@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -e
 
-APP_DIR=/var/www/html/laravel
+APP_DIR=/var/www/budgie
 mkdir -p "$APP_DIR"
 cd "$APP_DIR"
 
@@ -12,13 +12,13 @@ if [ "$1" = "php-fpm" ] && { [ ! -f artisan ] || [ ! -f composer.json ] || [ ! -
 
   for path in app bootstrap config database public resources routes tests; do
     if [ -e "/tmp/laravel-bootstrap/${path}" ]; then
-      cp -Rf "/tmp/laravel-bootstrap/${path}" /var/www/html/
+      cp -Rf "/tmp/laravel-bootstrap/${path}" "$APP_DIR/"
     fi
   done
 
   for file in .editorconfig .gitattributes .gitignore .npmrc artisan composer.json composer.lock package.json package-lock.json phpunit.xml vite.config.js; do
-    if [ -e "/tmp/laravel-bootstrap/${file}" ] && [ ! -e "/var/www/html/${file}" ]; then
-      cp -R "/tmp/laravel-bootstrap/${file}" "/var/www/html/${file}"
+    if [ -e "/tmp/laravel-bootstrap/${file}" ] && [ ! -e "$APP_DIR/${file}" ]; then
+      cp -R "/tmp/laravel-bootstrap/${file}" "$APP_DIR/${file}"
     fi
   done
 
@@ -34,6 +34,10 @@ if [ "$1" = "php-fpm" ] && { [ ! -f artisan ] || [ ! -f composer.json ] || [ ! -
 fi
 
 if [ -f artisan ]; then
+  if [ -d /opt/budgie-public ]; then
+    cp -a /opt/budgie-public/. public/
+  fi
+
   mkdir -p storage/app/public storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
   chown -R www-data:www-data storage bootstrap/cache
   chmod -R ug+rw storage bootstrap/cache

@@ -1,0 +1,47 @@
+@use "../partials/variables" as v;
+@use "../partials/functions" as f;
+
+@layer base {
+    // Hide
+    .hide {
+        display: none !important;
+    }
+    .hide-tablet {
+        display: none !important;
+    }
+    .hide-mobile {
+        display: none !important;
+    }    
+
+
+    // Overflow
+    // .overflow-visible{
+    // }
+    .overflow-hide{
+        overflow: none;
+    }    
+    .overflow-auto{
+        overflow: auto;
+    }  
+    .overflow-scroll{
+        overflow: scroll;
+    }    
+    
+    
+    // Pointer event
+    .pointer-events-auto {
+        pointer-events: auto;
+    }
+    .pointer-events-none {
+        pointer-events: none;
+    }   
+    
+    
+    // Z-index
+    .z-index-1 {
+        z-index: 1;
+    }
+    .z-index-2 {
+        z-index: 2;
+    }
+}
