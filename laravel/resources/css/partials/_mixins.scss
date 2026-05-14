@@ -1,0 +1,8 @@
+@mixin resetLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+@mixin resetAll {
+  all: unset;
+}

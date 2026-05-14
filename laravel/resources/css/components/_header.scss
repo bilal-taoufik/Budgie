@@ -1,0 +1,18 @@
+@use "../partials/functions" as f;
+@use "../partials/mixins" as m;
+
+@layer components {
+    .header-wrapper {
+        z-index: 1000;
+        position: fixed;
+        inset: 0% 0% auto;
+        .header_component {
+            color: var(--black);
+            background-color: var(--black);
+            display: flex;
+            align-items: center;
+            padding-left: 7%;
+            padding-right: 7%;
+        }
+    }
+}

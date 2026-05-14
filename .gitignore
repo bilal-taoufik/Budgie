@@ -7,6 +7,8 @@
 # Dependencies
 vendor/
 node_modules/
+!laravel/resources/css/vendor/
+!laravel/resources/css/vendor/**
 
 # Laravel generated files
 laravel/vendor/

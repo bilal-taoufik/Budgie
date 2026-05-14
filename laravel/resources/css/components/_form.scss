@@ -1,0 +1,95 @@
+@use "../partials/functions" as f;
+@use "../partials/mixins" as m;
+
+@layer components {
+    .form_field-wrapper {
+        position: relative;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        column-gap: f.rem(32);
+        row-gap: f.rem(32);
+    }
+    .form_field-label {
+        margin-bottom: f.rem(8);
+        font-weight: 400;
+    }
+    .form_label {
+        display: inline-block;
+        cursor: pointer;
+        font-weight: normal;
+    }
+
+    // Styles pour les champs de formulaire
+    .form_input {
+        width: 100%;
+        height: auto;
+        min-height: f.rem(44);
+        margin-bottom: 0%;
+        padding: f.rem(8) f.rem(12);
+        border-style: solid;
+        border-width: f.rem(1);
+        border-color: rgba(255, 255, 255, 0);
+        background-color: rgb(244, 244, 244);
+        transition-property: all; //désigne les noms des propriétés CSS sur lesquelles un effet de transition devrait être appliqué
+        transition-duration: 200ms;
+        transition-timing-function: ease;
+        color: var(--black);
+        font-size: f.rem(16);
+        line-height: 1.6;
+        text-align: left;
+        &:focus {
+            outline: none;
+            border-color: var(--brand);
+        }
+
+        &.is-text-area {
+            overflow: auto;
+            height: auto;
+            min-height: f.rem(180);
+            padding-top: f.rem(12);
+            padding-bottom: f.rem(12);
+        }
+        &.is-select-input {
+            appearance: none;
+            cursor: pointer;
+        }
+    }
+
+    // Styles pour les cases à cocher
+    .form_checkbox {
+        display: flex;
+        margin-bottom: f.rem(0);
+        padding-left: f.rem(20);
+        align-items: center;
+        gap: f.rem(16);
+        .form_checkbox-icon {
+            width: f.rem(18);
+            height: f.rem(18);
+            min-height: f.rem(18);
+            min-width: f.rem(18);
+            margin-top: f.rem(0);
+            margin-right: f.rem(0.5rem);
+            margin-left: f.rem(-20);
+            border-style: solid;
+            border-width: f.rem(1);
+            border-color: var(--brand);
+            border-radius: f.rem(0);
+            background-image: none;
+            background-size: auto;
+            background-repeat: repeat;
+            transition-property: all;
+            transition-duration: 200ms;
+            transition-timing-function: ease;
+            cursor: pointer;
+            appearance: none;
+            &:checked {
+                background-color: var(--brand);
+                border-color: var(--brand);
+            }
+        }
+        .form_checkbox-span {
+            margin-bottom: f.rem(0);
+        }
+    }
+}

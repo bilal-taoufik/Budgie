@@ -1,0 +1,22 @@
+$colors: (
+  "brand": #E96103,
+  "brand-dark": #A2541F,
+  "black": #000000,
+  "white": #ffffff,
+  "body": #aaa,
+  "grey": rgb(242, 242, 242),
+  "red": #dc3545,
+  "green": #28a745,
+);
+
+$gradients: (
+  "brand": linear-gradient(225deg, var(--brand) 100%, var(--brand-dark) 0%),
+);
+
+$breakpoints: (
+  "sm": 576px,
+  "md": 768px,
+  "lg": 992px,
+  "xl": 1200px,
+  "xxl": 1400px,
+);
