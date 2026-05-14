@@ -31,7 +31,28 @@ docker compose up -d --build
 Application:
 
 ```text
-http://localhost:8080
+http://localhost
+```
+
+## Production avec HTTPS
+
+Sur le serveur, utilise le fichier Compose de production:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
+
+La configuration production attend les certificats Let's Encrypt ici:
+
+```text
+/etc/letsencrypt/live/budgiefinance.fr/fullchain.pem
+/etc/letsencrypt/live/budgiefinance.fr/privkey.pem
+```
+
+En local, garde simplement:
+
+```bash
+docker compose up -d --build
 ```
 
 ## Commandes utiles
