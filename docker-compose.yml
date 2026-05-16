@@ -18,6 +18,9 @@ services:
       - app-public:/var/www/budgie/public
       - app-storage:/var/www/budgie/storage
       - app-cache:/var/www/budgie/bootstrap/cache
+      - ./laravel/app:/var/www/budgie/app          
+      - ./laravel/resources:/var/www/budgie/resources 
+      - ./laravel/routes:/var/www/budgie/routes
     networks:
       - budgie
 
