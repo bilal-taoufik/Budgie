@@ -4,6 +4,8 @@
 .vscode
 node_modules
 vendor
+!laravel/resources/css/vendor
+!laravel/resources/css/vendor/**
 app
 bootstrap
 config
