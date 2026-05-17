@@ -1,16 +1,19 @@
 $colors: (
-  "brand": #E96103,
-  "brand-dark": #A2541F,
+  "brand-green": #85A795,
+  "brand-blue": #B3C2C4,
+
+  "bg-primary": #0A0A0A,
+
+  "body": #D4D4D4,
+
+  "border": #525252,
+
   "black": #000000,
-  "white": #ffffff,
-  "body": #aaa,
-  "grey": rgb(242, 242, 242),
-  "red": #dc3545,
-  "green": #28a745,
+  "white": #ffffff, 
 );
 
 $gradients: (
-  "brand": linear-gradient(225deg, var(--brand) 100%, var(--brand-dark) 0%),
+  "brand": linear-gradient(225deg, var(--white) 100%, var(--brand-green) 0%),
 );
 
 $breakpoints: (

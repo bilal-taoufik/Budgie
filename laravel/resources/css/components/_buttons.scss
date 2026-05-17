@@ -2,60 +2,150 @@
 @use "../partials/mixins" as m;
 
 @layer components {
-    .button {
-        display: flex;
-        width: fit-content;
-        height: f.rem(40);
-        align-items: center;
-        justify-content: center;
-        padding-right: f.rem(26);
-        padding-left: f.rem(26);
-        border-radius: f.rem(25);
-        border: none;
-        font-weight: 500;
-        color: var(--white);
-        background: linear-gradient(245deg, var(--brand) 0%, var(--brand-dark) 100%);
-        cursor: pointer;
-        text-align: center;
-        text-decoration: none;
-        line-height: inherit;
+    .btn-primary {
+        position: relative;
 
-        transition: background 0.5s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: f.rem(12);
+
+        height: f.rem(47);
+        width: auto;
+        padding: f.rem(4) f.rem(22) f.rem(4) f.rem(10);
+
+        background-color: var(--brand-green);
+        color: var(--black);
+
+        border-radius: f.rem(999);
+        border: none;
+        overflow: hidden;
+        text-decoration: none;
+
+        font-size: f.rem(13);
+        font-weight: 700;
+        text-transform: uppercase;
+        line-height: 1;
+
+        transition:
+            color 0.35s ease,
+            transform 0.3s ease;
+
+        // couche noire animée
+        &::before {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+
+            background-color: var(--brand-green-hover);
+
+            transform: translateX(-102%);
+            transition: transform 0.45s cubic-bezier(0.77, 0, 0.175, 1);
+
+            z-index: 0;
+        }
+
+        &__icon,
+        &__text {
+            position: relative;
+            z-index: 1;
+        }
+
+        &__icon {
+            width: f.rem(35);
+            height: f.rem(35);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background-color: var(--black);
+            border-radius: 50%;
+            flex-shrink: 0;
+
+            transition:
+            background-color 0.3s ease,
+            transform 0.3s ease;
+
+            svg {
+                width: f.rem(18);
+                height: f.rem(18);
+
+                path {
+                    fill: none;
+                    stroke: var(--white);
+                    stroke-width: 2.4;
+                    stroke-linecap: round;
+                    stroke-linejoin: round;
+                }
+            }
+        }
 
         &:hover {
-            background: linear-gradient(245deg, var(--brand) 100%, var(--brand-dark) 0%);
+            color: var(--white);
+
+            &::before {
+                transform: translateX(0);
+            }
+
+            .btn-primary__icon {
+                background-color: transparent;
+                transform: translateX(f.rem(4));
+            }
+        }
+    }
+
+    .btn-secondary {
+        position: relative;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        height: f.rem(47);
+        min-width: f.rem(150);
+        width: auto;
+        padding: f.rem(4) f.rem(22);
+
+        background-color: var(--brand-blue);
+        color: var(--black);
+
+        border-radius: f.rem(999);
+        overflow: hidden;
+        text-decoration: none;
+
+        font-size: f.rem(13);
+        font-weight: 700;
+        text-transform: uppercase;
+        line-height: 1;
+        span {
+            position: relative;
+            z-index: 1;
+
+            transition: transform .3s ease;
         }
 
-        &.is-small {
+        &:hover {
+            background-color: var(--brand-blue-hover);
+        }
+
+        // VERSION SIMPLE
+        &.is-simple {
             height: auto;
-            padding: f.rem(0) f.rem(26);
-            justify-content: center;
-            align-items: center;
-        }
-        &.is-secondary {
-            width: auto;
-            background-image: none;
-            background-color: transparent;
-            color: var(--brand);
-            border: f.rem(1) solid var(--brand);
-        }
+            padding: 0;
 
-        &.is-icon {
-            display: flex;
-            padding-right: f.rem(0);
-            padding-left: f.rem(0);
-            justify-content: center;
-            align-items: center;
-            gap: f.rem(12);
-            background-image: none;
-            color: var(--brand);
-            svg {
-                display: flex;
-                width: f.rem(24);
-                height: f.rem(24);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
+            background-color: transparent;
+            border-radius: 0;
+
+            color: var(--white);
+
+            &:hover {
+                background-color: transparent;
+                color: var(--brand-blue);
+            }
+
+            span {
+                transform: none;
             }
         }
     }

@@ -2,17 +2,184 @@
 @use "../partials/mixins" as m;
 
 @layer components {
+
     .header-wrapper {
-        z-index: 1000;
         position: fixed;
-        inset: 0% 0% auto;
-        .header_component {
-            color: var(--black);
-            background-color: var(--black);
+        inset: 0 0 auto 0;
+        z-index: 1000;
+        pointer-events: none;
+        padding-top: f.rem(24);
+    }
+
+    .header-component {
+        position: relative;
+
+        width: 100%;
+        min-height: f.rem(72);
+        padding-inline: f.rem(50);
+
+        border-radius: f.rem(999);
+        background: rgba(20, 20, 20, 0.72);
+        backdrop-filter: blur(16px);
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        pointer-events: auto;
+    }
+
+    .header-logo {
+        display: none;
+        align-items: center;
+
+        svg {
+            width: f.rem(28);
+            height: auto;
+        }
+    }
+
+    .header-nav-list,
+    .wrapper_cta-header {
+        display: flex;
+        align-items: center;
+        gap: f.rem(48);
+    }
+
+    .header-nav-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .header-nav-link {
+        color: var(--white);
+        text-decoration: none;
+        font-size: f.rem(16);
+        font-weight: 400;
+        line-height: 1;
+        transition: color .3s ease;
+
+        &:hover {
+            color: var(--brand-blue);
+        }
+    }
+
+    .wrapper_cta-header {
+        gap: f.rem(32);
+    }
+
+    .menu-toggle {
+        display: none;
+    }
+
+    .burger-button {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: f.rem(6);
+
+        width: f.rem(42);
+        height: f.rem(42);
+        cursor: pointer;
+
+        span {
+            display: block;
+            width: f.rem(24);
+            height: f.rem(2);
+            border-radius: f.rem(999);
+            background-color: var(--white);
+
+            transition:
+                transform .3s ease,
+                opacity .3s ease;
+        }
+    }
+
+    .header-mobile-menu {
+        display: none;
+    }
+
+    @include m.bp(md) {
+
+        .header-component {
+            min-height: f.rem(64);
+            padding-inline: f.rem(24);
+            overflow: visible;
+        }
+
+        .header-logo {
             display: flex;
-            align-items: center;
-            padding-left: 7%;
-            padding-right: 7%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-nav,
+        .wrapper_cta-header {
+            display: none;
+        }
+
+        .burger-button {
+            position: relative;
+            z-index: 10;
+            display: flex;
+        }
+
+        .header-mobile-menu {
+            position: absolute;
+            top: calc(100% + #{f.rem(12)});
+            left: 0;
+            right: 0;
+
+            display: flex;
+            flex-direction: column;
+
+            padding: f.rem(32);
+            border-radius: f.rem(28);
+
+            background: rgba(20, 20, 20, 0.96);
+            backdrop-filter: blur(18px);
+
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(f.rem(-12));
+
+            transition:
+                opacity .3s ease,
+                visibility .3s ease,
+                transform .3s ease;
+        }
+
+        .header-mobile-list {
+            display: flex;
+            flex-direction: column;
+            gap: f.rem(24);
+
+            margin: 0;
+            padding: 0;
+            list-style: none;
+
+            a {
+                text-decoration: none;
+            }
+        }
+
+        .menu-toggle:checked ~ .burger-button span:nth-child(1) {
+            transform: translateY(f.rem(8)) rotate(45deg);
+        }
+
+        .menu-toggle:checked ~ .burger-button span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle:checked ~ .burger-button span:nth-child(3) {
+            transform: translateY(f.rem(-8)) rotate(-45deg);
+        }
+
+        .menu-toggle:checked ~ .header-mobile-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
     }
 }
