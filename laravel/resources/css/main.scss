@@ -1,4 +1,6 @@
-@use "vendor/modern-normalize";
+@use "vendor/modern-normalize.css";
+
+@use "animations/animation";
 
 @use "partials/fonts";
 @use "partials/globals";
@@ -10,7 +12,6 @@
 @use "base/typography";
 @use "base/color";
 @use "base/effect";
-@use "base/animation";
 @use "base/image";
 @use "base/utility";
 
@@ -20,4 +21,4 @@
 @use "components/form";
 @use "components/cookies";
 
-@use "pages/design-guide";
+@use "pages/home";
