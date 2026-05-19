@@ -8,6 +8,14 @@
 
     </head>
     <body>
-        <h1>HA carre </h1>
+        @if (session('success'))
+            <p>{{ session('success') }}</p>
+        @endif
+
+        @if (session('client'))
+            <h1>Bienvenue {{ session('client.prenom') }} {{ session('client.nom') }}</h1>
+        @else
+            <h1>Bienvenue</h1>
+        @endif
     </body>
 </html>

@@ -52,6 +52,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/99-app.ini
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/99-opcache.ini
 COPY docker/entrypoint.sh /usr/local/bin/budgie-entrypoint
+RUN sed -i 's/\r$//' /usr/local/bin/budgie-entrypoint
 
 COPY laravel ./
 COPY --from=assets /app/public/build ./public/build

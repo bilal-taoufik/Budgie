@@ -5,6 +5,13 @@ APP_DIR=/var/www/budgie
 mkdir -p "$APP_DIR"
 cd "$APP_DIR"
 
+if [ "${APP_ENV:-production}" != "production" ]; then
+  cat > /usr/local/etc/php/conf.d/zz-local-opcache.ini <<'EOF'
+opcache.validate_timestamps=1
+opcache.revalidate_freq=0
+EOF
+fi
+
 if [ "$1" = "php-fpm" ] && { [ ! -f artisan ] || [ ! -f composer.json ] || [ ! -f bootstrap/app.php ]; } && [ "${AUTO_INSTALL_LARAVEL:-false}" = "true" ]; then
   echo "Laravel not found, creating a new project..."
   rm -rf /tmp/laravel-bootstrap

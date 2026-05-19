@@ -13,8 +13,8 @@
 </head>
 <body>
     @php
-        $loginUrl = Route::has('login') ? route('login') : '#';
-        $registerUrl = Route::has('register') ? route('register') : '#';
+        $loginUrl = route('client.connexion');
+        $registerUrl = route('client.inscription');
     @endphp
 
     <header class="header-wrapper">
@@ -408,6 +408,7 @@
                     Manage cookies
                 </button> -->
             </div>
+            
         </div>
     </main>
 

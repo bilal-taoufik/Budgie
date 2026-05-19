@@ -2,18 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use App\Http\Controllers\ClientController;
-use PDO;
-use PDOException ;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -45,72 +42,52 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    private static $connexion = null ; 
-
-    private function __construct(){
-        self::$connexion = new PDO('mysql:host=localhost;dbname=Safar', 'boss', 'azerty');
-    }
-
-    private static function getConnexion(){
-        if(self::$connexion == null){
-            new User();
-        }
-        return self::$connexion ;
-    }
-
     public static function programmerSejour( $ville_dep, $ville_arr, $tarif, $numHotel, $numResp){
-        $bd = self::getConnexion() ; 
-
-        $sql = 'insert into voyages values(:ville_depart, :ville_arriver, :tarif, :num_hotel, :num_responsable)';
-        $st = $bd -> prepare($sql);
-        $st -> execute( array(
-                    ':ville_depart' => $ville_dep,
-                    ':ville_arriver' => $ville_arr,
-                    ':tarif' => $tarif,
-                    ':num_hotel' => $numHotel,
-                    ':num_responsable' => $numResp
-            )
-        );
-
-        $st -> closeCursor() ; 
+        DB::table('voyages')->insert([
+            'ville_depart' => $ville_dep,
+            'ville_arriver' => $ville_arr,
+            'tarif' => $tarif,
+            'num_hotel' => $numHotel,
+            'num_responsable' => $numResp,
+        ]);
 
     }
 
     public static function getConnexionP($email, $mdp){
-        $bd = self::getConnexion();
+        $client = DB::table('client')
+            ->where('email', $email)
+            ->first();
 
-        $sql = "SELECT nom, prenom FROM client WHERE email = :email AND mdp = :mdp";
+        if (! $client) {
+            return false;
+        }
 
-        $st = $bd->prepare($sql);
+        $passwordMatches = Hash::check($mdp, $client->mdp) || hash_equals((string) $client->mdp, $mdp);
 
-        $st->execute(array(':email' => $email, ':mdp' => $mdp));
+        if (! $passwordMatches) {
+            return false;
+        }
 
-        $client = $st ->fetch(PDO::FETCH_ASSOC);
-
-        $st->closeCursor();
-
-        return $client;
+        return [
+            'nom' => $client->nom,
+            'prenom' => $client->prenom,
+        ];
     }
 
     public static function enregistrerClient($nom, $prenom, $age, $email, $tel, $mdp)
     {
-        $bd = self::getConnexion();
+        if (DB::table('client')->where('email', $email)->exists()) {
+            throw new \RuntimeException('Email deja utilise.');
+        }
 
-        $sql = "INSERT INTO client (nom, prenom, email, age, tel, mdp) VALUES (:nom, :prenom, :age, :email, :tel, :mdp)";
-        $st = $bd->prepare($sql);
-        $st->execute([
-            ':nom'    => $nom,
-            ':prenom' => $prenom,
-            ':email'  => $email,
-            ':age'    => $age,
-            ':tel'    => $tel,
-            ':mdp'    => $mdp,
+        DB::table('client')->insert([
+            'nom' => $nom,
+            'prenom' => $prenom,
+            'age' => $age,
+            'email' => $email,
+            'tel' => $tel,
+            'mdp' => Hash::make($mdp),
         ]);
-
-        $st->closeCursor();
     }
-
-    
-
 
 }

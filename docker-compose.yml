@@ -4,11 +4,14 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        APP_ENV: ${APP_ENV:-production}
+        APP_ENV: ${APP_ENV:-local}
     image: budgie-laravel-app
     restart: unless-stopped
     env_file:
       - laravel/.env
+    environment:
+      APP_ENV: ${APP_ENV:-local}
+      APP_DEBUG: ${APP_DEBUG:-true}
     depends_on:
       postgres:
         condition: service_healthy
@@ -19,6 +22,7 @@ services:
       - app-storage:/var/www/budgie/storage
       - app-cache:/var/www/budgie/bootstrap/cache
       - ./laravel/app:/var/www/budgie/app          
+      - ./laravel/database:/var/www/budgie/database
       - ./laravel/resources:/var/www/budgie/resources 
       - ./laravel/routes:/var/www/budgie/routes
     networks:
@@ -44,6 +48,9 @@ services:
     restart: unless-stopped
     env_file:
       - laravel/.env
+    environment:
+      APP_ENV: ${APP_ENV:-local}
+      APP_DEBUG: ${APP_DEBUG:-true}
     depends_on:
       postgres:
         condition: service_healthy
@@ -62,6 +69,9 @@ services:
     restart: unless-stopped
     env_file:
       - laravel/.env
+    environment:
+      APP_ENV: ${APP_ENV:-local}
+      APP_DEBUG: ${APP_DEBUG:-true}
     depends_on:
       postgres:
         condition: service_healthy
@@ -80,7 +90,7 @@ services:
     environment:
       POSTGRES_DB: ${DB_DATABASE:-budgie}
       POSTGRES_USER: ${DB_USERNAME:-budgie}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+      POSTGRES_PASSWORD: "@Budgie2026!!"
     ports:
       - "${DB_FORWARD_PORT:-5432}:5432"
     volumes:
