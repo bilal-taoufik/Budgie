@@ -2,92 +2,60 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    // La table dans la base de données
+    protected $table = 'personne';
+
+    // La clé primaire
+    protected $primaryKey = 'prs_id';
+
+    // Pas de created_at / updated_at
+    public $timestamps = false;
+
+    // Les champs qu'on peut remplir
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+    'prs_nom',
+    'prs_prenom',
+    'prs_email',
+    'prs_password',
+    'prs_adresse',
+    'prs_age',
+    'prs_tel',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+    // Les champs cachés (jamais envoyés au navigateur)
     protected $hidden = [
-        'password',
-        'remember_token',
+        'prs_password',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    public static function programmerSejour( $ville_dep, $ville_arr, $tarif, $numHotel, $numResp){
-        DB::table('voyages')->insert([
-            'ville_depart' => $ville_dep,
-            'ville_arriver' => $ville_arr,
-            'tarif' => $tarif,
-            'num_hotel' => $numHotel,
-            'num_responsable' => $numResp,
-        ]);
-
-    }
-
-    public static function getConnexionP($email, $mdp){
-        $client = DB::table('client')
-            ->where('email', $email)
-            ->first();
-
-        if (! $client) {
-            return false;
-        }
-
-        $passwordMatches = Hash::check($mdp, $client->mdp) || hash_equals((string) $client->mdp, $mdp);
-
-        if (! $passwordMatches) {
-            return false;
-        }
-
-        return [
-            'nom' => $client->nom,
-            'prenom' => $client->prenom,
-        ];
-    }
-
-    public static function enregistrerClient($nom, $prenom, $age, $email, $tel, $mdp)
+    // Connexion : vérifie email + mot de passe et retourne l'utilisateur ou null
+    public static function getConnexionP($email, $mdp)
     {
-        if (DB::table('client')->where('email', $email)->exists()) {
-            throw new \RuntimeException('Email deja utilise.');
+        $user = self::where('prs_email', $email)->first();
+
+        if ($user && Hash::check($mdp, $user->prs_password)) {
+            return $user;
         }
 
-        DB::table('client')->insert([
-            'nom' => $nom,
-            'prenom' => $prenom,
-            'age' => $age,
-            'email' => $email,
-            'tel' => $tel,
-            'mdp' => Hash::make($mdp),
-        ]);
+        return null;
     }
 
+    // Inscription : crée un nouvel utilisateur dans la base
+    public static function enregistrerClient($nom, $prenom, $age, $email, $tel, $mdp){
+        return self::create([
+            'prs_nom'      => $nom,
+            'prs_prenom'   => $prenom,
+            'prs_email'    => $email,
+            'prs_password' => Hash::make($mdp),
+            'prs_age'      => $age,
+            'prs_tel'      => $tel,
+        ]);
+    }
 }

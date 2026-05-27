@@ -26,11 +26,11 @@ class ClientController extends Controller
 
         $client = User::getConnexionP($validated['email'], $validated['mdp']);
 
-        if ($client !== false) {
+        if ($client !== null) {
             $request->session()->put('client', [
-                'nom' => $client['nom'],
-                'prenom' => $client['prenom'],
-                'email' => $validated['email'],
+                'nom' => $client->prs_nom,
+                'prenom' => $client->prs_prenom,
+                'email' => $client->prs_email,
             ]);
 
             return redirect()
