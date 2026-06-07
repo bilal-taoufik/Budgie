@@ -49,17 +49,18 @@ RUN apk add --no-cache \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-COPY docker/php/php.ini /usr/local/etc/php/conf.d/99-app.ini
-COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/99-opcache.ini
-COPY docker/entrypoint.sh /usr/local/bin/budgie-entrypoint
-RUN sed -i 's/\r$//' /usr/local/bin/budgie-entrypoint
 
 COPY laravel ./
 COPY --from=assets /app/public/build ./public/build
 
-RUN mkdir -p storage bootstrap/cache \
+RUN mkdir -p \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache \
   && chown -R www-data:www-data storage bootstrap/cache \
-  && chmod -R ug+rw storage bootstrap/cache \
+  && chmod -R 775 storage bootstrap/cache \
   && if [ -f composer.json ] && [ -f bootstrap/app.php ]; then \
       composer install \
         --no-interaction \
@@ -69,10 +70,8 @@ RUN mkdir -p storage bootstrap/cache \
     fi \
   && chown -R www-data:www-data storage bootstrap/cache \
   && chmod -R ug+rw storage bootstrap/cache \
-  && cp -a public /opt/budgie-public \
-  && chmod +x /usr/local/bin/budgie-entrypoint
+  && cp -a public /opt/budgie-public
 
 EXPOSE 9000
 
-ENTRYPOINT ["sh", "/usr/local/bin/budgie-entrypoint"]
 CMD ["php-fpm"]

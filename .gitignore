@@ -1,4 +1,4 @@
-# Environment files
+# Environment
 .env
 .env.*
 !.env.example
@@ -7,15 +7,14 @@
 # Dependencies
 vendor/
 node_modules/
-!laravel/resources/css/vendor/
-!laravel/resources/css/vendor/**
-
-# Laravel generated files
 laravel/vendor/
 laravel/node_modules/
+
+# Laravel
 laravel/public/build/
 laravel/public/hot
 laravel/public/storage/
+
 laravel/storage/*.key
 laravel/storage/pail/
 laravel/storage/framework/cache/*
@@ -24,28 +23,13 @@ laravel/storage/framework/views/*
 laravel/storage/logs/*
 laravel/bootstrap/cache/*.php
 
-# Logs and caches
+!laravel/storage/framework/.gitignore
+!laravel/storage/logs/.gitignore
+
+# Logs
 *.log
 .phpunit.result.cache
 .phpunit.cache/
-.phpactor.json
 
-# Docker/local runtime
-docker-compose.override.yml
-.env.docker
-
-# IDE and OS files
-.DS_Store
-Thumbs.db
-.idea/
+# IDE
 .vscode/
-.cursor/
-.zed/
-.nova/
-
-# Project/tooling
-.codex/
-auth.json
-_ide_helper.php
-Homestead.json
-Homestead.yaml

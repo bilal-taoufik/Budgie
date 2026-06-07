@@ -2,60 +2,47 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Hash;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmailContract
 {
-    use Notifiable;
+    use HasFactory, MustVerifyEmailTrait, Notifiable;
 
-    // La table dans la base de données
-    protected $table = 'personne';
+    protected $table = 'client';
 
-    // La clé primaire
-    protected $primaryKey = 'prs_id';
-
-    // Pas de created_at / updated_at
-    public $timestamps = false;
-
-    // Les champs qu'on peut remplir
     protected $fillable = [
-    'prs_nom',
-    'prs_prenom',
-    'prs_email',
-    'prs_password',
-    'prs_adresse',
-    'prs_age',
-    'prs_tel',
+        'nom',
+        'prenom',
+        'email',
+        'tel',
+        'mdp',
     ];
 
-    // Les champs cachés (jamais envoyés au navigateur)
     protected $hidden = [
-        'prs_password',
+        'mdp',
+        'remember_token',
     ];
 
-    // Connexion : vérifie email + mot de passe et retourne l'utilisateur ou null
-    public static function getConnexionP($email, $mdp)
+    protected function casts(): array
     {
-        $user = self::where('prs_email', $email)->first();
-
-        if ($user && Hash::check($mdp, $user->prs_password)) {
-            return $user;
-        }
-
-        return null;
+        return [
+            'email_verified_at' => 'datetime',
+            'mdp' => 'hashed',
+        ];
     }
 
-    // Inscription : crée un nouvel utilisateur dans la base
-    public static function enregistrerClient($nom, $prenom, $age, $email, $tel, $mdp){
-        return self::create([
-            'prs_nom'      => $nom,
-            'prs_prenom'   => $prenom,
-            'prs_email'    => $email,
-            'prs_password' => Hash::make($mdp),
-            'prs_age'      => $age,
-            'prs_tel'      => $tel,
-        ]);
+    public function getAuthPasswordName(): string
+    {
+        return 'mdp';
+    }
+
+    public function comptes(): HasMany
+    {
+        return $this->hasMany(Compte::class, 'cmp_client_id');
     }
 }

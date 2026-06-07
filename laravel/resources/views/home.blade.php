@@ -12,11 +12,6 @@
 
 </head>
 <body>
-    @php
-        $loginUrl = route('client.connexion');
-        $registerUrl = route('client.inscription');
-    @endphp
-
     <header class="header-wrapper">
         <div class="padding-global">
 
@@ -58,11 +53,11 @@
 
                 <!-- DESKTOP CTA -->
                 <div class="wrapper_cta-header">
-                    <a href="{{ $loginUrl }}" class="btn-secondary is-simple">
+                    <a href="{{ route('login') }}" class="btn-secondary is-simple">
                         <span>CONNEXION</span>
                     </a>
 
-                    <a href="{{ $registerUrl }}" class="btn-primary">
+                    <a href="{{ route('register') }}" class="btn-primary">
                         <span class="btn-primary__icon">
                             <svg viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M9 5l7 7-7 7" />
@@ -94,13 +89,13 @@
                             </li>
 
                             <li>
-                                <a href="{{ $loginUrl }}" class="text-size-regular text-color-body">
+                                <a href="{{ route('login') }}" class="text-size-regular text-color-body">
                                     Connexion
                                 </a>
                             </li>
 
                             <li>
-                                <a href="{{ $registerUrl }}" class="text-size-regular text-color-body">
+                                <a href="{{ route('register') }}" class="text-size-regular text-color-body">
                                     Inscription
                                 </a>
                             </li>
@@ -133,11 +128,11 @@
                                 </p>
 
                                 <div class="hero-button-group">
-                                    <a href="{{ $loginUrl }}" class="btn-secondary">
+                                    <a href="{{ route('login') }}" class="btn-secondary">
                                         <span class="btn-primary__text">CONNEXION</span>
                                     </a>
 
-                                    <a href="{{ $registerUrl }}" class="btn-primary">
+                                    <a href="{{ route('register') }}" class="btn-primary">
                                         <span class="btn-primary__icon">
                                             <svg viewBox="0 0 24 24" aria-hidden="true">
                                             <path d="M9 5l7 7-7 7" />
@@ -246,7 +241,7 @@
                             </div>
 
                             <div class="cta-home-button">
-                                <a href="{{ $registerUrl }}" class="btn-primary">
+                                <a href="{{ route('register') }}" class="btn-primary">
                                     <span class="btn-primary__icon">
                                         <svg viewBox="0 0 24 24" aria-hidden="true">
                                             <path d="M9 5l7 7-7 7" />
@@ -437,8 +432,8 @@
 
                             <ul>
                                 <li><a href="#fonction">Fonctionnalités</a></li>
-                                <li><a href="{{ $loginUrl }}">Connexion</a></li>
-                                <li><a href="{{ $registerUrl }}">Inscription</a></li>
+                                <li><a href="{{ route('login') }}">Connexion</a></li>
+                                <li><a href="{{ route('register') }}">Inscription</a></li>
                             </ul>
                         </div>
 

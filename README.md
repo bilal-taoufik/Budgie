@@ -1,84 +1,118 @@
-# Budgie
+# Budgie Finance
 
-Configuration Docker pour deployer une application Laravel situee dans `laravel/` avec PHP-FPM, Nginx, PostgreSQL et Redis.
+Application web développée avec Laravel, PostgreSQL, Nginx et Docker.
 
-## Prerequis
+## Prérequis
 
-- Docker
+- Docker Desktop
 - Docker Compose
-- Une application Laravel placee dans `laravel/`
+- Git
 
-## Demarrage
-
-```bash
-cp .env.docker.example laravel/.env
-```
-
-Renseigne ensuite `APP_KEY`, `APP_URL` et `DB_PASSWORD`.
-
-Si ton projet Laravel existe deja, tu peux generer la cle avec:
+## Cloner le projet
 
 ```bash
-docker compose run --rm app php artisan key:generate --show
+git clone <url-du-repo>
+cd Budgie
 ```
 
-Puis lance les services:
+
+## Configuration
 
 ```bash
-docker compose up -d --build
+cp laravel/.env.example laravel/.env
 ```
 
-Application:
+Puis :
 
-```text
+```bash
+docker compose -f docker-compose.local.yml up -d --build
+docker compose -f docker-compose.local.yml exec app php artisan key:generate
+```
+
+## Lancement du projet
+
+```bash
+docker compose -f docker-compose.local.yml up -d --build
+```
+
+## Base de données
+
+```bash
+docker compose -f docker-compose.local.yml exec app php artisan migrate
+```
+## Installation complète
+
+Copiez le fichier d'environnement :
+
+```bash
+cp laravel/.env.example laravel/.env
+```
+
+Construisez et démarrez les conteneurs :
+
+```bash
+docker compose -f docker-compose.local.yml up -d --build
+```
+
+Installez les dépendances PHP :
+
+```bash
+docker compose -f docker-compose.local.yml exec app composer install
+```
+
+Générez la clé Laravel :
+
+```bash
+docker compose -f docker-compose.local.yml exec app php artisan key:generate
+```
+
+Exécutez les migrations :
+
+```bash
+docker compose -f docker-compose.local.yml exec app php artisan migrate
+```
+
+
+## Accès
+
+Application :
+
 http://localhost
-```
-
-## Production avec HTTPS
-
-Sur le serveur, utilise le fichier Compose de production:
-
-```bash
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
-```
-
-La configuration production attend les certificats Let's Encrypt ici:
-
-```text
-/etc/letsencrypt/live/budgiefinance.fr/fullchain.pem
-/etc/letsencrypt/live/budgiefinance.fr/privkey.pem
-```
-
-En local, garde simplement:
-
-```bash
-docker compose up -d --build
-```
 
 ## Commandes utiles
 
 ```bash
-docker compose exec app php artisan migrate
-docker compose exec app php artisan optimize:clear
-docker compose exec app composer install
-docker compose logs -f app nginx
+docker compose -f docker-compose.local.yml exec app php artisan --version
+docker compose -f docker-compose.local.yml exec app php artisan optimize:clear
 ```
 
-## Services
+## Arrêt
 
-- `app`: PHP 8.3 FPM avec les extensions Laravel courantes
-- `nginx`: serveur web expose sur `APP_PORT`
-- `postgres`: base PostgreSQL 16 persistante
-- `redis`: cache, sessions et queues
-- `queue`: worker Laravel
-- `scheduler`: execution de `schedule:run` chaque minute
-
-## Migration automatique
-
-En production, garde `RUN_MIGRATIONS=false` par defaut.
-
-Pour lancer les migrations automatiquement au demarrage:
-
-```env
-RUN_MIGRATIONS=true
+```bash
+docker compose -f docker-compose.local.yml down
 ```
+
+Suppression des volumes :
+
+```bash
+docker compose -f docker-compose.local.yml down -v
+```
+
+## Architecture
+
+```text
+Budgie
+├── docker
+├── laravel
+├── Dockerfile
+├── docker-compose.local.yml
+└── README.md
+```
+
+## Stack
+
+- Laravel
+- PHP 8.3
+- PostgreSQL 16
+- Nginx
+- Docker

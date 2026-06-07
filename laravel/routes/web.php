@@ -1,18 +1,19 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ClientController;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::view('/', 'home')->name('home');
 
-Route::get('/Client/Connexion', [ClientController::class, 'ConnexionClient'])->name('client.connexion');
-Route::post('/Client/Connecter', [ClientController::class, 'ConnecterClient'])->name('client.connecter');
-Route::get('/Client/Connecter', [ClientController::class, 'AfficherAccueil'])->name('client.accueil');
-Route::post('/Client/Inscription', [ClientController::class, 'Inscription'])->name('client.inscription.store');
-Route::get('/Client/Inscription', [ClientController::class, 'Formulaire'])->name('client.inscription');
-Route::get('/Client/Profil', [ClientController::class, 'ConsulterProfil'])->name('client.profil');
+Route::middleware('auth')->group(function () {
+    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::view('/comptes', 'comptes')->name('comptes');
+    Route::view('/depenses', 'depenses')->name('depenses');
+    Route::view('/revenus', 'revenus')->name('revenus');
+    Route::view('/previsions', 'previsions')->name('previsions');
 
-Route::redirect('/connexion', '/Client/Connexion');
-Route::redirect('/inscription', '/Client/Inscription');
+    Route::get('/profil', [ProfileController::class, 'edit'])->name('profil');
+    Route::patch('/profil', [ProfileController::class, 'update'])->name('profil.update');
+});
+
+require __DIR__.'/auth.php';

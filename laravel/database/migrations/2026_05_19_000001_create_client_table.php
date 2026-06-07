@@ -13,9 +13,10 @@ return new class extends Migration
             $table->string('nom', 100);
             $table->string('prenom', 100);
             $table->string('email')->unique();
-            $table->unsignedTinyInteger('age');
             $table->string('tel', 20);
             $table->string('mdp');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
     }
