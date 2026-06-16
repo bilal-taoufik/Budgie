@@ -1,0 +1,57 @@
+name: Rapport de bug
+description: Signaler un bug.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de prendre le temps de remplir ce rapport de bug !
+  - type: input
+    id: contact
+    attributes:
+      label: Coordonnées
+      description: Comment pouvons-nous vous contacter si nous avons besoin de plus d'informations ?
+      placeholder: bll.taoufik@gmail.com - zakaria.bouguera.sio@gmail.com
+    validations:
+      required: false
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Que s'est-il passé ?
+      description: Dites-nous également ce que vous attendiez comme comportement.
+      placeholder: Décrivez ce que vous avez observé !
+      value: "Un bug s'est produit !"
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: Sur quel(s) navigateur(s) observez-vous le problème ?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+  - type: textarea
+    id: logs
+    attributes:
+      label: Journaux pertinents
+      description: Veuillez copier-coller les journaux liés au problème. Ils seront automatiquement formatés en code, pas besoin de backticks.
+      render: shell
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code de conduite
+      description: En soumettant cette issue, vous acceptez de respecter notre Code de conduite.
+      options:
+        - label: J'accepte de respecter le Code de conduite de ce projet
+          required: true
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Captures d'écran
+      description: Si applicable, ajoutez des captures d'écran pour illustrer le problème.
+    validations:
+      required: false
