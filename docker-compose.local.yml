@@ -1,0 +1,44 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: budgie_app
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www
+    ports:
+      - "5173:5173"
+    depends_on:
+      - postgres
+
+  nginx:
+    image: nginx:alpine
+    container_name: budgie_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./src:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: budgie_postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./src/.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: budgie_mailpit
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+volumes:
+  postgres_data:
