@@ -10,23 +10,30 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    // Les attributs qui sont assignables en masse
+    protected $fillable = [
+        'firstname',
+        'lastname',
+        'email',
+        'password',
+        'role',
+        'email_verified',
+        'email_verification_token',
+        'email_verification_expires_at',
+    ];
+
+    // Les attributs qui doivent être castés
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'email_verified' => 'boolean',
+            'email_verification_expires_at' => 'datetime',
         ];
     }
 }
