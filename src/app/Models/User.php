@@ -9,13 +9,14 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Account;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    // Les attributs qui sont assignables en masse
     protected $fillable = [
         'firstname',
         'lastname',
@@ -27,7 +28,13 @@ class User extends Authenticatable
         'email_verification_expires_at',
     ];
 
-    // Les attributs qui doivent être castés
+    // HasMany pour la relation avec le modèle Account
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(Account::class); // clé étrangère user_id dans la table accounts
+    }
+
+    // Les attributs qui doivent être cachés pour les tableaux
     protected function casts(): array
     {
         return [

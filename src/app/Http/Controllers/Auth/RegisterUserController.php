@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
 use App\Mail\VerifyMail;
+use Illuminate\View\View;
 
 class RegisterUserController extends Controller
 {
     // Afficher le formulaire d'inscription
-    public function create()
+    public function index(): View
     {
         return view('auth.register');
     }

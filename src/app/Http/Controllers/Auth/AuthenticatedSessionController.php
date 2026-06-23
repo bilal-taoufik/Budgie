@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     // Afficher le formulaire de connexion
-    public function create(): View
+    public function index(): View
     {
         return view('auth.login');
     }
