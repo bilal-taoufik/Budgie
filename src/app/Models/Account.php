@@ -33,4 +33,9 @@ class Account extends Model
     {
         return $this->solde * ($this->tax_rate / 100);
     }
+
+    public function depenses(): HasMany
+    {
+        return $this->hasMany(Depense::class);
+    }
 }
