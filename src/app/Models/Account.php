@@ -38,4 +38,10 @@ class Account extends Model
     {
         return $this->hasMany(Depense::class);
     }
+
+    // Un compte possède plusieurs revenus
+    public function revenus(): HasMany
+    {
+        return $this->hasMany(Revenu::class);
+    }
 }

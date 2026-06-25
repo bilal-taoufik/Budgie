@@ -27,17 +27,17 @@ class DepenseRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nom.required'            => 'Le nom de la dépense est requis.',
-            'nom.string'              => 'Le nom doit être une chaîne de caractères.',
-            'nom.max'                 => 'Le nom ne doit pas dépasser 255 caractères.',
-            'account_id.required'     => 'Le compte associé est requis.',
-            'account_id.exists'       => 'Le compte sélectionné est invalide.',
-            'montant.required'        => 'Le montant est requis.',
-            'montant.numeric'         => 'Le montant doit être un nombre.',
-            'montant.min'             => 'Le montant ne peut pas être négatif.',
-            'fractionnement.required' => 'Le fractionnement est requis.',
-            'date_effet.required'     => 'La date d\'effet est requise.',
-            'date_effet.date'         => 'La date d\'effet doit être une date valide.',
+            'nom.required'            => 'Le nom de la dépense est requis',
+            'nom.string'              => 'Le nom doit être une chaîne de caractères',
+            'nom.max'                 => 'Le nom ne doit pas dépasser 255 caractères',
+            'account_id.required'     => 'Le compte associé est requis',
+            'account_id.exists'       => 'Le compte sélectionné est invalide',
+            'montant.required'        => 'Le montant est requis',
+            'montant.numeric'         => 'Le montant doit être un nombre',
+            'montant.min'             => 'Le montant ne peut pas être négatif',
+            'fractionnement.required' => 'Le fractionnement est requis',
+            'date_effet.required'     => 'La date d\'effet est requise',
+            'date_effet.date'         => 'La date d\'effet doit être une date valide',
         ];
     }
 
