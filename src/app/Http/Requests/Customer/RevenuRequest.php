@@ -4,9 +4,17 @@ namespace App\Http\Requests\Customer;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RevenuRequest extends FormRequest
 {
+    public const FRACTIONNEMENTS = [
+        'mensuel',
+        'semestriel',
+        'annuel',
+        'une_fois',
+    ];
+
     public function authorize(): bool
     {
         return true;
@@ -20,7 +28,7 @@ class RevenuRequest extends FormRequest
             'revenue_nom'            => ['required', 'string', 'max:255'],
             'revenue_description'    => ['nullable', 'string'],
             'revenue_montant'        => ['required', 'numeric', 'min:0'],
-            'revenue_fractionnement' => ['required', 'string', 'max:255'],
+            'revenue_fractionnement' => ['required', Rule::in(self::FRACTIONNEMENTS)],
             'revenue_date_effet'     => ['required', 'date'],
         ];
     }
@@ -38,6 +46,7 @@ class RevenuRequest extends FormRequest
             'revenue_montant.numeric'         => 'Le montant doit être un nombre',
             'revenue_montant.min'             => 'Le montant ne peut pas être négatif',
             'revenue_fractionnement.required' => 'Le fractionnement est requis',
+            'revenue_fractionnement.in'       => 'Le fractionnement selectionne est invalide',
             'revenue_date_effet.required'     => 'La date d\'effet est requise',
             'revenue_date_effet.date'         => 'La date d\'effet doit être une date valide',
         ];

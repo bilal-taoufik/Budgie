@@ -22,7 +22,13 @@
     <input type="text" name="revenue_nom" placeholder="Nom du revenu" required>
     <input type="text" name="revenue_description" placeholder="Description">
     <input type="number" step="0.01" name="revenue_montant" placeholder="Montant" required>
-    <input type="text" name="revenue_fractionnement" placeholder="Fractionnement" required>
+    <select name="revenue_fractionnement" required>
+        <option value="">-- Choisir un fractionnement --</option>
+        <option value="mensuel">Tous les 1 mois</option>
+        <option value="semestriel">Tous les 6 mois</option>
+        <option value="annuel">Tous les 12 mois</option>
+        <option value="une_fois">Une fois</option>
+    </select>
     <input type="date" name="revenue_date_effet" required>
     <button type="submit">Créer</button>
 
@@ -68,7 +74,12 @@
             <input type="text" name="revenue_nom" value="{{ $revenu->revenue_nom }}" required>
             <input type="text" name="revenue_description" value="{{ $revenu->revenue_description }}">
             <input type="number" step="0.01" name="revenue_montant" value="{{ $revenu->revenue_montant }}" required>
-            <input type="text" name="revenue_fractionnement" value="{{ $revenu->revenue_fractionnement }}" required>
+            <select name="revenue_fractionnement" required>
+                <option value="mensuel" {{ $revenu->revenue_fractionnement === 'mensuel' ? 'selected' : '' }}>Tous les 1 mois</option>
+                <option value="semestriel" {{ $revenu->revenue_fractionnement === 'semestriel' ? 'selected' : '' }}>Tous les 6 mois</option>
+                <option value="annuel" {{ $revenu->revenue_fractionnement === 'annuel' ? 'selected' : '' }}>Tous les 12 mois</option>
+                <option value="une_fois" {{ $revenu->revenue_fractionnement === 'une_fois' ? 'selected' : '' }}>Une fois</option>
+            </select>
             <input type="date" name="revenue_date_effet" value="{{ $revenu->revenue_date_effet }}" required>
             <button type="submit">Enregistrer</button>
             <button type="button" onclick="document.getElementById('edit-revenu-{{ $revenu->id }}').close()">

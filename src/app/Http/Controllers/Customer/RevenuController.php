@@ -5,19 +5,21 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\RevenuRequest;
 use App\Models\Revenu;
+use Carbon\Carbon;
 
 class RevenuController extends Controller
 {
-    // affichage de la liste
+    // Affichage de la liste
     public function index()
     {
-        // recupere uniquement les revenus des comptes appartenant a l'utilisateur
+        $this->appliquerRevenusEchus();
+
+        // Recupere uniquement les revenus des comptes appartenant a l'utilisateur
         $revenues = Revenu::whereIn(
             'account_id',
             auth()->user()->accounts->pluck('id')
-        )->with('account')->get(); //eviter les requêtes N+1
+        )->with('account')->get();
 
-        // recupere les comptes
         $accounts = auth()->user()->accounts;
 
         return view('customer.revenu', compact('revenues', 'accounts'));
@@ -26,61 +28,106 @@ class RevenuController extends Controller
     // Creer un revenu
     public function store(RevenuRequest $request)
     {
-        // vzerifie que le compte appartient bien a l'utilisateur connecté
-        $account = auth()->user()->accounts()->findOrFail($request->account_id);
+        // Verifie que le compte appartient bien a l'utilisateur connecte
+        auth()->user()->accounts()->findOrFail($request->account_id);
 
-        // Creer le revenu
-        Revenu::create($request->validated());
+        $revenu = Revenu::create($request->validated());
 
-        // augmente le solde du compte
-        $account->increment('solde', $request->revenue_montant);
+        // Credite uniquement si une echeance est deja arrivee.
+        $this->appliquerRevenuEchu($revenu);
 
         return redirect()->route('customer.revenues.index')
-            ->with('success', 'Revenu créé avec succès.');
+            ->with('success', 'Revenu cree avec succes.');
     }
 
-    // mise a jour d'un revenu
+    // Mise a jour d'un revenu
     public function update(RevenuRequest $request, $revenu)
     {
-        // Vérifie que le revenu appartient bien a un compte de l'utilisateur
         $revenu = Revenu::whereIn(
             'account_id',
             auth()->user()->accounts->pluck('id')
         )->findOrFail($revenu);
 
-        // recupere le compte associé
-        $account = auth()->user()->accounts()->findOrFail($request->account_id);
-
-        // calcule la différence entre le nouveau montant et l'ancien
-        $difference = $request->montant - $revenu->revenue_montant;
+        auth()->user()->accounts()->findOrFail($request->account_id);
 
         $revenu->update($request->validated());
 
-        // Ajuste le solde selon la différence
-        $account->increment('solde', $difference);
+        $this->appliquerRevenuEchu($revenu->fresh('account'));
 
         return redirect()->route('customer.revenues.index')
-            ->with('success', 'Revenu mis à jour avec succès.');
+            ->with('success', 'Revenu mis a jour avec succes.');
     }
 
-    // supprime un revenu 
+    // Supprime un revenu
     public function delete($revenu)
     {
-        // verifie que le revenu appartient bien au compte du bon l'utilisateur
         $revenu = Revenu::whereIn(
             'account_id',
             auth()->user()->accounts->pluck('id')
         )->findOrFail($revenu);
 
-        // recupere le compte lié via BelongsTo
-        $account = $revenu->account;
-
-        // deduit le montant du compte 
-        $account->decrement('solde', $revenu->revenue_montant);
-
+        // La suppression arrete les prochaines echeances, sans retirer les revenus deja recus.
         $revenu->delete();
 
         return redirect()->route('customer.revenues.index')
-            ->with('success', 'Revenu supprimé et solde ajusté.');
+            ->with('success', 'Revenu supprime.');
+    }
+
+    private function appliquerRevenusEchus(): void
+    {
+        Revenu::whereIn('account_id', auth()->user()->accounts->pluck('id'))
+            ->with('account')
+            ->get()
+            ->each(fn (Revenu $revenu) => $this->appliquerRevenuEchu($revenu));
+    }
+
+    private function appliquerRevenuEchu(Revenu $revenu): void
+    {
+        $today = now()->startOfDay();
+        $nextDate = $this->prochaineDatePaiement($revenu);
+
+        while ($nextDate && $nextDate->lessThanOrEqualTo($today)) {
+            $revenu->account->increment('solde', $revenu->revenue_montant);
+
+            $revenu->last_credited_at = $nextDate->toDateString();
+            $revenu->save();
+
+            if ($revenu->revenue_fractionnement === 'une_fois') {
+                break;
+            }
+
+            $nextDate = $this->prochaineDatePaiement($revenu);
+        }
+    }
+
+    private function prochaineDatePaiement(Revenu $revenu): ?Carbon
+    {
+        if ($revenu->revenue_fractionnement === 'une_fois' && $revenu->last_credited_at) {
+            return null;
+        }
+
+        $date = Carbon::parse($revenu->revenue_date_effet)->startOfDay();
+
+        if (! $revenu->last_credited_at) {
+            return $date;
+        }
+
+        $lastCreditedAt = Carbon::parse($revenu->last_credited_at)->startOfDay();
+
+        while ($date->lessThanOrEqualTo($lastCreditedAt)) {
+            $date = $this->dateSuivante($date, $revenu->revenue_fractionnement);
+        }
+
+        return $date;
+    }
+
+    private function dateSuivante(Carbon $date, string $fractionnement): Carbon
+    {
+        return match ($fractionnement) {
+            'mensuel' => $date->copy()->addMonthNoOverflow(),
+            'semestriel' => $date->copy()->addMonthsNoOverflow(6),
+            'annuel' => $date->copy()->addYearNoOverflow(),
+            default => $date->copy(),
+        };
     }
 }

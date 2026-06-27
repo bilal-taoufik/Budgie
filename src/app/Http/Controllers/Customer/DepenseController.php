@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\DepenseRequest;
 use App\Models\Depense;
+use Carbon\Carbon;
 
 class DepenseController extends Controller
 {
     public function index()
     {
-        // Récupère uniquement les dépenses des comptes de l'utilisateur connecté
+        $this->appliquerDepensesEchues();
+
+        // Recupere uniquement les depenses des comptes de l'utilisateur connecte
         $depenses = Depense::whereIn(
             'account_id',
             auth()->user()->accounts->pluck('id')
@@ -23,16 +26,16 @@ class DepenseController extends Controller
 
     public function store(DepenseRequest $request)
     {
-        // Vérifie que le compte appartient bien à l'utilisateur
-        $account = auth()->user()->accounts()->findOrFail($request->account_id);
+        // Verifie que le compte appartient bien a l'utilisateur
+        auth()->user()->accounts()->findOrFail($request->account_id);
 
-        Depense::create($request->validated());
+        $depense = Depense::create($request->validated());
 
-        // déduit le montant du solde du compte
-    $account->decrement('solde', $request->montant);
+        // Debite uniquement si une echeance est deja arrivee.
+        $this->appliquerDepenseEchue($depense);
 
         return redirect()->route('customer.depenses.index')
-            ->with('success', 'Dépense créée avec succès');
+            ->with('success', 'Depense creee avec succes');
     }
 
     public function update(DepenseRequest $request, $depense)
@@ -42,25 +45,14 @@ class DepenseController extends Controller
             auth()->user()->accounts->pluck('id')
         )->findOrFail($depense);
 
-        // recupere le compte lie a la dépense pour pouvoir modifier son solde
-        $account = auth()->user()->accounts()->findOrFail($request->account_id);
-
-        // Calcule la différence entre le nouveau montant et l'ancien
-        $difference = $request->montant - $depense->montant;
-
-        // verifie que le solde est suffisant pour couvrir la différence
-        if ($account->solde < $difference) {
-            return redirect()->route('customer.depenses.index')
-                ->with('error', 'Solde insuffisant pour modifier cette dépense');
-        }
+        auth()->user()->accounts()->findOrFail($request->account_id);
 
         $depense->update($request->validated());
 
-        // ajuste le solde du compte selon la difference calculee
-        $account->decrement('solde', $difference);
+        $this->appliquerDepenseEchue($depense->fresh('account'));
 
         return redirect()->route('customer.depenses.index')
-            ->with('success', 'Dépense mise à jour avec succès');
+            ->with('success', 'Depense mise a jour avec succes');
     }
 
     public function delete($depense)
@@ -70,15 +62,68 @@ class DepenseController extends Controller
             auth()->user()->accounts->pluck('id')
         )->findOrFail($depense);
 
-        // rcupère le compte lie à cette dépense via la relation BelongsTo
-        $account = $depense->account;
-
-        // rembourse le montant de la dépense supprimée sur le solde du compte
-        $account->increment('solde', $depense->montant);
-
+        // La suppression arrete les prochaines echeances, sans rembourser les paiements deja passes.
         $depense->delete();
 
         return redirect()->route('customer.depenses.index')
-            ->with('success', 'Dépense supprimée et solde remboursé');
+            ->with('success', 'Depense supprimee');
+    }
+
+    private function appliquerDepensesEchues(): void
+    {
+        Depense::whereIn('account_id', auth()->user()->accounts->pluck('id'))
+            ->with('account')
+            ->get()
+            ->each(fn (Depense $depense) => $this->appliquerDepenseEchue($depense));
+    }
+
+    private function appliquerDepenseEchue(Depense $depense): void
+    {
+        $today = now()->startOfDay();
+        $nextDate = $this->prochaineDatePaiement($depense);
+
+        while ($nextDate && $nextDate->lessThanOrEqualTo($today)) {
+            $depense->account->decrement('solde', $depense->montant);
+
+            $depense->last_debited_at = $nextDate->toDateString();
+            $depense->save();
+
+            if ($depense->fractionnement === 'une_fois') {
+                break;
+            }
+
+            $nextDate = $this->prochaineDatePaiement($depense);
+        }
+    }
+
+    private function prochaineDatePaiement(Depense $depense): ?Carbon
+    {
+        if ($depense->fractionnement === 'une_fois' && $depense->last_debited_at) {
+            return null;
+        }
+
+        $date = Carbon::parse($depense->date_effet)->startOfDay();
+
+        if (! $depense->last_debited_at) {
+            return $date;
+        }
+
+        $lastDebitedAt = Carbon::parse($depense->last_debited_at)->startOfDay();
+
+        while ($date->lessThanOrEqualTo($lastDebitedAt)) {
+            $date = $this->dateSuivante($date, $depense->fractionnement);
+        }
+
+        return $date;
+    }
+
+    private function dateSuivante(Carbon $date, string $fractionnement): Carbon
+    {
+        return match ($fractionnement) {
+            'mensuel' => $date->copy()->addMonthNoOverflow(),
+            'semestriel' => $date->copy()->addMonthsNoOverflow(6),
+            'annuel' => $date->copy()->addYearNoOverflow(),
+            default => $date->copy(),
+        };
     }
 }

@@ -22,7 +22,13 @@
     <input type="text" name="nom" placeholder="Nom de la dépense" required>
     <input type="text" name="description" placeholder="Description">
     <input type="number" step="0.01" name="montant" placeholder="Montant" required>
-    <input type="text" name="fractionnement" placeholder="Fractionnement" required>
+    <select name="fractionnement" required>
+        <option value="">-- Choisir un fractionnement --</option>
+        <option value="mensuel">Tous les 1 mois</option>
+        <option value="semestriel">Tous les 6 mois</option>
+        <option value="annuel">Tous les 12 mois</option>
+        <option value="une_fois">Une fois</option>
+    </select>
     <input type="date" name="date_effet" required>
     <button type="submit">Créer</button>
 
@@ -68,7 +74,12 @@
             <input type="text" name="nom" value="{{ $depense->nom }}" required>
             <input type="text" name="description" value="{{ $depense->description }}">
             <input type="number" step="0.01" name="montant" value="{{ $depense->montant }}" required>
-            <input type="text" name="fractionnement" value="{{ $depense->fractionnement }}" required>
+            <select name="fractionnement" required>
+                <option value="mensuel" {{ $depense->fractionnement === 'mensuel' ? 'selected' : '' }}>Tous les 1 mois</option>
+                <option value="semestriel" {{ $depense->fractionnement === 'semestriel' ? 'selected' : '' }}>Tous les 6 mois</option>
+                <option value="annuel" {{ $depense->fractionnement === 'annuel' ? 'selected' : '' }}>Tous les 12 mois</option>
+                <option value="une_fois" {{ $depense->fractionnement === 'une_fois' ? 'selected' : '' }}>Une fois</option>
+            </select>
             <input type="date" name="date_effet" value="{{ $depense->date_effet }}" required>
             <button type="submit">Enregistrer</button>
             <button type="button" onclick="document.getElementById('edit-depense-{{ $depense->id }}').close()">

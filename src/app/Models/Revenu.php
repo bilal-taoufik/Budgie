@@ -17,6 +17,7 @@ class Revenu extends Model
         'revenue_montant',
         'revenue_fractionnement',
         'revenue_date_effet',
+        'last_credited_at',
     ];
 
     // Un revenu appartient à un compte

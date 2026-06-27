@@ -17,8 +17,9 @@ return new class extends Migration
             $table->string('description');
             $table->foreignId('account_id')->constrained('accounts')->onDelete('cascade');
             $table->decimal('montant');
-            $table->string('fractionnement');
+            $table->enum('fractionnement', ['mensuel', 'semestriel', 'annuel', 'une_fois']);
             $table->date('date_effet');
+            $table->date('last_debited_at')->nullable();
             $table->timestamps();
         });
     }

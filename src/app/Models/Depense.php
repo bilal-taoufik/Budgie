@@ -14,9 +14,18 @@ class Depense extends Model
         'montant',
         'fractionnement',
         'date_effet',
+        'last_debited_at',
     ];
 
     // Relation avec le modèle Account
+    protected function casts(): array
+    {
+        return [
+            'date_effet' => 'date',
+            'last_debited_at' => 'date',
+        ];
+    }
+
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);

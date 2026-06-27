@@ -4,9 +4,17 @@ namespace App\Http\Requests\Customer;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class DepenseRequest extends FormRequest
 {
+    public const FRACTIONNEMENTS = [
+        'mensuel',
+        'semestriel',
+        'annuel',
+        'une_fois',
+    ];
+
     public function authorize(): bool
     {
         return true;
@@ -19,7 +27,7 @@ class DepenseRequest extends FormRequest
             'description'      => ['nullable', 'string'],
             'account_id'       => ['required', 'exists:accounts,id'],
             'montant'          => ['required', 'numeric', 'min:0'],
-            'fractionnement'   => ['required', 'string', 'max:255'],
+            'fractionnement'   => ['required', Rule::in(self::FRACTIONNEMENTS)],
             'date_effet'       => ['required', 'date'],
         ];
     }
@@ -36,6 +44,7 @@ class DepenseRequest extends FormRequest
             'montant.numeric'         => 'Le montant doit être un nombre',
             'montant.min'             => 'Le montant ne peut pas être négatif',
             'fractionnement.required' => 'Le fractionnement est requis',
+            'fractionnement.in'       => 'Le fractionnement selectionne est invalide',
             'date_effet.required'     => 'La date d\'effet est requise',
             'date_effet.date'         => 'La date d\'effet doit être une date valide',
         ];

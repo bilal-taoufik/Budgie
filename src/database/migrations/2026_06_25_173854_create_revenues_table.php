@@ -17,8 +17,9 @@ return new class extends Migration
             $table->string('revenue_description');
             $table->foreignId('account_id')->constrained('accounts')->onDelete('cascade');
             $table->decimal('revenue_montant');
-            $table->string('revenue_fractionnement');
+            $table->enum('revenue_fractionnement', ['mensuel', 'semestriel', 'annuel', 'une_fois']);
             $table->date('revenue_date_effet');
+            $table->date('last_credited_at')->nullable();
             $table->timestamps();
         });
     }
