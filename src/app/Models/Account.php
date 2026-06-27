@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Account extends Model
 {
@@ -32,5 +33,16 @@ class Account extends Model
     public function calculeTax(): float
     {
         return $this->solde * ($this->tax_rate / 100);
+    }
+
+    public function depenses(): HasMany
+    {
+        return $this->hasMany(Depense::class);
+    }
+
+    // Un compte possède plusieurs revenus
+    public function revenus(): HasMany
+    {
+        return $this->hasMany(Revenu::class);
     }
 }
