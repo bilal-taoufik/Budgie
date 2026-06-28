@@ -8,8 +8,18 @@
         <main>
 
             <h1>Home</h1>
-            <a href="{{ route('login')}}">Se connecter</a>
-            <a href="{{ route('register')}}">Inscription</a>
+
+            @auth
+                @if (auth()->user()->role === 'admin')
+                    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                @else
+                    <a href="{{ route('customer.dashboard') }}">Dashboard</a>
+                @endif
+            @else
+                <a href="{{ route('login') }}">Se connecter</a>
+                <a href="{{ route('register') }}">Inscription</a>
+            @endauth
         </main>
     </body>
 </html>
+
