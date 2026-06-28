@@ -53,7 +53,7 @@ class RegisterRequest extends FormRequest
     {       
         $this->merge([
             'firstname' => ucwords(strtolower(trim($this->firstname))),
-            'lastname' => strtoupper(strtolower(trim($this->lastname))),
+            'lastname' => strtoupper(trim($this->lastname)),
             'email' => strtolower(trim($this->email)),
         ]);
     }
