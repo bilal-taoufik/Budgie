@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\VerifyMailController;
 use App\Http\Controllers\Customer\AccountController;
 use App\Http\Controllers\Customer\DashboardController;
@@ -16,7 +19,16 @@ Route::get('/verify-email/{token}', [VerifyMailController::class, 'verifyEmail']
 Route::post('/resend-verify', [VerifyMailController::class, 'resendVerificationEmail'])->name('resend.verification');
 
 Route::middleware( ['auth','role:admin'] )->group(function () {
-    Route::get('/admin/dashboard', function () { return view('admin.dashboard'); })->name('admin.dashboard');
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
+    Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::post('/admin/users', [AdminUserController::class, 'store'])->name('admin.users.store');
+    Route::delete('/admin/users/{user}', [AdminUserController::class, 'delete'])->name('admin.users.delete');
+
+    Route::get('/admin/profile', [AdminProfileController::class, 'index'])->name('admin.profile.index');
+    Route::put('/admin/profile/info', [AdminProfileController::class, 'updateInfo'])->name('admin.profile.info');
+    Route::put('/admin/profile/password', [AdminProfileController::class, 'updatePassword'])->name('admin.profile.password');
+    Route::delete('/admin/profile', [AdminProfileController::class, 'delete'])->name('admin.profile.delete');
 });
 
 Route::middleware( ['auth','role:customer'] )->group(function () {
@@ -51,6 +63,7 @@ Route::middleware( ['auth','role:customer'] )->group(function () {
 
 
 require __DIR__.'/auth.php';
+
 
 
 
