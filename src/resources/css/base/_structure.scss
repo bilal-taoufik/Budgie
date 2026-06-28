@@ -1,0 +1,291 @@
+@use "../partials/variables" as v;
+@use "../partials/functions" as f;
+
+@layer base {
+    // structure classes
+    .page-wrapper {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+    }
+    .main-wrapper {
+        overflow: clip;
+    }
+
+
+    // containers classes
+    .container-small {
+        width: 100%;
+        max-width: f.rem(768);
+        margin-right: auto !important;
+        margin-left: auto !important;
+    }
+    .container-medium {
+        width: 100%;
+        max-width: f.rem(1024);
+        margin-right: auto !important;
+        margin-left: auto !important;
+    }
+    .container-large {
+        width: 100%;
+        max-width: f.rem(1360);
+        margin-right: auto !important;
+        margin-left: auto !important;
+    }
+
+
+    // padding classes
+    .padding-global {
+        padding-right: 7%;
+        padding-left: 7%;
+    }
+    .padding-section-small {
+        padding-top: f.rem(48);
+        padding-bottom: f.rem(48);
+    }
+    .padding-section-medium {
+        padding-top: f.rem(80);
+        padding-bottom: f.rem(80);
+    }
+    .padding-section-large {
+        margin-right: f.rem(0);
+        margin-left: f.rem(0);
+        padding-top: f.rem(80);
+        padding-bottom: f.rem(80);
+    }
+
+
+    // padding direction classes
+    .padding-bottom {
+        padding-top: f.rem(0) !important;
+        padding-right: f.rem(0) !important;
+        padding-left: f.rem(0) !important;
+    }
+    .padding-top {
+        padding-bottom: f.rem(0) !important;
+        padding-right: f.rem(0) !important;
+        padding-left: f.rem(0) !important;
+    }
+    .padding-vertical {
+        padding-right: f.rem(0) !important;
+        padding-left: f.rem(0) !important;
+    }
+    .padding-horizontal {
+        padding-top: f.rem(0) !important;
+        padding-bottom: f.rem(0) !important;
+    }
+    .padding-left {
+        padding-top: f.rem(0) !important;
+        padding-right: f.rem(0) !important;
+        padding-bottom: f.rem(0) !important;
+    }
+    .padding-right {
+        padding-top: f.rem(0) !important;
+        padding-bottom: f.rem(0) !important;
+        padding-left: f.rem(0) !important;
+    }
+
+
+    // padding size classes
+    .padding-0 {
+        padding: f.rem(0) !important;
+    }
+    .padding-tiny {
+        padding: f.rem(4);
+    }
+    .padding-xxsmall {
+        padding: f.rem(8);
+    }
+    .padding-small {
+        padding: f.rem(24);
+    }
+    .padding-medium {
+        padding: f.rem(32);
+    }
+    .padding-large {
+        padding: f.rem(48);
+    }
+    .padding-xlarge {
+        padding: f.rem(64);
+    }
+    .padding-xxlarge {
+        padding: f.rem(80);
+    }
+    .padding-huge {
+        padding: f.rem(96);
+    }
+    .padding-xhuge {
+        padding: f.rem(112);
+    }
+    .padding-xxhuge {
+        padding: f.rem(160);
+    }
+    // .padding-custom1{}
+    // .padding-custom2{}
+    // .padding-custom3{}
+
+
+    // button classes
+    .button-group {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: f.rem(16);
+    }
+
+
+    // max-width classes
+    .max-width-full {
+        width: 100%;
+        max-width: none;
+    }
+    .max-width-xxlarge {
+        width: 100%;
+        max-width: f.rem(1280);
+    }
+    .max-width-xlarge {
+        width: 100%;
+        max-width: f.rem(1024);
+    }
+    .max-width-large {
+        width: 100%;
+        max-width: f.rem(768);
+    }
+    .max-width-medium {
+        width: 100%;
+        max-width: f.rem(560);
+        object-fit: fill;
+    }
+    .max-width-small {
+        width: 100%;
+        max-width: f.rem(480);
+    }
+    .max-width-xsmall {
+        width: 100%;
+        max-width: f.rem(400);
+    }
+    .max-width-xxsmall {
+        width: 100%;
+        max-width: f.rem(320);
+    }
+
+
+    // margin classes
+    .margin-bottom {
+        margin-top: f.rem(0) !important;
+        margin-right: f.rem(0) !important;
+        margin-left: f.rem(0) !important;
+    }
+    .margin-top {
+        margin-bottom: f.rem(0) !important;
+        margin-right: f.rem(0) !important;
+        margin-left: f.rem(0) !important;
+    }
+    .margin-vertical {
+        margin-right: f.rem(0) !important;
+        margin-left: f.rem(0) !important;
+    }
+    .margin-horizontal {
+        margin-top: f.rem(0) !important;
+        margin-bottom: f.rem(0) !important;
+    }
+    .margin-left {
+        margin-top: f.rem(0) !important;
+        margin-bottom: f.rem(0) !important;
+        margin-left: f.rem(0) !important;
+    }
+    .margin-right {
+        margin-top: f.rem(0) !important;
+        margin-bottom: f.rem(0) !important;
+        margin-left: f.rem(0) !important;
+    }
+    
+    
+    // size classes
+    .margin-0 {
+        margin : f.rem(0) !important;
+    }
+    .margin-tiny {
+        margin : f.rem(4);
+    }
+    .margin-xxsmall {
+        margin : f.rem(8);
+    }
+    .margin-xsmall {
+        margin : f.rem(16);
+    }
+    .margin-small {
+        margin : f.rem(24);
+    }
+    .margin-medium {
+        margin : f.rem(32);
+    }
+    .margin-large {
+        margin : f.rem(48);
+    }
+    .margin-xlarge {
+        margin : f.rem(64);
+    }   
+    .margin-xxlarge {
+        margin : f.rem(80);
+    }   
+    .margin-huge {
+        margin : f.rem(96);
+    }   
+    .margin-xhuge {
+        margin : f.rem(112);
+    }   
+    .margin-xxhuge {
+        margin : f.rem(160);
+    }   
+    // .margin-custom1 {} 
+    // .margin-custom2 {} 
+    // .margin-custom3 {} 
+
+    
+    // spacers classes
+    .spacer-tiny {
+        width: 100%;
+        padding-top: f.rem(4);
+    }
+    .spacer-xxsmall {
+        width: 100%;
+        padding-top: f.rem(8);
+    }
+    .spacer-xsmall {
+        width: 100%;
+        padding-top: f.rem(16);
+    }
+    .spacer-small {
+        width: 100%;
+        padding-top: f.rem(24);
+    }
+    .spacer-medium {
+        width: 100%;
+        padding-top: f.rem(32);
+    }
+    .spacer-large {
+        width: 100%;
+        padding-top: f.rem(48);
+    }
+    .spacer-xlarge {
+        width: 100%;
+        padding-top: f.rem(64);
+    }     
+    .spacer-xxlarge {
+        width: 100%;
+        padding-top: f.rem(80);
+    }
+    .spacer-huge {
+        width: 100%;
+        padding-top: f.rem(96);
+    }    
+    .spacer-xhuge {
+        width: 100%;
+        padding-top: f.rem(112);
+    } 
+    .spacer-xxhuge {
+        width: 100%;
+        padding-top: f.rem(160);
+    }                
+}

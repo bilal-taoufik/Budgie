@@ -1,0 +1,33 @@
+@use "vendor/modern-normalize.css";
+
+@use "animations/animation";
+
+@use "partials/fonts";
+@use "partials/globals";
+@use "partials/layers";
+@use "partials/variables";
+@use "partials/functions";
+
+@use "base/structure";
+@use "base/typography";
+@use "base/color";
+@use "base/effect";
+@use "base/image";
+@use "base/utility";
+
+@use "components/buttons";
+@use "components/header";
+@use "components/footer";
+@use "components/form";
+@use "components/cookies";
+
+@use "pages/home";
+@use "pages/sign-up";
+@use "pages/sign-in";
+@use "pages/dashboard";
+@use "pages/client-sections";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+

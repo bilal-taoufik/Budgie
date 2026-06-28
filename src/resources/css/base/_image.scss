@@ -1,0 +1,93 @@
+@use "../partials/functions" as f;
+@use "../partials/mixins" as m;
+
+@layer base {
+    // images with different aspect ratios
+    .icon-1x1-xxsmall{
+        height: f.rem(16);
+        width: f.rem(16);
+    }
+    .icon-1x1-xsmall{
+        height: f.rem(24);
+        width: f.rem(24);
+    }
+    .icon-1x1-small{
+        height: f.rem(32);
+        width: f.rem(32);
+    }
+    .icon-1x1-medium{
+        height: f.rem(48);
+        width: f.rem(48);
+    }
+    .icon-1x1-large{
+        height: f.rem(80);
+        width: f.rem(80);
+    }
+    .icon-1x1-xlarge{
+        height: f.rem(104);
+        width: f.rem(104);
+    }
+    .icon-1x1-custom{
+        height: f.rem(16);
+        width: f.rem(16);
+    }
+
+    
+    // embedded icons with different aspect ratios
+    .icon-embed-xxsmall {
+        display: flex;
+        width: f.rem(16);
+        height: f.rem(16);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .icon-embed-xsmall {
+        display: flex;
+        width: f.rem(24);
+        height: f.rem(24);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .icon-embed-small {
+        display: flex;
+        width: f.rem(32);
+        height: f.rem(32);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .icon-embed-medium {
+        display: flex;
+        width: f.rem(48);
+        height: f.rem(48);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .icon-embed-large {
+        display: flex;
+        width: f.rem(80);
+        height: f.rem(80);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .icon-embed-xlarge {
+        display: flex;
+        width: f.rem(104);
+        height: f.rem(104);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .icon-embed-custom {
+        display: flex;
+        width: f.rem(16);
+        height: f.rem(16);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}

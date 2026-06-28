@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/dashboard.js'])
+    @vite(['resources/css/main.scss', 'resources/js/main.js', 'resources/js/dashboard.js'])
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-slate-100 text-slate-900">
@@ -128,5 +128,8 @@
     </script>
 </body>
 </html>
+
+
+
 
 
