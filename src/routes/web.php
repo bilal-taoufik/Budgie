@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\VerifyMailController;
 use App\Http\Controllers\Customer\AccountController;
+use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\DepenseController;
 use App\Http\Controllers\Customer\PrevisionController;
 use App\Http\Controllers\Customer\RevenuController;
@@ -19,7 +20,7 @@ Route::middleware( ['auth','role:admin'] )->group(function () {
 
 Route::middleware( ['auth','role:customer'] )->group(function () {
     // Routes pour les prévisions
-    Route::get('/customer/dashboard', function () { return view('customer.dashboard'); })->name('customer.dashboard');
+    Route::get('/customer/dashboard', [DashboardController::class, 'index'])->name('customer.dashboard');
     Route::get('/customer/prevision', [PrevisionController::class, 'index'])->name('customer.previsions.index');
 
     // Routes pour la gestion des comptes
@@ -43,3 +44,4 @@ Route::middleware( ['auth','role:customer'] )->group(function () {
 
 
 require __DIR__.'/auth.php';
+
