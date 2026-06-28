@@ -5,6 +5,7 @@ use App\Http\Controllers\Customer\AccountController;
 use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\DepenseController;
 use App\Http\Controllers\Customer\PrevisionController;
+use App\Http\Controllers\Customer\ProfileController;
 use App\Http\Controllers\Customer\RevenuController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,12 @@ Route::middleware( ['auth','role:admin'] )->group(function () {
 Route::middleware( ['auth','role:customer'] )->group(function () {
     // Routes pour les prévisions
     Route::get('/customer/dashboard', [DashboardController::class, 'index'])->name('customer.dashboard');
+
+    // Routes pour le profil
+    Route::get('/customer/profile', [ProfileController::class, 'index'])->name('customer.profile.index');
+    Route::put('/customer/profile/info', [ProfileController::class, 'updateInfo'])->name('customer.profile.info');
+    Route::put('/customer/profile/password', [ProfileController::class, 'updatePassword'])->name('customer.profile.password');
+    Route::delete('/customer/profile', [ProfileController::class, 'delete'])->name('customer.profile.delete');
     Route::get('/customer/prevision', [PrevisionController::class, 'index'])->name('customer.previsions.index');
 
     // Routes pour la gestion des comptes
@@ -44,4 +51,6 @@ Route::middleware( ['auth','role:customer'] )->group(function () {
 
 
 require __DIR__.'/auth.php';
+
+
 
