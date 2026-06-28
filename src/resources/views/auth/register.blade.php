@@ -1,101 +1,353 @@
-<h1>Inscription</h1>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @vite(['resources/css/main.scss', 'resources/js/main.js'])
+    <link rel="icon" type="image/ico" href="/favicon.ico" />
+    <title>Budgie | Inscription</title>
 
-<form method="POST" action="{{ route('register') }}">
-    @csrf
-    <div>
-        <label for="firstname">Prénom</label>
-        <input
-            type="text"
-            id="firstname"
-            name="firstname"
-            value="{{ old('firstname') }}"
-            required
-        >
+    <!-- Finsweet Cookie Consent -->
+    <script async fs-cc-mode="opt-in" src="https://cdn.jsdelivr.net/npm/@finsweet/cookie-consent@1/fs-cc.js"></script>
 
-        @error('firstname')
-            <p>{{ $message }}</p>
-        @enderror
-    </div>
+</head>
+<body>
 
-    <br>
+    <main class="main-wrapper">
+        <div class="page-wrapper">
 
-    <div>
-        <label for="lastname">Nom</label>
-        <input
-            type="text"
-            id="lastname"
-            name="lastname"
-            value="{{ old('lastname') }}"
-            required
-        >
 
-        @error('lastname')
-            <p>{{ $message }}</p>
-        @enderror
-    </div>
+            <div class="section_forms-inscription">
+                <div class="padding-global padding-section-large">
+                    <div class="component-form">
+                        <div class="margin-bottom margin-medium">
+                            <svg width="50" height="59" viewBox="0 0 50 59" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 59L6.87732 0H32.7138C37.5465 0 46.2825 2.54152 46.2825 13.6154C46.2825 18.1542 44.6097 25.5969 32.7138 25.5969H28.9963L29.7398 17.0646L10.223 27.7754L27.5093 37.76L28.2528 29.7723H39.9628C43.4944 29.7723 50 34.3108 50 43.5692C50 48.6523 46.2825 59 34.2007 59H0Z" fill="#85A795"/>
+                            </svg>
+                        </div>
 
-    <br>
+                        <div class="max-width-xxlarge">
+                            <div class="margin-bottom margin-tiny">
+                                <h1 class="heading-style-h2-bold text-color-white">
+                                    Bienvenue !
+                                </h1>
+                            </div>
+                            <div class="margin-bottom margin-large">
+                                <h2 class="text-size-regular text-color-body">
+                                    Rejoignez Budgie et gérez vos finances
+                                </h2>
+                            </div>
+                        </div>
 
-    <div>
-        <label for="email">Email</label>
-        <input
-            type="email"
-            id="email"
-            name="email"
-            value="{{ old('email') }}"
-            required
-        >
+                        <!-- FORM -->
+                        <div class="form-block w-form">
+                            <form id="signup-form" method="POST" action="{{ route('register') }}">
+                                @csrf
+                                <div class="form-field-wrapper">
+                                    <input 
+                                        type="text" 
+                                        class="form-input"
+                                        name="lastname"
+                                        value="{{ old('lastname') }}"
+                                        placeholder="Nom*"
+                                        required
+                                    >
+                                </div>
+                                <div class="form-field-wrapper">
+                                    <input 
+                                        type="text" 
+                                        class="form-input"
+                                        name="firstname"
+                                        value="{{ old('firstname') }}"
+                                        placeholder="Prenom*"
+                                        required
+                                    >
+                                </div>
+                                <div class="form-field-wrapper">
+                                    <input 
+                                        type="email" 
+                                        class="form-input"
+                                        name="email"
+                                        value="{{ old('email') }}"
+                                        placeholder="Email*"
+                                        required
+                                    >
+                                </div>
+                                <div class="form-field-wrapper">
 
-        @error('email')
-            <p>{{ $message }}</p>
-        @enderror
-    </div>
+                                    <input 
+                                        type="password" 
+                                        class="form-input"
+                                        name="password"
+                                        placeholder="Mot de passe"
+                                        required
+                                    >
+                                    <div class="form-helper">
+                                        Minimum 12 caractères<br>
+                                        Inclure une majuscule et un symbole au minimum
+                                    </div>
+                                </div>
 
-    <br>
+                                <div class="form-field-wrapper">
+                                    <input 
+                                        type="password" 
+                                        class="form-input"
+                                        name="password_confirmation"
+                                        placeholder="Confirmer le mot de passe"
+                                        required
+                                    >
+                                </div>
+                                <button type="submit" class="form-submit">
+                                    S'inscrire
+                                </button>
+                            </form>
 
-    <div>
-        <label for="password">Mot de passe</label>
-        <input
-            type="password"
-            id="password"
-            name="password"
-            required
-        >
+                            <!-- SUCCESS -->
+                            <div class="w-form-done">
+                                <div>
+                                    Votre compte a bien été créé.
+                                </div>
+                            </div>
 
-        @error('password')
-            <p>{{ $message }}</p>
-        @enderror
-    </div>
+                            <!-- ERROR -->
+                            <div class="w-form-fail">
+                                <div>
+                                    Une erreur est survenue.
+                                </div>
+                            </div>
 
-    <br>
+                        </div>
 
-    <div>
-        <label for="password_confirmation">
-            Confirmation du mot de passe
-        </label>
+                        <!-- LOGIN -->
+                        <div class="form-bottom">
+                            <p>
+                                Vous avez déjà un compte ?
+                                <a href="{{ route('login') }}">
+                                    Se connecter
+                                </a>
+                            </p>
+                        </div>
 
-        <input
-            type="password"
-            id="password_confirmation"
-            name="password_confirmation"
-            required
-        >
+                        <!-- DIVIDER -->
+                        <div class="form-divider"></div>
 
-        @error('password_confirmation')
-            <p>{{ $message }}</p>
-        @enderror
-    </div>
+                        <!-- BACK -->
+                        <a href="{{ route('home') }}" class="form-back-link">
 
-    <br>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <path 
+                                    d="M15 18L9 12L15 6" 
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
 
-    <a href="{{ route('login') }}">
-        Déjà inscrit ?
-    </a>
+                            <span>Retour à l’accueil</span>
 
-    <br><br>
+                        </a>
 
-    <button type="submit">
-        S'inscrire
-    </button>
+                    </div>
 
-</form>
+                </div>
+
+            </div>
+
+            <div class="cookie-component">
+                <div fs-cc="banner" class="fs-cc-banner2_component">
+                    <div class="fs-cc-banner2_container">
+                    <div class="fs-cc-banner2_text">
+                        En cliquant sur « Accepter les cookies », vous consentez au stockage de cookies sur votre appareil afin d'améliorer la navigation sur le site, d'analyser son utilisation et de soutenir nos actions marketing.
+                    </div>
+
+                    <div class="fs-cc-banner2_buttons-wrapper">
+                        <button fs-cc="open-preferences" type="button" class="button fs-cc-banner2_button is-secondary">
+                        Paramètres
+                        </button>
+
+                        <button fs-cc="allow" type="button" class="button fs-cc-banner2_button">
+                        Accepter
+                        </button>
+                    </div>
+                    </div>
+                </div>
+
+                <div fs-cc="preferences" fs-cc-scroll="disable" class="fs-cc-prefs2_component">
+                    <div class="fs-cc-prefs2_overlay" fs-cc="close"></div>
+
+                    <div class="fs-cc-prefs2_form-wrapper">
+                    <form id="cookie-preferences" class="fs-cc-prefs2_form">
+                        <button fs-cc="close" type="button" class="fs-cc-prefs2_close" aria-label="Close cookie preferences">
+                        <svg fill="currentColor" aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+                            <path d="M9.414 8l4.293-4.293-1.414-1.414L8 6.586 3.707 2.293 2.293 3.707 6.586 8l-4.293 4.293 1.414 1.414L8 9.414l4.293 4.293 1.414-1.414L9.414 8z"></path>
+                        </svg>
+                        </button>
+
+                        <div class="fs-cc-prefs2_content">
+                        <div class="fs-cc-prefs2_header">
+                            <h3 class="fs-cc-prefs2_title">Préférences des cookies</h3>
+                            <p class="fs-cc-prefs2_text">
+                            Choisissez les cookies que vous souhaitez autoriser. Les cookies essentiels sont nécessaires au bon fonctionnement du site web.
+                            </p>
+                        </div>
+
+                        <div class="fs-cc-prefs2_option">
+                            <div class="fs-cc-prefs2_toggle-wrapper">
+                            <div>
+                                <div class="fs-cc-prefs2_label">Essentiels</div>
+                                <div class="fs-cc-prefs2_description">
+                                Nécessaires au bon fonctionnement du site web.
+                                </div>
+                            </div>
+                            <div class="fs-cc-prefs2_required">Obligatoires</div>
+                            </div>
+                        </div>
+
+                        <div class="fs-cc-prefs2_option">
+                            <div class="fs-cc-prefs2_toggle-wrapper">
+                            <div>
+                                <div class="fs-cc-prefs2_label">Marketing</div>
+                                <div class="fs-cc-prefs2_description">
+                                Utilisés pour proposer des publicités et des campagnes marketing pertinentes.
+                                </div>
+                            </div>
+
+                            <label class="fs-cc-prefs2_checkbox-field" for="marketing-2">
+                                <input
+                                type="checkbox"
+                                name="marketing-2"
+                                id="marketing-2"
+                                fs-cc-checkbox="marketing"
+                                class="fs-cc-prefs2_checkbox-input"
+                                >
+                                <span class="fs-cc-prefs2_checkbox-ui"></span>
+                            </label>
+                            </div>
+                        </div>
+
+                        <div class="fs-cc-prefs2_option">
+                            <div class="fs-cc-prefs2_toggle-wrapper">
+                            <div>
+                                <div class="fs-cc-prefs2_label">Personnalisation</div>
+                                <div class="fs-cc-prefs2_description">
+                                Permet au site de mémoriser vos préférences et de proposer des fonctionnalités améliorées.
+                                </div>
+                            </div>
+
+                            <label class="fs-cc-prefs2_checkbox-field" for="personalization-2">
+                                <input
+                                type="checkbox"
+                                name="personalization-2"
+                                id="personalization-2"
+                                fs-cc-checkbox="personalization"
+                                class="fs-cc-prefs2_checkbox-input"
+                                >
+                                <span class="fs-cc-prefs2_checkbox-ui"></span>
+                            </label>
+                            </div>
+                        </div>
+
+                        <div class="fs-cc-prefs2_option">
+                            <div class="fs-cc-prefs2_toggle-wrapper">
+                            <div>
+                                <div class="fs-cc-prefs2_label">Analytics</div>
+                                <div class="fs-cc-prefs2_description">
+                                Nous aide à comprendre comment les visiteurs interagissent avec le site web.
+                                </div>
+                            </div>
+
+                            <label class="fs-cc-prefs2_checkbox-field" for="analytics-2">
+                                <input
+                                type="checkbox"
+                                name="analytics-2"
+                                id="analytics-2"
+                                fs-cc-checkbox="analytics"
+                                class="fs-cc-prefs2_checkbox-input"
+                                >
+                                <span class="fs-cc-prefs2_checkbox-ui"></span>
+                            </label>
+                            </div>
+                        </div>
+
+                        <div class="fs-cc-prefs2_buttons-wrapper">
+                            <div class="fs-cc-prefs2_buttons-container">
+                            <button fs-cc="deny" type="button" class="button fs-cc-banner2_button">
+                                Refuser tous les cookies
+                            </button>
+
+                            <button fs-cc="allow" type="button" class="button fs-cc-banner2_button">
+                                Autoriser tous les cookies
+                            </button>
+                            </div>
+
+                            <button fs-cc="submit" type="submit" class="button fs-cc-banner2_button">
+                            Enregistrer les préférences
+                            </button>
+                        </div>
+                        </div>
+                    </form>
+
+                    <div class="w-form-done" tabindex="-1" role="region" aria-label="Cookie Preferences success">
+                        Vos préférences ont été enregistrées.
+                    </div>
+
+                    <div class="w-form-fail" tabindex="-1" role="region" aria-label="Cookie Preferences failure">
+                        Une erreur est survenue. Veuillez réessayer.
+                    </div>
+                    </div>
+                </div>
+
+                <!-- <button fs-cc="open-preferences" type="button" class="cookie-settings-trigger button is-secondary">
+                    Manage cookies
+                </button> -->
+            </div>
+        </div>
+    </main>
+
+
+    @php
+        $toastMessages = collect();
+
+        foreach (['success', 'error', 'info'] as $type) {
+            if (session($type)) {
+                $toastMessages->push([
+                    'type' => $type,
+                    'message' => session($type),
+                ]);
+            }
+        }
+
+        foreach ($errors->all() as $error) {
+            $toastMessages->push([
+                'type' => 'error',
+                'message' => $error,
+            ]);
+        }
+    @endphp
+
+    @if($toastMessages->isNotEmpty())
+        <div class="toast-wrapper" id="toast-wrapper">
+            @foreach($toastMessages as $toast)
+                <div class="toast-message toast-{{ $toast['type'] }}">
+                    {{ $toast['message'] }}
+                </div>
+            @endforeach
+        </div>
+
+        <script>
+            setTimeout(() => {
+                const toastWrapper = document.getElementById('toast-wrapper');
+
+                if (toastWrapper) {
+                    toastWrapper.style.display = 'none';
+                }
+            }, 8000); // 8 seconds
+        </script>
+    @endif
+</body>
+</html>
+
+
+
+

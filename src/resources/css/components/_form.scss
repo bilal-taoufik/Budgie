@@ -2,5 +2,115 @@
 @use "../partials/mixins" as m;
 
 @layer components {
-   
+    .form-field-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .form-input {
+        width: 100%;
+        height: f.rem(54);
+        padding-inline: f.rem(22);
+
+        border: 1px solid var(--border);
+        border-radius: f.rem(999);
+
+        background: var(--bg-primary);
+        color: var(--white);
+
+        font-size: f.rem(15);
+
+        transition:
+            border-color .3s ease,
+            background-color .3s ease,
+            box-shadow .3s ease;
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0);
+        }
+
+        &:focus {
+            outline: none;
+            border-color: var(--brand-green);
+            background: var(--bg-primary);
+            box-shadow: 0 0 0 f.rem(4) var(--brand-green);
+        }
+    }
+
+    .form-submit {
+        width: 100%;
+        height: f.rem(56);
+        margin-top: f.rem(4);
+
+        border: none;
+        border-radius: f.rem(999);
+
+        background: #d8e0dd;
+        color: #0c0c0c;
+
+        font-size: f.rem(14);
+        font-weight: 700;
+        text-transform: uppercase;
+
+        cursor: pointer;
+
+        transition:
+            transform .3s ease,
+            background-color .3s ease;
+
+        &:hover {
+            background: var(--white);
+            transform: translateY(f.rem(-2));
+        }
+    }
+    .toast-wrapper {
+        position: fixed;
+        right: f.rem(24);
+        bottom: f.rem(24);
+        z-index: 2000;
+
+        display: flex;
+        flex-direction: column;
+        gap: f.rem(12);
+
+        width: min(calc(100% - #{f.rem(32)}), #{f.rem(420)});
+    }
+
+    .toast-message {
+        padding: f.rem(16) f.rem(18);
+
+        border: f.rem(1) solid var(--border);
+        border-radius: f.rem(16);
+
+        background: var(--bg-primary);
+        color: var(--white);
+        box-shadow: 0 f.rem(18) f.rem(50) rgba(0, 0, 0, 0.38);
+        backdrop-filter: blur(14px);
+
+        font-size: f.rem(14);
+        font-weight: 600;
+        line-height: 1.5;
+    }
+
+    .toast-success {
+        border-left: f.rem(4) solid var(--success);
+    }
+
+    .toast-error {
+        border-left: f.rem(4) solid var(--error);
+    }
+
+    .toast-info {
+        border-left: f.rem(4) solid var(--brand-blue);
+    }
+
+    @include m.bp(sm) {
+        .toast-wrapper {
+            right: f.rem(16);
+            bottom: f.rem(16);
+        }
+    }
 }
+
