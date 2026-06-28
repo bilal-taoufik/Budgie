@@ -16,9 +16,18 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => CheckRole::class,
         ]);
+
+        $middleware->redirectUsersTo(function (Request $request) {
+            if ($request->user()?->role === 'admin') {
+                return route('admin.dashboard');
+            }
+
+            return route('customer.dashboard');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );
     })->create();
+
