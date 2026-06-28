@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('revenues', function (Blueprint $table) {
+        Schema::create('revenus', function (Blueprint $table) {
             $table->id();
-            $table->string('revenue_nom');
-            $table->string('revenue_description');
+            $table->string('revenu_nom');
+            $table->string('revenu_description');
             $table->foreignId('account_id')->constrained('accounts')->onDelete('cascade');
-            $table->decimal('revenue_montant');
-            $table->enum('revenue_fractionnement', ['mensuel', 'semestriel', 'annuel', 'une_fois']);
-            $table->date('revenue_date_effet');
+            $table->decimal('revenu_montant', 15, 2);
+            $table->enum('revenu_fractionnement', ['mensuel', 'semestriel', 'annuel', 'unique']);
+            $table->date('revenu_date_effet');
             $table->date('last_credited_at')->nullable();
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('revenues');
+        Schema::dropIfExists('revenus');
     }
 };

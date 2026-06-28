@@ -11,3 +11,5 @@
     @csrf
     <button type="submit">Logout</button>
 </form>
+<br>
+<a href="{{ route('customer.previsions.index') }}">Previsions</a>

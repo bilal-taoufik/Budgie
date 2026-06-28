@@ -27,7 +27,7 @@
         <option value="mensuel">Tous les 1 mois</option>
         <option value="semestriel">Tous les 6 mois</option>
         <option value="annuel">Tous les 12 mois</option>
-        <option value="une_fois">Une fois</option>
+        <option value="unique">Unique</option>
     </select>
     <input type="date" name="date_effet" required>
     <button type="submit">Créer</button>
@@ -78,7 +78,7 @@
                 <option value="mensuel" {{ $depense->fractionnement === 'mensuel' ? 'selected' : '' }}>Tous les 1 mois</option>
                 <option value="semestriel" {{ $depense->fractionnement === 'semestriel' ? 'selected' : '' }}>Tous les 6 mois</option>
                 <option value="annuel" {{ $depense->fractionnement === 'annuel' ? 'selected' : '' }}>Tous les 12 mois</option>
-                <option value="une_fois" {{ $depense->fractionnement === 'une_fois' ? 'selected' : '' }}>Une fois</option>
+                <option value="unique" {{ $depense->fractionnement === 'unique' ? 'selected' : '' }}>Unique</option>
             </select>
             <input type="date" name="date_effet" value="{{ $depense->date_effet }}" required>
             <button type="submit">Enregistrer</button>

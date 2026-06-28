@@ -8,15 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Revenu extends Model
 {
     // indique à Laravel ql table utiliser
-    protected $table = 'revenues';
+    protected $table = 'revenus';
     // Champs autorisés à l'assignation en masse
     protected $fillable = [
         'account_id',
-        'revenue_nom',
-        'revenue_description',
-        'revenue_montant',
-        'revenue_fractionnement',
-        'revenue_date_effet',
+        'revenu_nom',
+        'revenu_description',
+        'revenu_montant',
+        'revenu_fractionnement',
+        'revenu_date_effet',
         'last_credited_at',
     ];
 

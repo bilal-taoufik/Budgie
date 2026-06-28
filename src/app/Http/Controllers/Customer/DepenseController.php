@@ -88,7 +88,7 @@ class DepenseController extends Controller
             $depense->last_debited_at = $nextDate->toDateString();
             $depense->save();
 
-            if ($depense->fractionnement === 'une_fois') {
+            if ($depense->fractionnement === 'unique') {
                 break;
             }
 
@@ -98,7 +98,7 @@ class DepenseController extends Controller
 
     private function prochaineDatePaiement(Depense $depense): ?Carbon
     {
-        if ($depense->fractionnement === 'une_fois' && $depense->last_debited_at) {
+        if ($depense->fractionnement === 'unique' && $depense->last_debited_at) {
             return null;
         }
 
