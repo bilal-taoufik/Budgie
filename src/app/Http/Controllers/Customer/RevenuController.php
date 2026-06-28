@@ -87,12 +87,12 @@ class RevenuController extends Controller
         $nextDate = $this->prochaineDatePaiement($revenu);
 
         while ($nextDate && $nextDate->lessThanOrEqualTo($today)) {
-            $revenu->account->increment('solde', $revenu->revenue_montant);
+            $revenu->account->increment('solde', $revenu->revenu_montant);
 
             $revenu->last_credited_at = $nextDate->toDateString();
             $revenu->save();
 
-            if ($revenu->revenue_fractionnement === 'une_fois') {
+            if ($revenu->revenu_fractionnement === 'unique') {
                 break;
             }
 
@@ -102,11 +102,11 @@ class RevenuController extends Controller
 
     private function prochaineDatePaiement(Revenu $revenu): ?Carbon
     {
-        if ($revenu->revenue_fractionnement === 'une_fois' && $revenu->last_credited_at) {
+        if ($revenu->revenu_fractionnement === 'unique' && $revenu->last_credited_at) {
             return null;
         }
 
-        $date = Carbon::parse($revenu->revenue_date_effet)->startOfDay();
+        $date = Carbon::parse($revenu->revenu_date_effet)->startOfDay();
 
         if (! $revenu->last_credited_at) {
             return $date;
@@ -115,7 +115,7 @@ class RevenuController extends Controller
         $lastCreditedAt = Carbon::parse($revenu->last_credited_at)->startOfDay();
 
         while ($date->lessThanOrEqualTo($lastCreditedAt)) {
-            $date = $this->dateSuivante($date, $revenu->revenue_fractionnement);
+            $date = $this->dateSuivante($date, $revenu->revenu_fractionnement);
         }
 
         return $date;

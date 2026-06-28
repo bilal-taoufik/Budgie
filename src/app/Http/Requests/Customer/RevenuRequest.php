@@ -12,7 +12,7 @@ class RevenuRequest extends FormRequest
         'mensuel',
         'semestriel',
         'annuel',
-        'une_fois',
+        'unique',
     ];
 
     public function authorize(): bool
@@ -25,11 +25,11 @@ class RevenuRequest extends FormRequest
     {
         return [
             'account_id'     => ['required', 'exists:accounts,id'],
-            'revenue_nom'            => ['required', 'string', 'max:255'],
-            'revenue_description'    => ['nullable', 'string'],
-            'revenue_montant'        => ['required', 'numeric', 'min:0'],
-            'revenue_fractionnement' => ['required', Rule::in(self::FRACTIONNEMENTS)],
-            'revenue_date_effet'     => ['required', 'date'],
+            'revenu_nom'            => ['required', 'string', 'max:255'],
+            'revenu_description'    => ['nullable', 'string'],
+            'revenu_montant'        => ['required', 'numeric', 'min:0'],
+            'revenu_fractionnement' => ['required', Rule::in(self::FRACTIONNEMENTS)],
+            'revenu_date_effet'     => ['required', 'date'],
         ];
     }
 
@@ -39,16 +39,16 @@ class RevenuRequest extends FormRequest
         return [
             'account_id.required'     => 'Le compte associé est requis',
             'account_id.exists'       => 'Le compte sélectionné est invalide',
-            'revenue_nom.required'            => 'Le nom du revenu est requis',
-            'revenue_nom.string'              => 'Le nom doit être une chaîne de caractères',
-            'revenue_nom.max'                 => 'Le nom ne doit pas dépasser 255 caractères',
-            'revenue_montant.required'        => 'Le montant est requis',
-            'revenue_montant.numeric'         => 'Le montant doit être un nombre',
-            'revenue_montant.min'             => 'Le montant ne peut pas être négatif',
-            'revenue_fractionnement.required' => 'Le fractionnement est requis',
-            'revenue_fractionnement.in'       => 'Le fractionnement selectionne est invalide',
-            'revenue_date_effet.required'     => 'La date d\'effet est requise',
-            'revenue_date_effet.date'         => 'La date d\'effet doit être une date valide',
+            'revenu_nom.required'            => 'Le nom du revenu est requis',
+            'revenu_nom.string'              => 'Le nom doit être une chaîne de caractères',
+            'revenu_nom.max'                 => 'Le nom ne doit pas dépasser 255 caractères',
+            'revenu_montant.required'        => 'Le montant est requis',
+            'revenu_montant.numeric'         => 'Le montant doit être un nombre',
+            'revenu_montant.min'             => 'Le montant ne peut pas être négatif',
+            'revenu_fractionnement.required' => 'Le fractionnement est requis',
+            'revenu_fractionnement.in'       => 'Le fractionnement selectionne est invalide',
+            'revenu_date_effet.required'     => 'La date d\'effet est requise',
+            'revenu_date_effet.date'         => 'La date d\'effet doit être une date valide',
         ];
     }
 
@@ -57,11 +57,11 @@ class RevenuRequest extends FormRequest
     {
         $this->merge([
             // Capitalise chaque mot et supprime les espaces
-            'revenue_nom'         => ucwords(trim($this->revenue_nom)),
+            'revenu_nom'         => ucwords(trim($this->revenu_nom)),
             // Capitalise le premier caractère et supprime les espaces
-            'revenue_description' => ucfirst(trim($this->revenue_description)),
+            'revenu_description' => ucfirst(trim($this->revenu_description)),
             // Remplace la virgule par un point pour le format SQL
-            'revenue_montant'     => str_replace(',', '.', $this->revenue_montant),
+            'revenu_montant'     => str_replace(',', '.', $this->revenu_montant),
         ]);
     }
 }

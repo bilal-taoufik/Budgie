@@ -20,6 +20,8 @@ class VerifyMailController extends Controller
             return redirect('login')->with('info', 'Votre adresse e-mail a déjà été vérifiée. Vous pouvez vous connecter.');
         } else {
             $user->email_verified = true;
+            $user->email_verification_token = null;
+            $user->email_verification_expires_at = null;
             $user->save();
 
             return redirect('login')->with('success', 'Votre adresse e-mail a été vérifiée avec succès ! Vous pouvez maintenant vous connecter.');

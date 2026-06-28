@@ -12,7 +12,7 @@ class DepenseRequest extends FormRequest
         'mensuel',
         'semestriel',
         'annuel',
-        'une_fois',
+        'unique',
     ];
 
     public function authorize(): bool
