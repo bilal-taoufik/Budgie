@@ -1,79 +1,56 @@
-window.addEventListener('load', () => {
-    // Les donnees viennent du dashboard.blade.php
-    const data = window.dashboardCharts;
+import Chart from 'chart.js/auto';
 
-    if (!window.Chart || !data) {
+window.addEventListener('load', () => {
+    const dataElement = document.getElementById('dashboard-chart-data');
+
+    if (!dataElement) {
         return;
     }
 
-    const euros = (value) => new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'EUR',
-    }).format(value);
+    const data = JSON.parse(dataElement.textContent);
 
-    // Graphique 1 : evolution du solde
+    const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+    };
+
+    const depenseOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            },
+        },
+    };
+
+    // Graphique du solde
     new Chart(document.getElementById('balanceChart'), {
         type: 'line',
         data: {
             labels: data.labels,
-            datasets: [
-                {
-                    label: 'Solde',
-                    data: data.balanceEvolution,
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.15)',
-                    fill: true,
-                    tension: 0.3,
-                },
-            ],
+            datasets: [{
+                label: 'Solde',
+                data: data.balanceEvolution,
+            }],
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: (context) => euros(context.raw),
-                    },
-                },
-            },
-        },
+        options: options,
     });
 
-    // Graphique 2 : repartition des depenses
+    // Graphique des depenses
     new Chart(document.getElementById('depensePieChart'), {
         type: 'doughnut',
         data: {
             labels: data.depenseLabels,
-            datasets: [
-                {
-                    label: 'Depenses',
-                    data: data.depenseData,
-                    backgroundColor: [
-                        '#2563eb',
-                        '#059669',
-                        '#dc2626',
-                        '#d97706',
-                        '#7c3aed',
-                        '#0891b2',
-                    ],
-                },
-            ],
+            datasets: [{
+                label: 'Depenses',
+                data: data.depenseData,
+            }],
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: (context) => `${context.label}: ${euros(context.raw)}`,
-                    },
-                },
-            },
-        },
+        options: depenseOptions,
     });
 
-    // Graphique 3 : revenus vs depenses
+    // Graphique revenus / depenses
     new Chart(document.getElementById('revenuDepenseChart'), {
         type: 'bar',
         data: {
@@ -82,25 +59,13 @@ window.addEventListener('load', () => {
                 {
                     label: 'Revenus',
                     data: data.monthlyRevenus,
-                    backgroundColor: '#059669',
                 },
                 {
                     label: 'Depenses',
                     data: data.monthlyDepenses,
-                    backgroundColor: '#dc2626',
                 },
             ],
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: (context) => `${context.dataset.label}: ${euros(context.raw)}`,
-                    },
-                },
-            },
-        },
+        options: options,
     });
 });

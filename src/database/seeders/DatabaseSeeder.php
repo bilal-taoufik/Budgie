@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
     {
         $admin = User::factory()->create([
             'firstname' => 'Bilal',
-            'lastname' => 'Admin',
+            'lastname' => 'TAOUFIK',
             'email' => 'bll.taoufik@gmail.com',
             'password' => Hash::make('@Budgie2026!!'),
             'role' => 'admin',
@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
 
         $customer = User::factory()->create([
             'firstname' => 'Zakaria',
-            'lastname' => 'Customer',
+            'lastname' => 'BOUGUERA',
             'email' => 'zakaria@gmail.com',
             'password' => Hash::make('@Budgie2026!!'),
             'role' => 'customer',
@@ -43,100 +43,119 @@ class DatabaseSeeder extends Seeder
 
         $compteCourant = Account::create([
             'user_id' => $customer->id,
-            'name' => 'Compte Courant SG',
-            'description' => 'Compte principal pour tester les revenus et depenses recurrentes',
-            'solde' => 2750.00,
+            'name' => 'Compte courant',
+            'description' => 'Compte principal utilisé pour les dépenses quotidiennes.',
+            'solde' => 1850.00,
             'interest_rate' => 0.00,
             'tax_rate' => 0.00,
         ]);
 
-        $epargne = Account::create([
+        $livretA = Account::create([
             'user_id' => $customer->id,
             'name' => 'Livret A',
-            'description' => 'Compte epargne pour tester plusieurs comptes',
-            'solde' => 15987.00,
-            'interest_rate' => 0.00,
+            'description' => 'Épargne réglementée non imposable.',
+            'solde' => 12400.00,
+            'interest_rate' => 1.50,
             'tax_rate' => 0.00,
+        ]);
+
+        $livretFiscalise = Account::create([
+            'user_id' => $customer->id,
+            'name' => 'Livret fiscalisé',
+            'description' => 'Livret bancaire soumis à imposition.',
+            'solde' => 6500.00,
+            'interest_rate' => 2.00,
+            'tax_rate' => 30.00,
         ]);
 
         Revenu::create([
             'account_id' => $compteCourant->id,
             'revenu_nom' => 'Salaire',
-            'revenu_description' => 'Revenu mensuel deja credite ce mois-ci',
-            'revenu_montant' => 3200.00,
+            'revenu_description' => 'Salaire mensuel de janvier 2025 à juin 2026.',
+            'revenu_montant' => 1850.00,
             'revenu_fractionnement' => 'mensuel',
-            'revenu_date_effet' => now()->startOfMonth()->toDateString(),
-            'last_credited_at' => now()->startOfMonth()->toDateString(),
-        ]);
-
-        Revenu::create([
-            'account_id' => $epargne->id,
-            'revenu_nom' => 'Interets Epargne',
-            'revenu_description' => 'Revenu annuel deja credite cette annee',
-            'revenu_montant' => 300.00,
-            'revenu_fractionnement' => 'annuel',
-            'revenu_date_effet' => now()->startOfYear()->toDateString(),
-            'last_credited_at' => now()->startOfYear()->toDateString(),
+            'revenu_date_effet' => '2025-01-01',
+            'last_credited_at' => '2026-06-01',
         ]);
 
         Revenu::create([
             'account_id' => $compteCourant->id,
-            'revenu_nom' => 'Prime Exceptionnelle',
-            'revenu_description' => 'Revenu ponctuel prevu pour demain',
-            'revenu_montant' => 450.00,
-            'revenu_fractionnement' => 'unique',
-            'revenu_date_effet' => now()->addDay()->toDateString(),
-            'last_credited_at' => null,
+            'revenu_nom' => 'Prime annuelle',
+            'revenu_description' => 'Prime versée en décembre.',
+            'revenu_montant' => 600.00,
+            'revenu_fractionnement' => 'annuel',
+            'revenu_date_effet' => '2025-12-01',
+            'last_credited_at' => '2025-12-01',
+        ]);
+
+        Revenu::create([
+            'account_id' => $livretA->id,
+            'revenu_nom' => 'Virement épargne',
+            'revenu_description' => 'Versement mensuel vers le Livret A.',
+            'revenu_montant' => 150.00,
+            'revenu_fractionnement' => 'mensuel',
+            'revenu_date_effet' => '2025-01-01',
+            'last_credited_at' => '2026-06-01',
+        ]);
+
+        Revenu::create([
+            'account_id' => $livretFiscalise->id,
+            'revenu_nom' => 'Versement livret fiscalisé',
+            'revenu_description' => 'Versement régulier sur livret bancaire fiscalisé.',
+            'revenu_montant' => 100.00,
+            'revenu_fractionnement' => 'mensuel',
+            'revenu_date_effet' => '2025-01-01',
+            'last_credited_at' => '2026-06-01',
         ]);
 
         Depense::create([
             'account_id' => $compteCourant->id,
             'nom' => 'Loyer',
-            'description' => 'Depense mensuelle deja debitee ce mois-ci',
-            'montant' => 950.00,
+            'description' => 'Loyer mensuel.',
+            'montant' => 780.00,
             'fractionnement' => 'mensuel',
-            'date_effet' => now()->startOfMonth()->addDays(4)->toDateString(),
-            'last_debited_at' => now()->startOfMonth()->addDays(4)->toDateString(),
+            'date_effet' => '2025-01-05',
+            'last_debited_at' => '2026-06-05',
         ]);
 
         Depense::create([
             'account_id' => $compteCourant->id,
-            'nom' => 'Forfait Mobile',
-            'description' => 'Depense mensuelle deja debitee ce mois-ci',
+            'nom' => 'Électricité',
+            'description' => 'Facture électricité mensuelle.',
+            'montant' => 85.00,
+            'fractionnement' => 'mensuel',
+            'date_effet' => '2025-01-10',
+            'last_debited_at' => '2026-06-10',
+        ]);
+
+        Depense::create([
+            'account_id' => $compteCourant->id,
+            'nom' => 'Forfait mobile',
+            'description' => 'Abonnement téléphone.',
             'montant' => 19.99,
             'fractionnement' => 'mensuel',
-            'date_effet' => now()->startOfMonth()->addDays(4)->toDateString(),
-            'last_debited_at' => now()->startOfMonth()->addDays(4)->toDateString(),
+            'date_effet' => '2025-01-15',
+            'last_debited_at' => '2026-06-15',
         ]);
 
         Depense::create([
             'account_id' => $compteCourant->id,
-            'nom' => 'Assurance Habitation',
-            'description' => 'Depense semestrielle deja debitee',
-            'montant' => 180.00,
-            'fractionnement' => 'semestriel',
-            'date_effet' => now()->startOfYear()->addMonth()->toDateString(),
-            'last_debited_at' => now()->startOfYear()->addMonth()->toDateString(),
-        ]);
-
-        Depense::create([
-            'account_id' => $epargne->id,
-            'nom' => 'Achat Ordinateur',
-            'description' => 'Depense ponctuelle deja payee',
-            'montant' => 1200.00,
-            'fractionnement' => 'unique',
-            'date_effet' => now()->subDays(10)->toDateString(),
-            'last_debited_at' => now()->subDays(10)->toDateString(),
-        ]);
-
-        Depense::create([
-            'account_id' => $compteCourant->id,
-            'nom' => 'Abonnement Streaming',
-            'description' => 'Depense mensuelle qui sera debitee demain',
-            'montant' => 12.99,
+            'nom' => 'Internet',
+            'description' => 'Box internet.',
+            'montant' => 32.99,
             'fractionnement' => 'mensuel',
-            'date_effet' => now()->addDay()->toDateString(),
-            'last_debited_at' => null,
+            'date_effet' => '2025-01-18',
+            'last_debited_at' => '2026-06-18',
+        ]);
+
+        Depense::create([
+            'account_id' => $compteCourant->id,
+            'nom' => 'Courses alimentaires',
+            'description' => 'Budget courses mensuel.',
+            'montant' => 320.00,
+            'fractionnement' => 'mensuel',
+            'date_effet' => '2025-01-20',
+            'last_debited_at' => '2026-06-20',
         ]);
     }
 }

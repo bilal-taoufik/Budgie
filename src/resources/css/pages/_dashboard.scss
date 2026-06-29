@@ -58,7 +58,8 @@
             gap: f.rem(12);
         }
 
-        a {
+        a,
+        button {
             display: flex;
             align-items: center;
 
@@ -72,6 +73,12 @@
             text-decoration: none;
             font-size: f.rem(14);
             line-height: 1;
+
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
 
             transition:
                 background-color .3s ease,
@@ -88,6 +95,14 @@
     .dashboard-sidebar-bottom {
         margin-top: auto;
         padding-top: f.rem(30);
+
+        form {
+            width: 100%;
+        }
+
+        button {
+            width: 100%;
+        }
 
         border-top: f.rem(1) solid var(--border);
     }
