@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/dashboard.js'])
+    @vite(['resources/css/main.scss', 'resources/js/main.js', 'resources/js/dashboard.js'])
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-slate-100 text-slate-900">
@@ -20,6 +20,7 @@
                 <a class="rounded bg-white px-4 py-2 shadow" href="{{ route('customer.depenses.index') }}">Depenses</a>
                 <a class="rounded bg-white px-4 py-2 shadow" href="{{ route('customer.revenues.index') }}">Revenus</a>
                 <a class="rounded bg-white px-4 py-2 shadow" href="{{ route('customer.previsions.index') }}">Previsions</a>
+                <a class="rounded bg-white px-4 py-2 shadow" href="{{ route('customer.profile.index') }}">Profil</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button class="rounded bg-slate-900 px-4 py-2 text-white" type="submit">Logout</button>
@@ -127,4 +128,8 @@
     </script>
 </body>
 </html>
+
+
+
+
 

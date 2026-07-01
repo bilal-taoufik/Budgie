@@ -1,0 +1,42 @@
+@use "../partials/variables" as v;
+@use "../partials/functions" as f;
+
+@layer base {
+    // Background color
+    .bg-color-black {
+        background-color: var(--black);
+        color: var(--white);
+    }
+    .bg-color-white {
+        background-color: var(--white);
+    }
+    .bg-color-grey {
+        background-color: var(--grey);
+    }
+    .bg-color-brand {
+        background-color: var(--brand);
+        color: var(--white);
+    }
+    .bg-color-brand-dark {
+        background-color: var(--brand-dark);
+        color: var(--white);
+    }
+
+    
+    // Text color
+    .text-color-white {
+        color: var(--white);
+    }
+    .text-color-black {
+        color: var(--black);
+    }
+    .text-color-brand {
+        color: var(--brand);
+    }
+    .text-color-brand-dark {
+        color: var(--brand-dark);
+    }
+    .text-color-body {
+        color: var(--body);
+    }
+}
