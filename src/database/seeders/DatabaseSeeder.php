@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::factory()->create([
+        $admin = User::create([
             'firstname' => 'Bilal',
             'lastname' => 'Admin',
             'email' => 'bll.taoufik@gmail.com',
@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             'email_verification_expires_at' => null,
         ]);
 
-        $customer = User::factory()->create([
+        $customer = User::create([
             'firstname' => 'Zakaria',
             'lastname' => 'Customer',
             'email' => 'zakaria@gmail.com',
