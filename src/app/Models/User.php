@@ -4,19 +4,15 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Account;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
 
+    // Définir les attributs qui peuvent être assignés
     protected $fillable = [
         'firstname',
         'lastname',
@@ -28,19 +24,21 @@ class User extends Authenticatable
         'email_verification_expires_at',
     ];
 
-    // HasMany pour la relation avec le modèle Account
+    // Définir la relation entre User et Account
     public function accounts(): HasMany
     {
-        return $this->hasMany(Account::class); // clé étrangère user_id dans la table accounts
+        return $this->hasMany(Account::class);
     }
 
-    // Les attributs qui doivent être cachés pour les tableaux
-    protected function casts(): array
+    // Définir la relation entre User et Transaction via Account
+    public function account(): HasMany
     {
-        return [
-            'password' => 'hashed',
-            'email_verified' => 'boolean',
-            'email_verification_expires_at' => 'datetime',
-        ];
+        return $this->accounts();
+    }
+
+    // Définir la relation entre User et Transaction via Account
+    public function transactions(): HasManyThrough
+    {
+        return $this->hasManyThrough(Transaction::class, Account::class);
     }
 }

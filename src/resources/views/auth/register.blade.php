@@ -40,12 +40,12 @@
                         </div>
 
                         <!-- FORM -->
-                        <div class="form-block w-form">
-                            <form id="signup-form" method="POST" action="{{ route('register') }}">
+                        <div class="form-block">
+                            <form class="form-content" id="signup-form" method="POST" action="{{ route('register') }}">
                                 @csrf
                                 <div class="form-field-wrapper">
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         class="form-input"
                                         name="lastname"
                                         value="{{ old('lastname') }}"
@@ -54,8 +54,8 @@
                                     >
                                 </div>
                                 <div class="form-field-wrapper">
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         class="form-input"
                                         name="firstname"
                                         value="{{ old('firstname') }}"
@@ -64,8 +64,8 @@
                                     >
                                 </div>
                                 <div class="form-field-wrapper">
-                                    <input 
-                                        type="email" 
+                                    <input
+                                        type="email"
                                         class="form-input"
                                         name="email"
                                         value="{{ old('email') }}"
@@ -74,12 +74,11 @@
                                     >
                                 </div>
                                 <div class="form-field-wrapper">
-
-                                    <input 
-                                        type="password" 
+                                    <input
                                         class="form-input"
+                                        type="password"
                                         name="password"
-                                        placeholder="Mot de passe"
+                                        placeholder="Mot de passe*"
                                         required
                                     >
                                     <div class="form-helper">
@@ -89,40 +88,25 @@
                                 </div>
 
                                 <div class="form-field-wrapper">
-                                    <input 
-                                        type="password" 
+                                    <input
+                                        type="password"
                                         class="form-input"
                                         name="password_confirmation"
-                                        placeholder="Confirmer le mot de passe"
+                                        placeholder="Confirmer le mot de passe*"
                                         required
                                     >
                                 </div>
-                                <button type="submit" class="form-submit">
+                                <button type="submit" class="btn-secondary is-full">
                                     S'inscrire
                                 </button>
                             </form>
-
-                            <!-- SUCCESS -->
-                            <div class="w-form-done">
-                                <div>
-                                    Votre compte a bien été créé.
-                                </div>
-                            </div>
-
-                            <!-- ERROR -->
-                            <div class="w-form-fail">
-                                <div>
-                                    Une erreur est survenue.
-                                </div>
-                            </div>
-
                         </div>
 
                         <!-- LOGIN -->
                         <div class="form-bottom">
-                            <p>
+                            <p class="text-size-regular text-color-body">
                                 Vous avez déjà un compte ?
-                                <a href="{{ route('login') }}">
+                                <a class="text-size-regular text-color-brand" href="{{ route('login') }}">
                                     Se connecter
                                 </a>
                             </p>
@@ -133,19 +117,16 @@
 
                         <!-- BACK -->
                         <a href="{{ route('home') }}" class="form-back-link">
-
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <path 
-                                    d="M15 18L9 12L15 6" 
+                                <path
+                                    d="M15 18L9 12L15 6"
                                     stroke="currentColor"
                                     stroke-width="2"
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                 />
                             </svg>
-
-                            <span>Retour à l’accueil</span>
-
+                            <span>Retour à l'accueil</span>
                         </a>
 
                     </div>
@@ -302,16 +283,16 @@
                     Manage cookies
                 </button> -->
             </div>
+
         </div>
     </main>
 
-
     @php
-        $toastMessages = collect();
+        $popupMessages = collect();
 
         foreach (['success', 'error', 'info'] as $type) {
             if (session($type)) {
-                $toastMessages->push([
+                $popupMessages->push([
                     'type' => $type,
                     'message' => session($type),
                 ]);
@@ -319,32 +300,33 @@
         }
 
         foreach ($errors->all() as $error) {
-            $toastMessages->push([
+            $popupMessages->push([
                 'type' => 'error',
                 'message' => $error,
             ]);
         }
     @endphp
 
-    @if($toastMessages->isNotEmpty())
-        <div class="toast-wrapper" id="toast-wrapper">
-            @foreach($toastMessages as $toast)
-                <div class="toast-message toast-{{ $toast['type'] }}">
-                    {{ $toast['message'] }}
+    @if($popupMessages->isNotEmpty())
+        <div class="popup-wrapper" id="popup-wrapper">
+            @foreach($popupMessages as $popup)
+                <div class="popup-message popup-{{ $popup['type'] }}">
+                    {{ $popup['message'] }}
                 </div>
             @endforeach
         </div>
 
         <script>
             setTimeout(() => {
-                const toastWrapper = document.getElementById('toast-wrapper');
+                const popupWrapper = document.getElementById('popup-wrapper');
 
-                if (toastWrapper) {
-                    toastWrapper.style.display = 'none';
+                if (popupWrapper) {
+                    popupWrapper.style.display = 'none';
                 }
             }, 8000); // 8 seconds
         </script>
     @endif
+
 </body>
 </html>
 

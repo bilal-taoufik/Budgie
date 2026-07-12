@@ -1,27 +1,10 @@
+@vite(['resources/css/main.scss', 'resources/js/main.js'])
 <h1>Mon profil admin</h1>
 
 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
 <br>
 <a href="{{ route('admin.users.index') }}">Utilisateurs</a>
 <br>
-
-@if(session('success'))
-    <div>{{ session('success') }}</div>
-@endif
-
-@if(session('error'))
-    <div>{{ session('error') }}</div>
-@endif
-
-@if($errors->any())
-    <div>
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
 
 <h2>Modifier mes informations</h2>
 
@@ -67,3 +50,5 @@
 
     <button type="submit">Supprimer mon compte admin</button>
 </form>
+
+@include('components.popup-messages')

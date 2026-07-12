@@ -19,7 +19,7 @@
         padding-inline: f.rem(50);
 
         border-radius: f.rem(999);
-        background: rgba(20, 20, 20, 0.72);
+        background: var(--bg-primary);
         backdrop-filter: blur(16px);
 
         display: flex;
@@ -137,7 +137,7 @@
             padding: f.rem(32);
             border-radius: f.rem(28);
 
-            background: rgba(20, 20, 20, 0.96);
+            background: var(--bg-primary);
             backdrop-filter: blur(18px);
 
             opacity: 0;

@@ -1,106 +1,43 @@
+import Chart from 'chart.js/auto';
+
 window.addEventListener('load', () => {
-    // Les donnees viennent du dashboard.blade.php
-    const data = window.dashboardCharts;
+    const dataElement = document.getElementById('dashboard-chart-data');
+    if (!dataElement) return;
 
-    if (!window.Chart || !data) {
-        return;
-    }
+    const data = JSON.parse(dataElement.textContent);
 
-    const euros = (value) => new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'EUR',
-    }).format(value);
-
-    // Graphique 1 : evolution du solde
-    new Chart(document.getElementById('balanceChart'), {
-        type: 'line',
-        data: {
-            labels: data.labels,
-            datasets: [
-                {
-                    label: 'Solde',
-                    data: data.balanceEvolution,
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.15)',
-                    fill: true,
-                    tension: 0.3,
-                },
-            ],
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: (context) => euros(context.raw),
-                    },
-                },
+    const createChart = (elementId, type, chartData, customOptions = {}) => {
+        new Chart(document.getElementById(elementId), {
+            type,
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                ...customOptions,
             },
-        },
+        });
+    };
+
+    // Graphique du solde
+    createChart('balanceChart', 'line', {
+        labels: data.etiquettes,
+        datasets: [{ label: 'Solde', data: data.evolutionSolde }],
     });
 
-    // Graphique 2 : repartition des depenses
-    new Chart(document.getElementById('depensePieChart'), {
-        type: 'doughnut',
-        data: {
-            labels: data.depenseLabels,
-            datasets: [
-                {
-                    label: 'Depenses',
-                    data: data.depenseData,
-                    backgroundColor: [
-                        '#2563eb',
-                        '#059669',
-                        '#dc2626',
-                        '#d97706',
-                        '#7c3aed',
-                        '#0891b2',
-                    ],
-                },
-            ],
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: (context) => `${context.label}: ${euros(context.raw)}`,
-                    },
-                },
-            },
-        },
+    // Graphique des dépenses
+    createChart('depensePieChart', 'doughnut', {
+        labels: data.etiquettesDepenses,
+        datasets: [{ label: 'Depenses', data: data.donneesDepenses }],
+    }, {
+        plugins: { legend: { position: 'bottom' } },
     });
 
-    // Graphique 3 : revenus vs depenses
-    new Chart(document.getElementById('revenuDepenseChart'), {
-        type: 'bar',
-        data: {
-            labels: data.labels,
-            datasets: [
-                {
-                    label: 'Revenus',
-                    data: data.monthlyRevenus,
-                    backgroundColor: '#059669',
-                },
-                {
-                    label: 'Depenses',
-                    data: data.monthlyDepenses,
-                    backgroundColor: '#dc2626',
-                },
-            ],
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: (context) => `${context.dataset.label}: ${euros(context.raw)}`,
-                    },
-                },
-            },
-        },
+    // Graphique revenus/dépenses
+    createChart('revenuDepenseChart', 'bar', {
+        labels: data.etiquettes,
+        datasets: [
+            { label: 'Revenus', data: data.revenusMensuels },
+            { label: 'Depenses', data: data.depensesMensuelles },
+        ],
     });
 });

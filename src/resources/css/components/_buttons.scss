@@ -152,5 +152,8 @@
                 transform: none;
             }
         }
+        &.is-full {
+            width: 100%;
+        }
     }
 }

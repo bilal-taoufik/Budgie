@@ -28,7 +28,7 @@ class WelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Bienvenue Sur Budgie: Gestion de finance !',
+            subject: 'Bienvenue sur Budgie',
         );
     }
 

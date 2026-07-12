@@ -5,14 +5,10 @@
   color: inherit;
 }
 
-@mixin resetAll {
-  all: unset;
-}
-
 @mixin bp($breakpoint) {
     $breakpoints: (
-        "sm": 768px,
         "md": 1024px,
+        "sm": 768px,
     );
 
     @media (max-width: map.get($breakpoints, $breakpoint)) {

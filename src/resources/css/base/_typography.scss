@@ -1,5 +1,6 @@
 @use "../partials/variables" as v;
 @use "../partials/functions" as f;
+@use "../partials/mixins" as m;
 
 @layer base {
     // HTML Headings Tags
@@ -131,8 +132,7 @@
 
     // Link
     a {
-        text-decoration: underline;
-        color: inherit;
+        @include m.resetLink;
     }
 
 

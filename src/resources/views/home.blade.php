@@ -12,34 +12,26 @@
 
 </head>
 <body>
-    @php
-        $dashboardUrl = auth()->check() && auth()->user()->role === 'admin'
-            ? route('admin.dashboard')
-            : route('customer.dashboard');
-        $loginUrl = auth()->check() ? $dashboardUrl : route('login');
-        $registerUrl = auth()->check() ? $dashboardUrl : route('register');
-    @endphp
     <header class="header-wrapper">
         <div class="padding-global">
 
             <div class="header-component">
 
-                <!-- LOGO MOBILE -->
+                <!-- MOBILE -->
                 <a href="{{ route('home') }}" class="header-logo" aria-label="Accueil">
                     <svg width="32" height="38" viewBox="0 0 32 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 38L4.40149 0H20.9368C24.0297 0 29.6208 1.63691 29.6208 8.76923C29.6208 11.6925 28.5502 16.4861 20.9368 16.4861H18.5576L19.0335 10.9908L6.54275 17.8892L17.6059 24.32L18.0818 19.1754H25.5762C27.8364 19.1754 32 22.0985 32 28.0615C32 31.3354 29.6208 38 21.8885 38H0Z" fill="#85A795"/>
                     </svg>
                 </a>
-
                 <!-- TOGGLE -->
                 <input type="checkbox" id="menu-toggle" class="menu-toggle">
-
                 <!-- BURGER -->
                 <label for="menu-toggle" class="burger-button" aria-label="Ouvrir le menu">
                     <span></span>
                     <span></span>
                     <span></span>
                 </label>
+
 
                 <!-- DESKTOP NAV -->
                 <nav class="header-nav" id="headerNav" aria-label="Navigation principale">
@@ -60,11 +52,11 @@
 
                 <!-- DESKTOP CTA -->
                 <div class="wrapper_cta-header">
-                    <a href="{{ $loginUrl }}" class="btn-secondary is-simple">
+                    <a href="{{ route('login') }}" class="btn-secondary is-simple">
                         <span>CONNEXION</span>
                     </a>
 
-                    <a href="{{ $registerUrl }}" class="btn-primary">
+                    <a href="{{ route('register') }}" class="btn-primary">
                         <span class="btn-primary__icon">
                             <svg viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M9 5l7 7-7 7" />
@@ -96,24 +88,20 @@
                             </li>
 
                             <li>
-                                <a href="{{ $loginUrl }}" class="text-size-regular text-color-body">
+                                <a href="{{ route('login') }}" class="text-size-regular text-color-body">
                                     Connexion
                                 </a>
                             </li>
 
                             <li>
-                                <a href="{{ $registerUrl }}" class="text-size-regular text-color-body">
+                                <a href="{{ route('register') }}" class="text-size-regular text-color-body">
                                     Inscription
                                 </a>
                             </li>
-
                         </ul>
                     </nav>
-
                 </div>
-
             </div>
-
         </div>
     </header>
 
@@ -135,11 +123,11 @@
                                 </p>
 
                                 <div class="hero-button-group">
-                                    <a href="{{ $loginUrl }}" class="btn-secondary">
+                                    <a href="{{ route('login') }}" class="btn-secondary">
                                         <span class="btn-primary__text">CONNEXION</span>
                                     </a>
 
-                                    <a href="{{ $registerUrl }}" class="btn-primary">
+                                    <a href="{{ route('register') }}" class="btn-primary">
                                         <span class="btn-primary__icon">
                                             <svg viewBox="0 0 24 24" aria-hidden="true">
                                             <path d="M9 5l7 7-7 7" />
@@ -248,7 +236,7 @@
                             </div>
 
                             <div class="cta-home-button">
-                                <a href="{{ $registerUrl }}" class="btn-primary">
+                                <a href="{{ route('register') }}" class="btn-primary">
                                     <span class="btn-primary__icon">
                                         <svg viewBox="0 0 24 24" aria-hidden="true">
                                             <path d="M9 5l7 7-7 7" />
@@ -410,6 +398,7 @@
                     Manage cookies
                 </button> -->
             </div>
+
         </div>
     </main>
 
@@ -432,41 +421,36 @@
                     </div>
 
                     <div class="footer-nav-wrapper">
-
                         <div class="footer-nav-group">
                             <h3 class="heading-style-h4-bold text-color-white">Liens rapides</h3>
-
-                            <ul>
-                                <li><a href="#fonction">Fonctionnalités</a></li>
-                                <li><a href="{{ $loginUrl }}">Connexion</a></li>
-                                <li><a href="{{ $registerUrl }}">Inscription</a></li>
+                            <ul class="footer-nav-list">
+                                <li><a class="text-color-body" href="#fonction">Fonctionnalités</a></li>
+                                <li><a class="text-color-body" href="{{ route('login') }}">Connexion</a></li>
+                                <li><a class="text-color-body" href="{{ route('register') }}">Inscription</a></li>
                             </ul>
                         </div>
 
                         <div class="footer-nav-group">
                             <h3 class="heading-style-h4-bold text-color-white">Ressources</h3>
 
-                            <ul>
-                                <li><a fs-cc="open-preferences" role="button" tabindex="0" title="Cookie Preferences" aria-label="Cookie Preferences" href="#" class="fs-cc-manager2_button-footer">Cookies</a></li>
-                                <li><a href="#about">À propos</a></li>
-                                <li><a href="#">Mentions légales</a></li>
+                            <ul class="footer-nav-list">
+                                <li><a fs-cc="open-preferences" role="button" tabindex="0" title="Cookie Preferences" aria-label="Cookie Preferences" href="#" class="text-color-body fs-cc-manager2_button-footer">Cookies</a></li>
+                                <li><a class="text-color-body" href="#about">À propos</a></li>
+                                <li><a class="text-color-body" href="#">Mentions légales</a></li>
                             </ul>
                         </div>
 
                     </div>
-
                 </div>
-
                 <div class="footer-divider"></div>
-
                 <div class="footer-bottom">
                     <p class="text-size-regular text-color-body">
-                        © 2026 Budgie. Projet réaliser par des étudiants - ESGI
+                        © 2026 Budgie. TAOUFIK Bilal & BOUGUERA Zakaria. 
                     </p>
                 </div>
-
             </div>
         </div>
     </footer>
+    
 </body>
 </html>

@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -24,6 +25,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
         $user = Auth::user();
+        if ($user->role === 'customer') {
+            $this->rattraperTransactions($user);
+        }
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }
@@ -40,5 +44,30 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    private function rattraperTransactions($user): void
+    {
+        foreach ($user->accounts as $account) {
+            foreach ($account->transactions as $transaction) {
+                if ($transaction->derniere_application) {
+                    $debut = $transaction->derniere_application->copy()->addDay();
+                } else {
+                    $debut = $transaction->date_effet;
+                }
+
+                $fin = Carbon::today();
+
+                $diff = $transaction->montantTotal($debut, $fin);
+
+                if ($diff !== 0.0) {
+                    $account->solde += $diff;
+                    $account->save();
+                }
+
+                $transaction->derniere_application = $fin;
+                $transaction->save();
+            }
+        }
     }
 }
