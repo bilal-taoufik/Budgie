@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Http\Requests\Customer\PrevisionRequest;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -18,7 +19,7 @@ class PrevisionController extends Controller
         return view('customer.prevision', compact('comptes'));
     }
 
-    public function calculer(Request $request): View
+    public function calculer(PrevisionRequest $request): View
     {
         $request->validate([
             'date_prevision' => 'required|date_format:Y-m-d'
