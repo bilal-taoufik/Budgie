@@ -3,93 +3,81 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Account;
-use App\Models\Transaction;
-use Illuminate\Http\Request;
 use App\Http\Requests\Customer\PrevisionRequest;
+use App\Models\Account;
 use Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class PrevisionController extends Controller
 {
     public function index(): View
     {
-        $comptes = Account::all();
+        $comptes = auth()->user()->accounts()->get();
+
         return view('customer.prevision', compact('comptes'));
     }
 
     public function calculer(PrevisionRequest $request): View
     {
-        $request->validate([
-            'date_prevision' => 'required|date_format:Y-m-d'
-        ]);
-
-        $datePrevision = Carbon::createFromFormat('Y-m-d', $request->date_prevision);
-        $comptes = Account::all();
-
+        $datePrevision = Carbon::createFromFormat('Y-m-d', $request->validated('date_prevision'))
+            ->endOfMonth();
+        $comptes = auth()->user()->accounts()->with('transactions')->get();
         $previsions = [];
         $totalPrevision = 0;
 
-        // Boucle sur chaque compte
         foreach ($comptes as $compte) {
-            $result = $this->calculerSoldePrevuCompte($compte, $datePrevision);
+            $resultat = $this->calculerSoldePrevuCompte($compte, $datePrevision);
             $previsions[] = [
                 'account' => $compte,
-                'solde' => $result['solde'],
-                'interets' => $result['interets'],
-                'taxes' => $result['taxes']
+                'solde' => $resultat['solde'],
+                'interets' => $resultat['interets'],
+                'taxes' => $resultat['taxes'],
             ];
-            $totalPrevision += $result['solde'];
+            $totalPrevision += $resultat['solde'];
         }
 
         return view('customer.prevision', [
             'previsions' => $previsions,
-            'totalPrevision' => $totalPrevision,
-            'selectedDate' => $datePrevision
+            'totalPrevision' => round($totalPrevision, 2),
+            'selectedDate' => $datePrevision,
         ]);
     }
 
-    private function calculerSoldePrevuCompte(Account $compte, Carbon $datePrevision)
+    private function calculerSoldePrevuCompte(Account $compte, Carbon $datePrevision): array
     {
-        $soldeCourant = $compte->solde;
-        $totalInterets = 0;
-        $totalTaxes = 0;
+        $soldeCourant = (float) $compte->solde;
+        $totalInterets = 0.0;
+        $totalTaxes = 0.0;
+        $demain = Carbon::tomorrow()->startOfDay();
+        $moisCourant = Carbon::today()->startOfMonth();
 
-        // Récupère toutes les transactions du compte
-        $transactionsCompte = $compte->transactions()->get();
+        while ($moisCourant->lte($datePrevision)) {
+            $debutMois = $moisCourant->copy()->startOfMonth()->max($demain);
+            $finMois = $moisCourant->copy()->endOfMonth()->min($datePrevision);
 
-        // Boucle mois par mois jusqu'à la date de prévision
-        $moisCourant = Carbon::now()->copy()->startOfMonth();
-
-        while ($moisCourant <= $datePrevision) {
-            $debutMois = $moisCourant->copy()->startOfMonth();
-            $finMois = $moisCourant->copy()->endOfMonth();
-
-            // Appliquer les transactions du mois
-            foreach ($transactionsCompte as $transaction) {
-                $montantDuMois = $transaction->montantTotal($debutMois, $finMois);
-                $soldeCourant = $soldeCourant + $montantDuMois;
+            if ($debutMois->lte($finMois)) {
+                foreach ($compte->transactions as $transaction) {
+                    $soldeCourant += $transaction->montantTotal($debutMois, $finMois);
+                }
             }
 
-            $moisCourant->addMonth();
-        }
+            if ($compte->taux_remuneration > 0 && $finMois->isEndOfMonth()) {
+                $interetBrut = max(0, $soldeCourant)
+                    * ((float) $compte->taux_remuneration / 100 / 12);
+                $taxes = $interetBrut * ((float) $compte->taux_imposition / 100);
 
-        // Appliquer les intérêts si le compte a un taux > 0
-        if ($compte->taux_remuneration > 0) {
-            $interet = $soldeCourant * ($compte->taux_remuneration / 100);
-            $impot = $interet * ($compte->taux_imposition / 100);
-            $interetNet = $interet - $impot;
+                $soldeCourant += $interetBrut - $taxes;
+                $totalInterets += $interetBrut;
+                $totalTaxes += $taxes;
+            }
 
-            $soldeCourant = $soldeCourant + $interetNet;
-            $totalInterets = $interetNet;
-            $totalTaxes = $impot;
+            $moisCourant->addMonthNoOverflow();
         }
 
         return [
-            'solde' => $soldeCourant,
-            'interets' => $totalInterets,
-            'taxes' => $totalTaxes
+            'solde' => round($soldeCourant, 2),
+            'interets' => round($totalInterets, 2),
+            'taxes' => round($totalTaxes, 2),
         ];
     }
 }

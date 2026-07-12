@@ -47,6 +47,10 @@
                             <span>Depenses</span>
                         </a>
                         <a href="{{ route('customer.revenues.index') }}" class="nav-link">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18.3333 5.83334L11.25 12.9167L7.08329 8.75001L1.66663 14.1667" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M13.3334 5.83334H18.3334V10.8333" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
                             <span>Revenus</span>
                         </a>
                         <a href="{{ route('customer.previsions.index') }}" class="nav-link">
@@ -122,6 +126,15 @@
                                     <button type="submit" class="dashboard-action-button">Enregistrer</button>
                                 </form>
                             </article>
+
+                            <form class="dashboard-filter-row" method="GET" action="{{ route('customer.depenses.index') }}">
+                                <label for="recherche-depense">Filtrer les depenses</label>
+                                <input id="recherche-depense" name="recherche" type="search" value="{{ $recherche ?? '' }}" placeholder="Nom ou description">
+                                <button type="submit" class="dashboard-action-button">Rechercher</button>
+                                @if(!empty($recherche))
+                                    <a class="client-back-link" href="{{ route('customer.depenses.index') }}">Effacer le filtre</a>
+                                @endif
+                            </form>
 
                             <div class="entity-grid">
                                 @forelse($transactions as $transaction)

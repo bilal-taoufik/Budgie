@@ -8,32 +8,55 @@ use App\Models\Account;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class TransactionController extends Controller
 {
-    public function revenus(): View
+    public function revenus(Request $request): View
     {
+        $validated = $request->validate([
+            'recherche' => ['nullable', 'string', 'max:100'],
+        ]);
         $accounts = auth()->user()->accounts()->get();
+        $recherche = trim($validated['recherche'] ?? '');
         $transactions = Transaction::with('account')
             ->whereIn('account_id', $accounts->pluck('id'))
             ->where('type', 'revenu')
+            ->when($recherche !== '', function ($query) use ($recherche) {
+                $terme = '%'.mb_strtolower($recherche).'%';
+                $query->where(function ($query) use ($terme) {
+                    $query->whereRaw('LOWER(nom) LIKE ?', [$terme])
+                        ->orWhereRaw('LOWER(description) LIKE ?', [$terme]);
+                });
+            })
             ->latest()
             ->get();
 
-        return view('customer.revenu', compact('accounts', 'transactions'));
+        return view('customer.revenu', compact('accounts', 'transactions', 'recherche'));
     }
 
-    public function depenses(): View
+    public function depenses(Request $request): View
     {
+        $validated = $request->validate([
+            'recherche' => ['nullable', 'string', 'max:100'],
+        ]);
         $accounts = auth()->user()->accounts()->get();
+        $recherche = trim($validated['recherche'] ?? '');
         $transactions = Transaction::with('account')
             ->whereIn('account_id', $accounts->pluck('id'))
             ->where('type', 'depense')
+            ->when($recherche !== '', function ($query) use ($recherche) {
+                $terme = '%'.mb_strtolower($recherche).'%';
+                $query->where(function ($query) use ($terme) {
+                    $query->whereRaw('LOWER(nom) LIKE ?', [$terme])
+                        ->orWhereRaw('LOWER(description) LIKE ?', [$terme]);
+                });
+            })
             ->latest()
             ->get();
 
-        return view('customer.depense', compact('accounts', 'transactions'));
+        return view('customer.depense', compact('accounts', 'transactions', 'recherche'));
     }
 
     public function store(TransactionRequest $request): RedirectResponse

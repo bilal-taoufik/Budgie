@@ -9,9 +9,9 @@ use App\Models\Transaction;
 class AppliqueInteretAnnuel extends Command
 {
     protected $signature = 'accounts:interet';
-    protected $description = 'Applique les intérêts au 31 décembre';
+    protected $description = 'Applique les intérêts annuels au 31 décembre';
 
-    public function calculeInteret()
+    public function handle(): void
     {
         // recupere les compte ou il y a un taux d'interet superieur a 0
         $comptes = Account::where('taux_remuneration', '>', 0)->get();
