@@ -73,13 +73,11 @@ class ProfileRequest extends FormRequest
     // Prepare les donnees avant la validation
     public function prepareForValidation(): void
     {
-        if ($this->routeIs('customer.profile.info', 'admin.profile.info')) {
-            $this->merge([
-                'firstname' => ucwords(strtolower(trim($this->firstname))),
-                'lastname' => strtoupper(strtolower(trim($this->lastname))),
-                'email' => strtolower(trim($this->email)),
-            ]);
-        }
+        $this->merge([
+            'firstname' => ucwords(strtolower(trim($this->firstname))),
+            'lastname' => strtoupper(strtolower(trim($this->lastname))),
+            'email' => strtolower(trim($this->email)),
+        ]);
     }
 }
 

@@ -47,13 +47,9 @@
                             <span>Depenses</span>
                         </a>
                         <a href="{{ route('customer.revenues.index') }}" class="nav-link">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18.3333 5.83334L11.25 12.9167L7.08329 8.75001L1.66663 14.1667" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M13.3334 5.83334H18.3334V10.8333" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
                             <span>Revenus</span>
                         </a>
-                        <a href="{{ route('customer.previsions.index') }}" class="nav-link is-active">
+                        <a href="{{ route('customer.previsions.calculer') }}" class="nav-link is-active">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M2.5 2.5V15.8333C2.5 16.2754 2.67559 16.6993 2.98816 17.0118C3.30072 17.3244 3.72464 17.5 4.16667 17.5H17.5" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M15 14.1667V7.5" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -94,24 +90,32 @@
                     </header>
 
                     <section class="dashboard-content client-sections-content">
-                        @if(session('success'))
-                            <p class="dashboard-card text-color-body">{{ session('success') }}</p>
-                        @endif
 
-                        @if($errors->any())
-                            <div class="dashboard-card text-color-body">
-                                @foreach($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                            </div>
-                        @endif
-
+                        @if(!isset($previsions) || empty($previsions))
+                        <!-- FORMULAIRE POUR SELECTIONNER LA DATE -->
                         <section class="client-section">
                             <div class="forecast-layout">
                                 <article class="dashboard-card entity-form-card">
                                     <h3 class="heading-style-h5-bold">Date de projection</h3>
 
-                                    <form class="dashboard-form" method="GET" action="{{ route('customer.previsions.index') }}">
+                                    <form class="dashboard-form" method="GET" action="{{ route('customer.previsions.calculer') }}">
+                                        <label>Date selectionnee
+                                            <input name="date_prevision" type="date" value="{{ now()->format('Y-m-d') }}">
+                                        </label>
+                                        <button type="submit" class="dashboard-action-button">Calculer</button>
+                                    </form>
+                                </article>
+                            </div>
+                        </section>
+
+                        @else
+                        <!-- AFFICHAGE DES RESULTATS DE PREVISION -->
+                        <section class="client-section">
+                            <div class="forecast-layout">
+                                <article class="dashboard-card entity-form-card">
+                                    <h3 class="heading-style-h5-bold">Date de projection</h3>
+
+                                    <form class="dashboard-form" method="GET" action="{{ route('customer.previsions.calculer') }}">
                                         <label>Date selectionnee
                                             <input name="date_prevision" type="date" value="{{ $selectedDate->format('Y-m-d') }}">
                                         </label>
@@ -131,13 +135,13 @@
                                         @forelse($previsions as $prevision)
                                             <div>
                                                 <span>
-                                                    {{ $prevision['account']->name }}<br>
+                                                    {{ $prevision['account']->nom }}<br>
                                                     <small>
-                                                        Interets {{ number_format($prevision['date']['interets'], 2, ',', ' ') }} €
-                                                        - Taxes {{ number_format($prevision['date']['taxes'], 2, ',', ' ') }} €
+                                                        Interets {{ number_format($prevision['interets'], 2, ',', ' ') }} €
+                                                        - Taxes {{ number_format($prevision['taxes'], 2, ',', ' ') }} €
                                                     </small>
                                                 </span>
-                                                <strong>{{ number_format($prevision['date']['solde'], 2, ',', ' ') }} €</strong>
+                                                <strong>{{ number_format($prevision['solde'], 2, ',', ' ') }} €</strong>
                                             </div>
                                         @empty
                                             <div><span>Aucun compte</span><strong>0,00 €</strong></div>
@@ -145,36 +149,14 @@
                                     </div>
                                 </article>
                             </div>
-
-                            @foreach($previsions as $prevision)
-                                <article class="dashboard-card transactions-card">
-                                    <div class="dashboard-card-header">
-                                        <h2 class="heading-style-h4-bold">{{ $prevision['account']->name }}</h2>
-                                    </div>
-
-                                    @foreach($prevision['lignes'] as $ligne)
-                                        <div class="transaction-row">
-                                            <div>
-                                                <p class="text-size-regular text-weight-medium">{{ ucfirst($ligne['mois']) }}</p>
-                                                <span class="text-size-tiny text-color-body">
-                                                    Revenus {{ number_format($ligne['revenus'], 2, ',', ' ') }} €
-                                                    - Depenses {{ number_format($ligne['depenses'], 2, ',', ' ') }} €
-                                                    - Interets {{ number_format($ligne['interets'], 2, ',', ' ') }} €
-                                                    - Taxes {{ number_format($ligne['taxes'], 2, ',', ' ') }} €
-                                                </span>
-                                            </div>
-                                            <p class="text-weight-bold {{ $ligne['variation'] >= 0 ? 'positive' : 'negative' }}">
-                                                {{ number_format($ligne['solde'], 2, ',', ' ') }} €
-                                            </p>
-                                        </div>
-                                    @endforeach
-                                </article>
-                            @endforeach
                         </section>
+                        @endif
+
                     </section>
                 </main>
             </div>
         </div>
     </main>
+    @include('components.popup-messages')
 </body>
 </html>

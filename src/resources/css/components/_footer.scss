@@ -6,7 +6,7 @@
         position: relative;
         overflow: hidden;
 
-        background-color: #000;
+        background-color: var(--black);
 
         .footer_component {
             position: relative;
@@ -64,7 +64,7 @@
         .footer-brand-text {
             margin: 0;
 
-            color: rgba(255,255,255,.92);
+            color: var(--white);
 
             font-size: f.rem(32);
             font-weight: 400;
@@ -106,7 +106,7 @@
                 min-width: f.rem(120);
             }
 
-            ul {
+            .footer-nav-list {
                 display: flex;
                 flex-direction: column;
                 gap: f.rem(18);
@@ -115,21 +115,6 @@
                 padding: 0;
 
                 list-style: none;
-            }
-
-            a {
-                color: var(--body);
-
-                font-size: f.rem(16);
-                line-height: 1;
-
-                text-decoration: none;
-
-                transition: color .3s ease;
-
-                &:hover {
-                    color: var(--brand-blue);
-                }
             }
         }
 

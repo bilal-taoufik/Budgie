@@ -20,3 +20,6 @@ Jira : [Lien du Jira](https://esgibudgie.atlassian.net/jira/software/projects/SC
 certificat utiliser : Certbot - delai 90 jours
 hook utiliser pour le renouveller automatiquement : sudo certbot renew --deploy-hook "docker exec budgie_nginx_prod nginx -s reload"
 voir si il ets active ou pas : systemctl status certbot.timer
+
+
+L'ajout d'une transaction passe par plusieurs methode : 

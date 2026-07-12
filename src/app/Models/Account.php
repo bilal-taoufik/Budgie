@@ -10,39 +10,20 @@ class Account extends Model
 {
     protected $fillable = [
         'user_id',
-        'name',
+        'nom',
         'description',
         'solde',
-        'interest_rate',
-        'tax_rate',
+        'taux_remuneration',
+        'taux_imposition',
     ];
 
-    // Relation avec le modèle User
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);  // clé étrangère user_id dans la table accounts
+        return $this->belongsTo(User::class);
     }
 
-    // Méthode pour calculer l'intérêt
-    public function calculeInterest(): float
+    public function transactions(): HasMany
     {
-        return $this->solde * ($this->interest_rate / 100);
-    }
-
-    // Méthode pour calculer l'imposition
-    public function calculeTax(): float
-    {
-        return $this->solde * ($this->tax_rate / 100);
-    }
-
-    public function depenses(): HasMany
-    {
-        return $this->hasMany(Depense::class);
-    }
-
-    // Un compte possède plusieurs revenus
-    public function revenus(): HasMany
-    {
-        return $this->hasMany(Revenu::class);
+        return $this->hasMany(Transaction::class);
     }
 }

@@ -1,17 +1,10 @@
+@vite(['resources/css/main.scss', 'resources/js/main.js'])
 <h1>Admin Dashboard</h1>
 
 <a href="{{ route('admin.users.index') }}">Utilisateurs</a>
 <br>
 <a href="{{ route('admin.profile.index') }}">Profil</a>
 <br>
-
-@if(session('success'))
-    <div>{{ session('success') }}</div>
-@endif
-
-@if(session('error'))
-    <div>{{ session('error') }}</div>
-@endif
 
 <h2>Statistiques</h2>
 
@@ -37,3 +30,5 @@
     @csrf
     <button type="submit">Se deconnecter</button>
 </form>
+
+@include('components.popup-messages')

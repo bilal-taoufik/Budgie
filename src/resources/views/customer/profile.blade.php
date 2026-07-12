@@ -47,10 +47,6 @@
                             <span>Depenses</span>
                         </a>
                         <a href="{{ route('customer.revenues.index') }}" class="nav-link">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18.3333 5.83334L11.25 12.9167L7.08329 8.75001L1.66663 14.1667" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M13.3334 5.83334H18.3334V10.8333" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
                             <span>Revenus</span>
                         </a>
                         <a href="{{ route('customer.previsions.index') }}" class="nav-link">
@@ -87,8 +83,7 @@
                 <main class="dashboard-main">
                     <header class="dashboard-header"><div><h1 class="heading-style-h3-bold">Profil</h1><p class="text-color-body text-size-small">Gerer les informations de votre espace personnel.</p></div><a class="client-back-link" href="{{ route('customer.dashboard') }}">Retour au dashboard</a></header>
                     <section class="dashboard-content client-sections-content">
-                        @if(session('success'))<p class="dashboard-card text-color-body">{{ session('success') }}</p>@endif
-                        @if($errors->any())<div class="dashboard-card text-color-body">@foreach($errors->all() as $error)<p>{{ $error }}</p>@endforeach</div>@endif
+
 
                         <section class="client-section">
                             <article class="dashboard-card entity-form-card">
@@ -127,5 +122,6 @@
             </div>
         </div>
     </main>
+    @include('components.popup-messages')
 </body>
 </html>

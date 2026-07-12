@@ -47,10 +47,6 @@
                             <span>Depenses</span>
                         </a>
                         <a href="{{ route('customer.revenues.index') }}" class="nav-link">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18.3333 5.83334L11.25 12.9167L7.08329 8.75001L1.66663 14.1667" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M13.3334 5.83334H18.3334V10.8333" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
                             <span>Revenus</span>
                         </a>
                         <a href="{{ route('customer.previsions.index') }}" class="nav-link">
@@ -94,19 +90,18 @@
                     </header>
 
                     <section class="dashboard-content client-sections-content">
-                        @if(session('success'))<p class="dashboard-card text-color-body">{{ session('success') }}</p>@endif
-                        @if($errors->any())<div class="dashboard-card text-color-body">@foreach($errors->all() as $error)<p>{{ $error }}</p>@endforeach</div>@endif
+
 
                         <section class="client-section">
                             <article class="dashboard-card entity-form-card">
                                 <h3 class="heading-style-h5-bold">Creer un compte</h3>
                                 <form class="dashboard-form" method="POST" action="{{ route('customer.accounts.store') }}">
                                     @csrf
-                                    <label>Nom court<input name="name" type="text" value="{{ old('name') }}" required></label>
+                                    <label>Nom court<input name="nom" type="text" value="{{ old('nom') }}" required></label>
                                     <label>Description<input name="description" type="text" value="{{ old('description') }}"></label>
                                     <label>Solde<input name="solde" type="number" step="0.01" min="0" value="{{ old('solde', 0) }}" required></label>
-                                    <label>Taux de remuneration<input name="interest_rate" type="number" step="0.01" min="0" max="100" value="{{ old('interest_rate', 0) }}" required></label>
-                                    <label>Taux d'imposition<input name="tax_rate" type="number" step="0.01" min="0" max="100" value="{{ old('tax_rate', 0) }}" required></label>
+                                    <label>Taux de remuneration<input name="taux_remuneration" type="number" step="0.01" min="0" max="100" value="{{ old('taux_remuneration', 0) }}" required></label>
+                                    <label>Taux d'imposition<input name="taux_imposition" type="number" step="0.01" min="0" max="100" value="{{ old('taux_imposition', 0) }}" required></label>
                                     <button type="submit" class="dashboard-action-button">Enregistrer</button>
                                 </form>
                             </article>
@@ -114,37 +109,40 @@
                             <div class="dashboard-table-card dashboard-card">
                                 <div class="dashboard-table-wrapper">
                                     <table class="dashboard-table">
-                                        <thead><tr><th>Nom</th><th>Description</th><th>Remuneration</th><th>Imposition</th><th>Solde</th><th>Actions</th></tr></thead>
+                                        <thead><tr><th>Nom</th><th>Description</th><th>Remuneration</th><th>Imposition</th><th>Solde</th><th>Date de creation</th><th>Actions</th></tr></thead>
                                         <tbody>
                                             @forelse($accounts as $account)
                                                 <tr>
-                                                    <td>{{ $account->name }}</td>
+                                                    <td>{{ $account->nom }}</td>
                                                     <td>{{ $account->description ?? '-' }}</td>
-                                                    <td>{{ number_format($account->interest_rate, 2, ',', ' ') }} %</td>
-                                                    <td>{{ number_format($account->tax_rate, 2, ',', ' ') }} %</td>
+                                                    <td>{{ number_format($account->taux_remuneration, 2, ',', ' ') }} %</td>
+                                                    <td>{{ number_format($account->taux_imposition, 2, ',', ' ') }} %</td>
                                                     <td>{{ number_format($account->solde, 2, ',', ' ') }} €</td>
-                                                    <td>
+                                                    <td>{{ $account->created_at?->format('d/m/Y') }}</td>
+                                                    <td class="dashboard-table-actions">
                                                         <details class="entity-edit">
                                                             <summary class="icon-action" title="Modifier" aria-label="Modifier"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 20H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 3.5C17.3284 2.67157 18.6716 2.67157 19.5 3.5C20.3284 4.32843 20.3284 5.67157 19.5 6.5L7 19L3 20L4 16L16.5 3.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
                                                             <form class="dashboard-form" method="POST" action="{{ route('customer.accounts.update', $account) }}">
-                                                                @csrf @method('PUT')
-                                                                <label>Nom<input name="name" type="text" value="{{ old('name', $account->name) }}" required></label>
+                                                                @csrf 
+                                                                @method('PUT')
+                                                                <label>Nom<input name="nom" type="text" value="{{ old('nom', $account->nom) }}" required></label>
                                                                 <label>Description<input name="description" type="text" value="{{ old('description', $account->description) }}"></label>
                                                                 <label>Solde<input name="solde" type="number" step="0.01" min="0" value="{{ old('solde', $account->solde) }}" required></label>
-                                                                <label>Taux de remuneration<input name="interest_rate" type="number" step="0.01" min="0" max="100" value="{{ old('interest_rate', $account->interest_rate) }}" required></label>
-                                                                <label>Taux d'imposition<input name="tax_rate" type="number" step="0.01" min="0" max="100" value="{{ old('tax_rate', $account->tax_rate) }}" required></label>
+                                                                <label>Taux de remuneration<input name="taux_remuneration" type="number" step="0.01" min="0" max="100" value="{{ old('taux_remuneration', $account->taux_remuneration) }}" required></label>
+                                                                <label>Taux d'imposition<input name="taux_imposition" type="number" step="0.01" min="0" max="100" value="{{ old('taux_imposition', $account->taux_imposition) }}" required></label>
                                                                 <button type="submit" class="dashboard-action-button">Modifier</button>
                                                             </form>
                                                         </details>
 
                                                         <form method="POST" action="{{ route('customer.accounts.delete', $account) }}" data-confirm="Supprimer ce compte ? Cette action est definitive.">
-                                                            @csrf @method('DELETE')
+                                                            @csrf 
+                                                            @method('DELETE')
                                                             <button type="submit" class="dashboard-action-button icon-action icon-action-danger" title="Supprimer" aria-label="Supprimer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 6V4C8 3.44772 8.44772 3 9 3H15C15.5523 3 16 3.44772 16 4V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 6L18.25 20C18.1968 20.9915 17.3767 21.75 16.3838 21.75H7.61616C6.62334 21.75 5.8032 20.9915 5.75 20L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
                                                         </form>
                                                     </td>
                                                 </tr>
                                             @empty
-                                                <tr><td colspan="6">Aucun compte pour le moment.</td></tr>
+                                                <tr><td colspan="7">Aucun compte pour le moment.</td></tr>
                                             @endforelse
                                         </tbody>
                                     </table>
@@ -156,5 +154,6 @@
             </div>
         </div>
     </main>
+    @include('components.popup-messages')
 </body>
 </html>

@@ -1,27 +1,10 @@
+@vite(['resources/css/main.scss', 'resources/js/main.js'])
 <h1>Gestion des utilisateurs</h1>
 
 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
 <br>
 <a href="{{ route('admin.profile.index') }}">Profil</a>
 <br>
-
-@if(session('success'))
-    <div>{{ session('success') }}</div>
-@endif
-
-@if(session('error'))
-    <div>{{ session('error') }}</div>
-@endif
-
-@if($errors->any())
-    <div>
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
 
 <h2>Ajouter un admin</h2>
 
@@ -65,3 +48,5 @@
         <hr>
     </div>
 @endforeach
+
+@include('components.popup-messages')

@@ -2,68 +2,53 @@
 
 namespace App\Http\Requests\Customer;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AccountRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
-    
-    // Règles de validation pour le formulaire de création et de mise à jour d'un compte
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'nom' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'solde' => ['required', 'numeric', 'min:0'],
-            'interest_rate' => ['required', 'numeric', 'min:0', 'max:100'],
-            'tax_rate' => ['required', 'numeric', 'min:0', 'max:100'],
+            'taux_remuneration' => ['required', 'numeric', 'min:0', 'max:100'],
+            'taux_imposition' => ['required', 'numeric', 'min:0', 'max:100'],
         ];
     }
 
-    // Message d'erreur personnalisés pour les règles de validation
     public function messages(): array
     {
         return [
-            'name.required' => 'Le nom du compte est requis.',
-            'name.string' => 'Le nom du compte doit être une chaîne de caractères.',
-            'name.max' => 'Le nom du compte ne doit pas dépasser 255 caractères.',
+            'nom.required' => 'Le nom du compte est requis.',
+            'nom.string' => 'Le nom du compte doit etre une chaine de caracteres.',
+            'nom.max' => 'Le nom du compte ne doit pas depasser 255 caracteres.',
             'solde.required' => 'Le solde du compte est requis.',
-            'solde.numeric' => 'Le solde du compte doit être un nombre.',
-            'solde.min' => 'Le solde du compte ne peut pas être négatif.',
-            'description.string' => 'La description du compte doit être une chaîne de caractères.',
-            'interest_rate.required' => 'Le taux d\'intérêt est requis.',
-            'interest_rate.numeric' => 'Le taux d\'intérêt doit être un nombre.',
-            'interest_rate.min' => 'Le taux d\'intérêt ne peut pas être inférieur à 0%.',
-            'interest_rate.max' => 'Le taux d\'intérêt ne peut pas dépasser 100%.',
-            'tax_rate.required' => 'Le taux d\'imposition est requis.',
-            'tax_rate.numeric' => 'Le taux d\'imposition doit être un nombre.',
-            'tax_rate.min' => 'Le taux d\'imposition ne peut pas être inférieur à 0%.',
-            'tax_rate.max' => 'Le taux d\'imposition ne peut pas dépasser 100%.',
+            'solde.numeric' => 'Le solde du compte doit etre un nombre.',
+            'solde.min' => 'Le solde du compte ne peut pas etre negatif.',
+            'description.string' => 'La description du compte doit etre une chaine de caracteres.',
+            'taux_remuneration.required' => 'Le taux d interet est requis.',
+            'taux_remuneration.numeric' => 'Le taux d interet doit etre un nombre.',
+            'taux_remuneration.min' => 'Le taux d interet ne peut pas etre inferieur a 0%.',
+            'taux_remuneration.max' => 'Le taux d interet ne peut pas depasser 100%.',
+            'taux_imposition.required' => 'Le taux d imposition est requis.',
+            'taux_imposition.numeric' => 'Le taux d imposition doit etre un nombre.',
+            'taux_imposition.min' => 'Le taux d imposition ne peut pas etre inferieur a 0%.',
+            'taux_imposition.max' => 'Le taux d imposition ne peut pas depasser 100%.',
         ];
     }
 
-    // Préparer les données avant la validation (par exemple, convertir les valeurs en nombres à virgule flottante et supprimer les espaces)
     public function prepareForValidation(): void
     {
         $this->merge([
-            'name' => ucwords(trim($this->name)),
-            'description' => ucfirst(trim($this->description)),
-            'solde' => str_replace(',', '.', $this->solde),
-            'interest_rate' => str_replace(',', '.', $this->interest_rate),
-            'tax_rate' => str_replace(',', '.', $this->tax_rate),
+            'nom' =>ucwords(trim($this->nom)),
+            'description' => ucfirst($this->description),
+            'solde' => trim($this->solde),
         ]);
     }
 }

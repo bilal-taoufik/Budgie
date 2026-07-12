@@ -3,222 +3,122 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Depense;
-use App\Models\Revenu;
+use App\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
     public function index(): View
     {
-        $accounts = auth()->user()->accounts()->get();
-        $accountIds = $accounts->pluck('id');
+        $comptes = auth()->user()->accounts()->get();
+        $accountIds = $comptes->pluck('id');
+        $transactions = Transaction::with('account')
+            ->whereIn('account_id', $accountIds)
+            ->get();
 
-        $revenus = Revenu::whereIn('account_id', $accountIds)->with('account')->get();
-        $depenses = Depense::whereIn('account_id', $accountIds)->with('account')->get();
-
-        $soldeTotal = 0;
-        $interetsAnnuels = 0;
-        $taxesAnnuelles = 0;
-
-        foreach ($accounts as $account) {
-            $solde = (float) $account->solde;
-            $interets = max(0, $solde) * ((float) $account->interest_rate / 100);
-            $taxes = $interets * ((float) $account->tax_rate / 100);
-
-            $soldeTotal += $solde;
-            $interetsAnnuels += $interets;
-            $taxesAnnuelles += $taxes;
-        }
-
-        $revenuCeMois = $this->totalRevenusDuMois($revenus, now());
-        $depenseCeMois = $this->totalDepensesDuMois($depenses, now());
-
-        // Les interets et taxes sont prevus une fois par an, le 31 decembre.
-        if ((int) now()->format('m') === 12) {
-            $revenuCeMois += $interetsAnnuels;
-            $depenseCeMois += $taxesAnnuelles;
-        }
-
-        $labels = [];
-        $monthlyRevenus = [];
-        $monthlyDepenses = [];
-        $balanceEvolution = [];
-        $soldeDuGraphique = $soldeTotal;
-
-        for ($i = 5; $i >= 0; $i--) {
-            $mois = now()->subMonths($i)->startOfMonth();
-            $revenusDuMois = $this->totalRevenusDuMois($revenus, $mois);
-            $depensesDuMois = $this->totalDepensesDuMois($depenses, $mois);
-
-            if ((int) $mois->format('m') === 12) {
-                $revenusDuMois += $interetsAnnuels;
-                $depensesDuMois += $taxesAnnuelles;
-            }
-
-            $labels[] = ucfirst($mois->translatedFormat('M Y'));
-            $monthlyRevenus[] = round($revenusDuMois, 2);
-            $monthlyDepenses[] = round($depensesDuMois, 2);
-            $balanceEvolution[] = round($soldeDuGraphique + $revenusDuMois - $depensesDuMois, 2);
-
-            $soldeDuGraphique += $revenusDuMois - $depensesDuMois;
-        }
-
-        $depenseLabels = [];
-        $depenseData = [];
-
-        foreach ($depenses as $depense) {
-            $depenseLabels[] = $depense->nom;
-            $depenseData[] = (float) $depense->montant;
-        }
-
-        if ($taxesAnnuelles > 0) {
-            $depenseLabels[] = 'Taxes annuelles';
-            $depenseData[] = round($taxesAnnuelles, 2);
-        }
-
-        $charts = [
-            'labels' => $labels,
-            'balanceEvolution' => $balanceEvolution,
-            'monthlyRevenus' => $monthlyRevenus,
-            'monthlyDepenses' => $monthlyDepenses,
-            'depenseLabels' => $depenseLabels,
-            'depenseData' => $depenseData,
-        ];
-
-        $transactionsRecentes = $this->transactionsRecentes($revenus, $depenses, $accounts);
+        $soldeTotal = $comptes->sum('solde');
+        $revenuTotal = $this->totalDansMois($transactions, 'revenu', now());
+        $depenseTotal = $this->totalDansMois($transactions, 'depense', now());
+        $derniersComptes = $comptes->sortByDesc('created_at')->take(3);
+        $graphiques = $this->construireGraphiques($transactions, $soldeTotal);
+        $listeTransactions = $this->transactionsRecentes($transactions);
 
         return view('customer.dashboard', compact(
-            'accounts',
-            'soldeTotal',
-            'revenuCeMois',
-            'depenseCeMois',
-            'interetsAnnuels',
-            'taxesAnnuelles',
-            'transactionsRecentes',
-            'charts'
+            'comptes', 'soldeTotal', 'revenuTotal', 'depenseTotal',
+            'derniersComptes', 'graphiques', 'listeTransactions'
         ));
     }
 
-    private function totalRevenusDuMois($revenus, Carbon $mois): float
+    private function construireGraphiques(Collection $transactions, float $soldeTotal): array
     {
-        $total = 0;
+        $derniersMois = collect(range(5, 0))->map(fn ($indexMois) => now()->subMonths($indexMois));
+        $revenusMensuels = $derniersMois->map(fn ($date) => $this->totalDansMois($transactions, 'revenu', $date))->values();
+        $depensesMensuelles = $derniersMois->map(fn ($date) => $this->totalDansMois($transactions, 'depense', $date))->values();
+        $mouvementsMensuels = $revenusMensuels->zip($depensesMensuelles)
+            ->map(fn ($totaux) => $totaux[0] - $totaux[1]);
 
-        foreach ($revenus as $revenu) {
-            $total += $this->montantDuMois(
-                (float) $revenu->revenu_montant,
-                $revenu->revenu_fractionnement,
-                Carbon::parse($revenu->revenu_date_effet),
-                $mois
-            );
-        }
+        $soldeDepart = $soldeTotal - $mouvementsMensuels->sum();
+        $evolutionSolde = $mouvementsMensuels->map(function ($mouvement) use (&$soldeDepart) {
+            $soldeDepart += $mouvement;
+            return round($soldeDepart, 2);
+        })->values();
 
-        return $total;
+        $depensesParNom = $this->occurrencesEntre($transactions->where('type', 'depense'), now()->startOfMonth(), now())
+            ->groupBy('nom')
+            ->map(fn ($occurrences) => $occurrences->sum('montant'));
+
+        return [
+            'etiquettes' => $derniersMois->map(fn ($date) => $date->translatedFormat('M Y'))->values(),
+            'revenusMensuels' => $revenusMensuels,
+            'depensesMensuelles' => $depensesMensuelles,
+            'evolutionSolde' => $evolutionSolde,
+            'etiquettesDepenses' => $depensesParNom->keys()->values(),
+            'donneesDepenses' => $depensesParNom->values(),
+        ];
     }
 
-    private function totalDepensesDuMois($depenses, Carbon $mois): float
+    private function totalDansMois(Collection $transactions, string $type, Carbon $mois): float
     {
-        $total = 0;
+        $debut = $mois->copy()->startOfMonth();
 
-        foreach ($depenses as $depense) {
-            $total += $this->montantDuMois(
-                (float) $depense->montant,
-                $depense->fractionnement,
-                Carbon::parse($depense->date_effet),
-                $mois
-            );
+        if ($mois->isSameMonth(now()) && $mois->isSameYear(now())) {
+            $fin = now();
+        } else {
+            $fin = $mois->copy()->endOfMonth();
         }
 
-        return $total;
+        return abs($transactions->where('type', $type)->sum(fn ($transaction) => $transaction->montantTotal($debut, $fin)));
     }
 
-    private function montantDuMois(float $montant, string $fractionnement, Carbon $dateEffet, Carbon $mois): float
+    private function transactionsRecentes(Collection $transactions): LengthAwarePaginator
     {
-        $debutMois = $mois->copy()->startOfMonth();
-        $finMois = $mois->copy()->endOfMonth();
+        $dateDebut = $transactions->min('date_effet');
 
-        if ($dateEffet->greaterThan($finMois)) {
-            return 0;
+        if ($dateDebut === null) {
+            $dateDebut = now();
         }
 
-        if ($fractionnement === 'unique') {
-            return $dateEffet->betweenIncluded($debutMois, $finMois) ? $montant : 0;
-        }
+        $occurrences = $this->occurrencesEntre($transactions, $dateDebut, now())
+            ->sortByDesc('date_effet')
+            ->values();
 
-        $differenceEnMois = $dateEffet->copy()->startOfMonth()->diffInMonths($debutMois);
+        $page = LengthAwarePaginator::resolveCurrentPage();
+        $parPage = 5;
 
-        if ($fractionnement === 'mensuel') {
-            return $montant;
-        }
-
-        if ($fractionnement === 'semestriel' && $differenceEnMois % 6 === 0) {
-            return $montant;
-        }
-
-        if ($fractionnement === 'annuel' && $differenceEnMois % 12 === 0) {
-            return $montant;
-        }
-
-        return 0;
+        return new LengthAwarePaginator(
+            $occurrences->forPage($page, $parPage)->values(),
+            $occurrences->count(),
+            $parPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
     }
 
-    private function transactionsRecentes($revenus, $depenses, $accounts)
+    private function occurrencesEntre(Collection $transactions, Carbon|string $debut, Carbon|string $fin): Collection
     {
-        $transactions = [];
-
-        foreach ($revenus as $revenu) {
-            $transactions[] = [
-                'type' => 'Revenu',
-                'nom' => $revenu->revenu_nom,
-                'compte' => $revenu->account?->name,
-                'montant' => (float) $revenu->revenu_montant,
-                'date' => $revenu->last_credited_at ?? $revenu->revenu_date_effet,
-                'prevision' => false,
-            ];
+        if ($debut instanceof Carbon) {
+            $debut = $debut;
+        } else {
+            $debut = Carbon::parse($debut);
         }
 
-        foreach ($depenses as $depense) {
-            $transactions[] = [
-                'type' => 'Depense',
-                'nom' => $depense->nom,
-                'compte' => $depense->account?->name,
-                'montant' => -1 * (float) $depense->montant,
-                'date' => $depense->last_debited_at ?? $depense->date_effet,
-                'prevision' => false,
-            ];
+        if ($fin instanceof Carbon) {
+            $fin = $fin;
+        } else {
+            $fin = Carbon::parse($fin);
         }
 
-        foreach ($accounts as $account) {
-            $interets = max(0, (float) $account->solde) * ((float) $account->interest_rate / 100);
-            $taxes = $interets * ((float) $account->tax_rate / 100);
-            $dateFinAnnee = now()->endOfYear()->toDateString();
-
-            if ($interets > 0) {
-                $transactions[] = [
-                    'type' => 'Prevision',
-                    'nom' => 'Interets annuels',
-                    'compte' => $account->name,
-                    'montant' => round($interets, 2),
-                    'date' => $dateFinAnnee,
-                    'prevision' => true,
-                ];
-            }
-
-            if ($taxes > 0) {
-                $transactions[] = [
-                    'type' => 'Prevision',
-                    'nom' => 'Taxes annuelles',
-                    'compte' => $account->name,
-                    'montant' => -1 * round($taxes, 2),
-                    'date' => $dateFinAnnee,
-                    'prevision' => true,
-                ];
-            }
-        }
-
-        usort($transactions, fn ($a, $b) => strtotime($b['date']) <=> strtotime($a['date']));
-
-        return collect(array_slice($transactions, 0, 10));
+        return $transactions->flatMap(function (Transaction $transaction) use ($debut, $fin) {
+            return $transaction->nrbEcheance($debut, $fin)->map(fn (Carbon $date) => (object) [
+                'nom' => $transaction->nom,
+                'type' => $transaction->type,
+                'montant' => (float) $transaction->montant,
+                'date_effet' => $date,
+                'account' => $transaction->account,
+            ]);
+        });
     }
 }

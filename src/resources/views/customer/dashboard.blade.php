@@ -11,7 +11,7 @@
     <main class="main-wrapper">
         <div class="page-wrapper">
             <div class="dashboard-page">
-                <aside class="dashboard-sidebar">
+                <div class="dashboard-sidebar">
                     <a href="{{ route('home') }}" class="dashboard-logo" aria-label="Accueil">
                         <svg width="32" height="38" viewBox="0 0 32 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 38L4.40149 0H20.9368C24.0297 0 29.6208 1.63691 29.6208 8.76923C29.6208 11.6925 28.5502 16.4861 20.9368 16.4861H18.5576L19.0335 10.9908L6.54275 17.8892L17.6059 24.32L18.0818 19.1754H25.5762C27.8364 19.1754 32 22.0985 32 28.0615C32 31.3354 29.6208 38 21.8885 38H0Z" fill="#85A795"/>
@@ -47,10 +47,6 @@
                             <span>Depenses</span>
                         </a>
                         <a href="{{ route('customer.revenues.index') }}" class="nav-link">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18.3333 5.83334L11.25 12.9167L7.08329 8.75001L1.66663 14.1667" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M13.3334 5.83334H18.3334V10.8333" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
                             <span>Revenus</span>
                         </a>
                         <a href="{{ route('customer.previsions.index') }}" class="nav-link">
@@ -82,25 +78,30 @@
                             </button>
                         </form>
                     </div>
-                </aside>
+                </div>
 
-                <main class="dashboard-main">
-                    <header class="dashboard-header">
+                <div class="dashboard-main">
+                    <div class="dashboard-header">
                         <div>
                             <h1 class="heading-style-h3-bold">Tableau de bord</h1>
                             <p class="text-color-body text-size-small">
                                 Bienvenue {{ auth()->user()->firstname }} {{ auth()->user()->lastname }}.
                             </p>
                         </div>
-                        <span class="text-size-tiny text-color-body">Derniere mise a jour : {{ now()->format('d/m/Y') }}</span>
-                    </header>
 
-                    <section class="dashboard-content" id="dashboard-overview">
+                        <span class="text-size-tiny text-color-body">
+                            Dernière mise à jour : {{ now()->format('d/m/Y') }}
+                        </span>
+                    </div>
+
+                    <div class="dashboard-content" id="dashboard-overview">
                         <div class="dashboard-stats">
                             <article class="dashboard-card stat-card">
                                 <div>
                                     <span class="text-size-regular">Solde total</span>
-                                    <h2 class="heading-style-h3-regular">{{ number_format($soldeTotal, 2, ',', ' ') }} €</h2>
+                                    <h2 class="heading-style-h3-regular">
+                                        {{ number_format($soldeTotal, 2, ',', ' ') }} €
+                                    </h2>
                                     <p class="text-color-body text-size-small">Tous les comptes confondus</p>
                                 </div>
                             </article>
@@ -108,48 +109,37 @@
                             <article class="dashboard-card stat-card">
                                 <div>
                                     <span class="text-size-regular">Revenus ce mois</span>
-                                    <h2 class="heading-style-h3-regular positive">+{{ number_format($revenuCeMois, 2, ',', ' ') }} €</h2>
-                                    <p class="text-color-body text-size-small">Revenus manuels et interets</p>
+                                    <h2 class="heading-style-h3-regular positive">
+                                        +{{ number_format($revenuTotal, 2, ',', ' ') }} €
+                                    </h2>
+                                    <p class="text-color-body text-size-small">Total des revenus du mois</p>
                                 </div>
                             </article>
 
                             <article class="dashboard-card stat-card">
                                 <div>
-                                    <span class="text-size-regular">Depenses ce mois</span>
-                                    <h2 class="heading-style-h3-regular negative">-{{ number_format($depenseCeMois, 2, ',', ' ') }} €</h2>
-                                    <p class="text-color-body text-size-small">Depenses et taxes en decembre</p>
-                                </div>
-                            </article>
-
-                            <article class="dashboard-card stat-card">
-                                <div>
-                                    <span class="text-size-regular">Interets annuels prevus</span>
-                                    <h2 class="heading-style-h3-regular positive">+{{ number_format($interetsAnnuels, 2, ',', ' ') }} €</h2>
-                                    <p class="text-color-body text-size-small">Ajoutes le 31/12</p>
-                                </div>
-                            </article>
-
-                            <article class="dashboard-card stat-card">
-                                <div>
-                                    <span class="text-size-regular">Taxes annuelles prevues</span>
-                                    <h2 class="heading-style-h3-regular negative">-{{ number_format($taxesAnnuelles, 2, ',', ' ') }} €</h2>
-                                    <p class="text-color-body text-size-small">Retirees le 31/12</p>
+                                    <span class="text-size-regular">Dépenses ce mois</span>
+                                    <h2 class="heading-style-h3-regular negative">
+                                        -{{ number_format($depenseTotal, 2, ',', ' ') }} €
+                                    </h2>
+                                    <p class="text-color-body text-size-small">Total des dépenses du mois</p>
                                 </div>
                             </article>
                         </div>
 
                         <article class="dashboard-card transactions-card">
                             <div class="dashboard-card-header">
-                                <h2 class="heading-style-h4-bold">Comptes</h2>
+                                <h2 class="heading-style-h4-bold">Derniers comptes créés</h2>
                                 <a href="{{ route('customer.accounts.index') }}">Voir tout</a>
                             </div>
 
-                            @forelse($accounts as $account)
+                            @forelse($derniersComptes  as $account)
                                 <div class="transaction-row">
                                     <div>
-                                        <p class="text-size-regular text-weight-medium">{{ $account->name }}</p>
+                                        <p class="text-size-regular text-weight-medium">{{ $account->nom }}</p>
                                         <span class="text-size-tiny text-color-body">Solde du compte</span>
                                     </div>
+
                                     <p class="text-weight-bold {{ $account->solde >= 0 ? 'positive' : 'negative' }}">
                                         {{ number_format($account->solde, 2, ',', ' ') }} €
                                     </p>
@@ -161,50 +151,63 @@
 
                         <div class="dashboard-chart-grid">
                             <article class="dashboard-card chart-card">
-                                <h2 class="heading-style-h4-bold">Revenus vs Depenses</h2>
-                                <div class="chart-wrapper"><canvas id="revenuDepenseChart"></canvas></div>
+                                <h2 class="heading-style-h4-bold">Revenus vs Dépenses</h2>
+                                <div class="chart-wrapper">
+                                    <canvas id="revenuDepenseChart"></canvas>
+                                </div>
                             </article>
 
                             <article class="dashboard-card chart-card">
-                                <h2 class="heading-style-h4-bold">Repartition des depenses</h2>
-                                <div class="chart-wrapper"><canvas id="depensePieChart"></canvas></div>
+                                <h2 class="heading-style-h4-bold">Répartition des dépenses</h2>
+                                <div class="chart-wrapper">
+                                    <canvas id="depensePieChart"></canvas>
+                                </div>
                             </article>
                         </div>
 
                         <article class="dashboard-card chart-card large-chart">
-                            <h2 class="heading-style-h4-bold">Evolution du solde total</h2>
-                            <div class="chart-wrapper"><canvas id="balanceChart"></canvas></div>
+                            <h2 class="heading-style-h4-bold">Évolution du solde total</h2>
+                            <div class="chart-wrapper">
+                                <canvas id="balanceChart"></canvas>
+                            </div>
                         </article>
 
                         <article class="dashboard-card transactions-card">
                             <div class="dashboard-card-header">
-                                <h2 class="heading-style-h4-bold">Dernieres transactions</h2>
-                                <a href="{{ route('customer.depenses.index') }}">Voir tout</a>
+                                <h2 class="heading-style-h4-bold">Dernières transactions</h2>
                             </div>
 
-                            @forelse($transactionsRecentes as $transaction)
+                            @forelse($listeTransactions as $transaction)
                                 <div class="transaction-row">
                                     <div>
-                                        <p class="text-size-regular text-weight-medium">{{ $transaction['nom'] }}</p>
+                                        <p class="text-size-regular text-weight-medium">
+                                            {{ $transaction->nom }}
+                                        </p>
+
                                         <span class="text-size-tiny text-color-body">
-                                            {{ $transaction['type'] }} - {{ $transaction['compte'] ?? 'Compte supprime' }} -
-                                            {{ ($transaction['prevision'] ?? false) ? 'prevu le' : 'le' }} {{ \Carbon\Carbon::parse($transaction['date'])->format('d/m/Y') }}
+                                            {{ ucfirst($transaction->type) }} -
+                                            le {{ \Carbon\Carbon::parse($transaction->date_effet)->format('d/m/Y') }}
                                         </span>
                                     </div>
-                                    <p class="text-weight-bold {{ $transaction['montant'] >= 0 ? 'positive' : 'negative' }}">
-                                        {{ $transaction['montant'] >= 0 ? '+' : '-' }}{{ number_format(abs($transaction['montant']), 2, ',', ' ') }} €
+
+                                    <p class="text-weight-bold {{ $transaction->type === 'revenu' ? 'positive' : 'negative' }}">
+                                        {{ $transaction->type === 'revenu' ? '+' : '-' }}
+                                        {{ number_format(abs($transaction->montant), 2, ',', ' ') }} €
                                     </p>
                                 </div>
                             @empty
                                 <p class="text-color-body text-size-small">Aucune transaction pour le moment.</p>
                             @endforelse
+
+                            {{ $listeTransactions->links() }}
                         </article>
-                    </section>
-                </main>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
-    <script type="application/json" id="dashboard-chart-data">@json($charts)</script>
+    <script type="application/json" id="dashboard-chart-data">@json($graphiques)</script>
+    @include('components.popup-messages')
 </body>
 </html>

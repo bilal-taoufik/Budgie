@@ -1,0 +1,54 @@
+@use "../partials/functions" as f;
+@use "../partials/mixins" as m;
+
+@layer components {
+    .popup-wrapper {
+        position: fixed;
+        right: f.rem(24);
+        bottom: f.rem(24);
+        z-index: 2000;
+
+        display: flex;
+        flex-direction: column;
+        gap: f.rem(12);
+
+        width: min(calc(100% - #{f.rem(32)}), #{f.rem(420)});
+        pointer-events: none;
+    }
+
+    .popup-message {
+        padding: f.rem(16) f.rem(18);
+
+        border: f.rem(1) solid var(--border);
+        border-radius: f.rem(16);
+
+        background: var(--bg-primary);
+        color: var(--white);
+        box-shadow: 0 f.rem(18) f.rem(50) rgba(0, 0, 0, 0.38);
+        backdrop-filter: blur(14px);
+
+        font-size: f.rem(14);
+        font-weight: 600;
+        line-height: 1.5;
+        pointer-events: auto;
+    }
+
+    .popup-success {
+        border-left: f.rem(4) solid var(--success);
+    }
+
+    .popup-error {
+        border-left: f.rem(4) solid var(--error);
+    }
+
+    .popup-info {
+        border-left: f.rem(4) solid var(--brand-blue);
+    }
+
+    @include m.bp(sm) {
+        .popup-wrapper {
+            right: f.rem(16);
+            bottom: f.rem(16);
+        }
+    }
+}
