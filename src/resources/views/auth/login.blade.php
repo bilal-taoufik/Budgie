@@ -66,6 +66,8 @@
                                     >
                                 </div>
 
+                                <a class="text-size-small text-color-brand" href="{{ route('password.request') }}">Mot de passe oublie ?</a>
+
                                 <button type="submit" class="btn-secondary is-full">
                                     Se connecter
                                 </button>

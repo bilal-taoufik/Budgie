@@ -3,14 +3,17 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class User extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     // Définir les attributs qui peuvent être assignés
     protected $fillable = [
@@ -30,11 +33,11 @@ class User extends Authenticatable
         return $this->hasMany(Account::class);
     }
 
-    // Définir la relation entre User et Transaction via Account
-    public function account(): HasMany
+    public function sendPasswordResetNotification($token): void
     {
-        return $this->accounts();
+        $this->notify(new ResetPasswordNotification($token));
     }
+
 
     // Définir la relation entre User et Transaction via Account
     public function transactions(): HasManyThrough

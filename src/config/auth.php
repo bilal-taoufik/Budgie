@@ -17,6 +17,7 @@ return [
 
     'defaults' => [
         'guard' => env('AUTH_GUARD', 'web'),
+        'passwords' => 'users',
     ],
 
     /*
@@ -90,6 +91,15 @@ return [
     | quickly generating a very large amount of password reset tokens.
     |
     */
+
+    'passwords' => [
+        'users' => [
+            'provider' => 'users',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------

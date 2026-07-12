@@ -52,7 +52,7 @@ class TransactionRequest extends FormRequest
     {
         $this->merge([
             'nom' => ucwords(trim($this->nom)),
-            'description' =>ucfirst(trim($this->descripti)),
+            'description' =>ucfirst(trim($this->description)),
         ]);
     }
 }
