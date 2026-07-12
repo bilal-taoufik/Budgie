@@ -22,8 +22,6 @@
       --gradient-#{$name}: #{$gradient};
     }
   }
-  html, body { height: 100%; }
-
   body{
     font-family: ff.$mainFont;
     color: var(--black);

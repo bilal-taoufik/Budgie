@@ -41,8 +41,8 @@
                             </div>
                         </div>
 
-                        <div class="form-block w-form">
-                            <form id="login-form" method="POST" action="{{ route('login') }}">
+                        <div class="form-block">
+                            <form class="form-content" id="login-form" method="POST" action="{{ route('login') }}">
                                 @csrf
 
                                 <div class="form-field-wrapper">
@@ -50,8 +50,8 @@
                                         type="email" 
                                         class="form-input"
                                         name="email"
-                                        value="{{ old('email', session('email')) }}"
-                                        placeholder="Email"
+                                        value="{{ old('email') }}"
+                                        placeholder="Email*"
                                         required
                                     >
                                 </div>
@@ -61,12 +61,12 @@
                                         type="password" 
                                         class="form-input"
                                         name="password"
-                                        placeholder="Mot de passe"
+                                        placeholder="Mot de passe*"
                                         required
                                     >
                                 </div>
 
-                                <button type="submit" class="form-submit">
+                                <button type="submit" class="btn-secondary is-full">
                                     Se connecter
                                 </button>
 
@@ -84,10 +84,10 @@
                                 </form>
                             @endif
                         <div class="form-bottom">
-                            <p class="text-size-small text-color-body">
+                            <p class="text-size-regular text-color-body">
                                 Pas encore de compte ?
-                                <a href="{{ route('register') }}">
-                                    S'inscrire
+                                <a class="text-size-regular text-color-brand" href="{{ route('register') }}">
+                                S'inscrire
                                 </a>
                             </p>
                         </div>
@@ -105,7 +105,7 @@
                                 />
                             </svg>
 
-                            <span>Retour à l’accueil</span>
+                            <span>Retour à l'accueil</span>
                         </a>
 
                     </div>
@@ -262,14 +262,12 @@
             </div>
         </div>
     </main>
-
-
     @php
-        $toastMessages = collect();
+        $popupMessages = collect();
 
         foreach (['success', 'error', 'info'] as $type) {
             if (session($type)) {
-                $toastMessages->push([
+                $popupMessages->push([
                     'type' => $type,
                     'message' => session($type),
                 ]);
@@ -277,32 +275,33 @@
         }
 
         foreach ($errors->all() as $error) {
-            $toastMessages->push([
+            $popupMessages->push([
                 'type' => 'error',
                 'message' => $error,
             ]);
         }
     @endphp
 
-    @if($toastMessages->isNotEmpty())
-        <div class="toast-wrapper" id="toast-wrapper">
-            @foreach($toastMessages as $toast)
-                <div class="toast-message toast-{{ $toast['type'] }}">
-                    {{ $toast['message'] }}
+    @if($popupMessages->isNotEmpty())
+        <div class="popup-wrapper" id="popup-wrapper">
+            @foreach($popupMessages as $popup)
+                <div class="popup-message popup-{{ $popup['type'] }}">
+                    {{ $popup['message'] }}
                 </div>
             @endforeach
         </div>
 
         <script>
             setTimeout(() => {
-                const toastWrapper = document.getElementById('toast-wrapper');
+                const popupWrapper = document.getElementById('popup-wrapper');
 
-                if (toastWrapper) {
-                    toastWrapper.style.display = 'none';
+                if (popupWrapper) {
+                    popupWrapper.style.display = 'none';
                 }
             }, 8000); // 8 seconds
         </script>
     @endif
+
 </body>
 </html>
 

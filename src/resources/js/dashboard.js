@@ -1,106 +1,46 @@
+import Chart from 'chart.js/auto';
+
 window.addEventListener('load', () => {
-    // Les donnees viennent du dashboard.blade.php
-    const data = window.dashboardCharts;
+    // Récupère l'élément qui contient les données JSON
+    const dataElement = document.getElementById('dashboard-chart-data');
+    if (!dataElement) return;
 
-    if (!window.Chart || !data) {
-        return;
-    }
+    // Parse les données JSON
+    const data = JSON.parse(dataElement.textContent);
 
-    const euros = (value) => new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'EUR',
-    }).format(value);
-
-    // Graphique 1 : evolution du solde
-    new Chart(document.getElementById('balanceChart'), {
-        type: 'line',
-        data: {
-            labels: data.labels,
-            datasets: [
-                {
-                    label: 'Solde',
-                    data: data.balanceEvolution,
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.15)',
-                    fill: true,
-                    tension: 0.3,
-                },
-            ],
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: (context) => euros(context.raw),
-                    },
-                },
+    // Fonction utilitaire pour créer un graphique
+    const createChart = (elementId, type, chartData, customOptions = {}) => {
+        new Chart(document.getElementById(elementId), {
+            type, // Type du graphique (line, doughnut, bar)
+            data: chartData, // Données à afficher
+            options: {
+                responsive: true, // Adapte la taille à l'écran
+                maintainAspectRatio: false, // Respecte la hauteur du conteneur
+                ...customOptions, // Options personnalisées
             },
-        },
+        });
+    };
+
+    // Graphique en ligne pour l'évolution du solde
+    createChart('balanceChart', 'line', {
+        labels: data.etiquettes, // Mois ou dates
+        datasets: [{ label: 'Solde', data: data.evolutionSolde }], // Valeurs du solde
     });
 
-    // Graphique 2 : repartition des depenses
-    new Chart(document.getElementById('depensePieChart'), {
-        type: 'doughnut',
-        data: {
-            labels: data.depenseLabels,
-            datasets: [
-                {
-                    label: 'Depenses',
-                    data: data.depenseData,
-                    backgroundColor: [
-                        '#2563eb',
-                        '#059669',
-                        '#dc2626',
-                        '#d97706',
-                        '#7c3aed',
-                        '#0891b2',
-                    ],
-                },
-            ],
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: (context) => `${context.label}: ${euros(context.raw)}`,
-                    },
-                },
-            },
-        },
+    // Graphique en donut pour les dépenses
+    createChart('depensePieChart', 'doughnut', {
+        labels: data.etiquettesDepenses, // Catégories de dépenses
+        datasets: [{ label: 'Depenses', data: data.donneesDepenses }], // Montants par catégorie
+    }, {
+        plugins: { legend: { position: 'bottom' } }, // Légende en bas
     });
 
-    // Graphique 3 : revenus vs depenses
-    new Chart(document.getElementById('revenuDepenseChart'), {
-        type: 'bar',
-        data: {
-            labels: data.labels,
-            datasets: [
-                {
-                    label: 'Revenus',
-                    data: data.monthlyRevenus,
-                    backgroundColor: '#059669',
-                },
-                {
-                    label: 'Depenses',
-                    data: data.monthlyDepenses,
-                    backgroundColor: '#dc2626',
-                },
-            ],
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: (context) => `${context.dataset.label}: ${euros(context.raw)}`,
-                    },
-                },
-            },
-        },
+    // Graphique en barres comparant revenus et dépenses
+    createChart('revenuDepenseChart', 'bar', {
+        labels: data.etiquettes, // Mois ou dates
+        datasets: [
+            { label: 'Revenus', data: data.revenusMensuels }, // Montants des revenus
+            { label: 'Depenses', data: data.depensesMensuelles }, // Montants des dépenses
+        ],
     });
 });

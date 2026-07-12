@@ -4,145 +4,92 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Account;
-use Carbon\Carbon;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Http\Requests\Customer\PrevisionRequest;
+use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class PrevisionController extends Controller
 {
-    public function index(Request $request)
+    public function index(): View
+    {
+        $comptes = Account::all();
+        return view('customer.prevision', compact('comptes'));
+    }
+
+    public function calculer(PrevisionRequest $request): View
     {
         $request->validate([
-            'date_prevision' => ['nullable', 'date'],
+            'date_prevision' => 'required|date_format:Y-m-d'
         ]);
 
-        $selectedDate = $request->filled('date_prevision')
-            ? Carbon::parse($request->date_prevision)->startOfDay()
-            : now()->startOfDay();
+        $datePrevision = Carbon::createFromFormat('Y-m-d', $request->date_prevision);
+        $comptes = Account::all();
 
-        $accounts = Account::where('user_id', auth()->id())
-            ->with(['revenus', 'depenses'])
-            ->get();
+        $previsions = [];
+        $totalPrevision = 0;
 
-        $previsions = $accounts->map(
-            fn (Account $account) => $this->previsionCompte($account, $selectedDate)
-        );
+        // Boucle sur chaque compte
+        foreach ($comptes as $compte) {
+            $result = $this->calculerSoldePrevuCompte($compte, $datePrevision);
+            $previsions[] = [
+                'account' => $compte,
+                'solde' => $result['solde'],
+                'interets' => $result['interets'],
+                'taxes' => $result['taxes']
+            ];
+            $totalPrevision += $result['solde'];
+        }
 
         return view('customer.prevision', [
             'previsions' => $previsions,
-            'selectedDate' => $selectedDate,
+            'totalPrevision' => $totalPrevision,
+            'selectedDate' => $datePrevision
         ]);
     }
 
-    private function previsionCompte(Account $account, Carbon $selectedDate): array
+    private function calculerSoldePrevuCompte(Account $compte, Carbon $datePrevision)
     {
-        return [
-            'account' => $account,
-            'lignes' => $this->previsionMensuelle($account),
-            'date' => $this->previsionALaDate($account, $selectedDate),
-        ];
-    }
+        $soldeCourant = $compte->solde;
+        $totalInterets = 0;
+        $totalTaxes = 0;
 
-    private function previsionMensuelle(Account $account): array
-    {
-        $solde = (float) $account->solde;
-        $start = now()->startOfMonth();
+        // Récupère toutes les transactions du compte
+        $transactionsCompte = $compte->transactions()->get();
 
-        return collect(range(0, 5))->map(function (int $index) use ($account, &$solde, $start) {
-            $monthStart = $start->copy()->addMonthsNoOverflow($index)->startOfMonth();
-            $monthEnd = $monthStart->copy()->endOfMonth();
-            $mouvements = $this->mouvementsSurPeriode($account, $monthStart, $monthEnd);
+        // Boucle mois par mois jusqu'à la date de prévision
+        $moisCourant = Carbon::now()->copy()->startOfMonth();
 
-            $solde += $mouvements['variation'];
+        while ($moisCourant <= $datePrevision) {
+            $debutMois = $moisCourant->copy()->startOfMonth();
+            $finMois = $moisCourant->copy()->endOfMonth();
 
-            return [
-                'mois' => $monthStart->translatedFormat('F Y'),
-                'revenus' => $mouvements['revenus'],
-                'depenses' => $mouvements['depenses'],
-                'variation' => $mouvements['variation'],
-                'solde' => $solde,
-            ];
-        })->all();
-    }
-
-    private function previsionALaDate(Account $account, Carbon $selectedDate): array
-    {
-        $today = now()->startOfDay();
-        $mouvements = $selectedDate->greaterThanOrEqualTo($today)
-            ? $this->mouvementsSurPeriode($account, $today, $selectedDate)
-            : ['revenus' => 0.0, 'depenses' => 0.0, 'variation' => 0.0];
-
-        return [
-            ...$mouvements,
-            'solde' => (float) $account->solde + $mouvements['variation'],
-        ];
-    }
-
-    private function mouvementsSurPeriode(Account $account, Carbon $start, Carbon $end): array
-    {
-        $revenus = $account->revenus->sum(fn ($revenu) => $this->montantSurPeriode(
-            Carbon::parse($revenu->revenu_date_effet),
-            $revenu->last_credited_at ? Carbon::parse($revenu->last_credited_at) : null,
-            $revenu->revenu_fractionnement,
-            (float) $revenu->revenu_montant,
-            $start,
-            $end
-        ));
-
-        $depenses = $account->depenses->sum(fn ($depense) => $this->montantSurPeriode(
-            Carbon::parse($depense->date_effet),
-            $depense->last_debited_at ? Carbon::parse($depense->last_debited_at) : null,
-            $depense->fractionnement,
-            (float) $depense->montant,
-            $start,
-            $end
-        ));
-
-        return [
-            'revenus' => $revenus,
-            'depenses' => $depenses,
-            'variation' => $revenus - $depenses,
-        ];
-    }
-
-    private function montantSurPeriode(Carbon $dateEffet, ?Carbon $lastAppliedAt, string $fractionnement, float $montant, Carbon $start, Carbon $end): float
-    {
-        $date = $dateEffet->copy()->startOfDay();
-        $total = 0.0;
-
-        if ($end->lessThan($start)) {
-            return 0.0;
-        }
-
-        if ($fractionnement === 'unique') {
-            if ($lastAppliedAt) {
-                return 0.0;
+            // Appliquer les transactions du mois
+            foreach ($transactionsCompte as $transaction) {
+                $montantDuMois = $transaction->montantTotal($debutMois, $finMois);
+                $soldeCourant = $soldeCourant + $montantDuMois;
             }
 
-            return $date->betweenIncluded($start, $end) ? $montant : 0.0;
+            $moisCourant->addMonth();
         }
 
-        while ($date->lessThan($start)) {
-            $date = $this->dateSuivante($date, $fractionnement);
+        // Appliquer les intérêts si le compte a un taux > 0
+        if ($compte->taux_remuneration > 0) {
+            $interet = $soldeCourant * ($compte->taux_remuneration / 100);
+            $impot = $interet * ($compte->taux_imposition / 100);
+            $interetNet = $interet - $impot;
+
+            $soldeCourant = $soldeCourant + $interetNet;
+            $totalInterets = $interetNet;
+            $totalTaxes = $impot;
         }
 
-        while ($date->lessThanOrEqualTo($end)) {
-            if (! $lastAppliedAt || $date->greaterThan($lastAppliedAt)) {
-                $total += $montant;
-            }
-
-            $date = $this->dateSuivante($date, $fractionnement);
-        }
-
-        return $total;
-    }
-
-    private function dateSuivante(Carbon $date, string $fractionnement): Carbon
-    {
-        return match ($fractionnement) {
-            'mensuel' => $date->copy()->addMonthNoOverflow(),
-            'semestriel' => $date->copy()->addMonthsNoOverflow(6),
-            'annuel' => $date->copy()->addYearNoOverflow(),
-            default => $date->copy()->addCentury(),
-        };
+        return [
+            'solde' => $soldeCourant,
+            'interets' => $totalInterets,
+            'taxes' => $totalTaxes
+        ];
     }
 }
