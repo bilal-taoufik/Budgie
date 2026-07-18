@@ -1,185 +1,47 @@
-# Budgie
+<p align="center">
+  <img src="docs/logo.svg" width="96" alt="Logo Budgie">
+</p>
 
-Budgie est une application web de gestion de finances personnelles. Elle permet à un utilisateur de suivre ses comptes, ses dépenses et ses revenus sans connecter directement l'application à un établissement bancaire.
+<p align="center">
+  <strong>Votre partenaire financier personnel</strong><br>
+  Gérez vos comptes, suivez vos revenus et dépenses, et anticipez votre situation financière.
+</p>
 
-L'application a été réalisée dans le cadre d'un projet ESGI. Les fonctionnalités bonus du sujet (exceptions, partage de comptes et abonnements Stripe) ne font pas partie du périmètre retenu.
+<p align="center">
+  <a href="https://budgiefinance.fr">Application</a> ·
+  <a href="https://www.figma.com/design/tZfCaCvDEsaIeNFKGXN2fF/Budgie---Gestion-de-finance?node-id=2091-462&t=iGtsQHm5gZn9fwFC-1">Figma</a> ·
+  <a href="https://esgibudgie.atlassian.net/jira/software/projects/SCRUM/boards/1">Jira</a>
+</p>
 
-## Liens du projet
+## Présentation
 
-- Application : [https://budgiefinance.fr](https://budgiefinance.fr)
-- Dépôt GitHub : [github.com/bilal-taoufik/Budgie](https://github.com/bilal-taoufik/Budgie)
-- Maquettes Figma : [Budgie - Gestion de finance](https://www.figma.com/design/tZfCaCvDEsaIeNFKGXN2fF/Budgie---Gestion-de-finance?node-id=2091-462&t=iGtsQHm5gZn9fwFC-1)
-- Suivi Jira : [Board SCRUM Budgie](https://esgibudgie.atlassian.net/jira/software/projects/SCRUM/boards/1)
+Budgie est une application web de gestion de finances personnelles développée dans le cadre d'un projet ESGI. Elle fonctionne sans connexion directe à un établissement bancaire : l'utilisateur garde le contrôle sur les informations qu'il enregistre.
 
 ## Fonctionnalités
 
-### Authentification
+- inscription, vérification d'adresse e-mail, connexion et réinitialisation du mot de passe ;
+- séparation des espaces client et administrateur ;
+- gestion complète des comptes financiers ;
+- gestion des revenus et dépenses ponctuels ou récurrents ;
+- recherche par nom ou description ;
+- mise à jour automatique des soldes ;
+- prévisions avec intérêts, imposition et capitalisation ;
+- tableau de bord avec statistiques et graphiques ;
+- administration des utilisateurs ;
+- sauvegarde hebdomadaire de PostgreSQL ;
+- application annuelle automatisée des intérêts.
 
-Un visiteur peut :
+Les fonctionnalités bonus du sujet — partage de comptes, abonnements Stripe et exceptions — ne font pas partie du périmètre retenu.
 
-- créer un compte client ;
-- confirmer son adresse e-mail ;
-- demander un nouvel e-mail de vérification ;
-- se connecter et se déconnecter ;
-- demander un lien de réinitialisation de mot de passe ;
-- choisir un nouveau mot de passe avec un token sécurisé.
+## Technologies
 
-Les mots de passe doivent contenir au minimum 12 caractères, avec une majuscule, une minuscule, un chiffre et un symbole. Ils sont stockés sous forme de hash et ne sont jamais enregistrés en clair.
-
-### Comptes financiers
-
-Chaque client peut créer, afficher, modifier et supprimer ses propres comptes. Un compte contient :
-
-- un nom court ;
-- une description ;
-- un solde ;
-- un taux annuel de rémunération ;
-- un taux d'imposition ;
-- une date de création.
-
-La suppression d'un compte supprime également les transactions qui lui sont associées.
-
-### Dépenses et revenus
-
-Les dépenses et revenus sont rattachés à un compte appartenant à l'utilisateur connecté. Une transaction contient :
-
-- un nom court et une description ;
-- un montant ;
-- un type : `depense` ou `revenu` ;
-- une date d'effet ;
-- une date de fin facultative ;
-- une fréquence : ponctuelle, mensuelle, semestrielle ou annuelle.
-
-À la création, à la modification ou à la suppression d'une transaction, le solde du compte est recalculé avec la différence réellement applicable jusqu'à aujourd'hui.
-
-Les pages Dépenses et Revenus disposent d'un filtre par nom ou description. La recherche reste limitée aux transactions appartenant à l'utilisateur connecté.
-
-### Prévisions
-
-La page Prévisions calcule l'état des comptes à la fin du mois sélectionné.
-
-Le calcul :
-
-1. part du solde actuel du compte ;
-2. ajoute ou retire uniquement les échéances futures, pour éviter un double comptage ;
-3. applique les transactions récurrentes jusqu'à la date projetée ;
-4. convertit le taux annuel de rémunération en taux mensuel ;
-5. calcule chaque mois les intérêts bruts, l'imposition et les intérêts nets ;
-6. capitalise les intérêts nets dans le solde du mois suivant.
-
-Les prévisions sont strictement limitées aux comptes de l'utilisateur connecté.
-
-### Tableau de bord client
-
-Le tableau de bord présente :
-
-- le solde total ;
-- les revenus et dépenses du mois ;
-- les derniers comptes ;
-- les dernières échéances ;
-- l'évolution du solde ;
-- la répartition des dépenses ;
-- une comparaison des revenus et dépenses.
-
-### Administration
-
-Un administrateur dispose d'un espace protégé par rôle. Il peut :
-
-- consulter les statistiques générales ;
-- afficher la liste des utilisateurs ;
-- créer un autre administrateur ;
-- supprimer un utilisateur, sauf son propre compte depuis la liste ;
-- modifier ses informations et son mot de passe ;
-- supprimer son compte si un autre administrateur existe.
-
-## E-mails et durées de sécurité
-
-| Élément | Durée | Fonctionnement |
-|---|---:|---|
-| Session utilisateur | 120 minutes | Expiration après 120 minutes d'inactivité. La fermeture du navigateur ne force pas immédiatement l'expiration. |
-| Vérification d'e-mail | 24 heures | Un token aléatoire est créé à l'inscription. Un nouveau lien peut être demandé après expiration. |
-| Réinitialisation du mot de passe | 60 minutes | Le token est stocké sous forme sécurisée dans `password_reset_tokens`. |
-| Nouvelle demande de reset | 60 secondes | Limitation appliquée entre deux créations de token. |
-| Confirmation sensible | 3 heures | Valeur Laravel `AUTH_PASSWORD_TIMEOUT` disponible ; Budgie ne possède actuellement pas de page `/confirm-password` dédiée. |
-
-### Liens envoyés
-
-- Vérification : `/verify-email/{token}`
-- Mot de passe oublié : `/forgot-password`
-- Réinitialisation : `/reset-password/{token}?email=adresse`
-
-Les e-mails utilisent des templates Blade Budgie :
-
-- `resources/views/mail/welcome.blade.php` ;
-- `resources/views/mail/verify.blade.php` ;
-- `resources/views/mail/reset-password.blade.php`.
-
-En local, les messages sont consultables dans Mailpit à l'adresse [http://localhost:8025](http://localhost:8025).
-
-## Sécurité
-
-Les principales protections mises en place sont :
-
-- protection CSRF sur les formulaires ;
-- validation des données avec des `FormRequest` ;
-- hash des mots de passe ;
-- régénération de session après connexion ;
-- invalidation de la session à la déconnexion ;
-- contrôle des rôles `admin` et `customer` ;
-- requêtes Eloquent paramétrées ;
-- vérification de propriété avant modification ou suppression ;
-- isolation des comptes, transactions et prévisions par utilisateur ;
-- tokens d'e-mail aléatoires avec date d'expiration ;
-- variables sensibles dans `.env`, exclu de Git ;
-- blocage par Nginx de l'accès aux fichiers cachés ;
-- HTTPS avec redirection automatique du port 80 vers le port 443.
-
-## Conformité au sujet
-
-Le tableau suivant concerne uniquement le périmètre obligatoire, hors bonus.
-
-| Exigence | État | Implémentation |
-|---|---|---|
-| Identification | Conforme | Inscription, vérification e-mail, connexion, session et déconnexion. |
-| CRUD comptes | Conforme | Création, liste, modification, suppression et affichage du solde. |
-| CRUD dépenses | Conforme | Gestion complète, rattachement à un compte et filtre. |
-| CRUD revenus | Conforme | Gestion complète, rattachement à un compte et filtre. |
-| Prévisions | Conforme | Échéances futures, intérêts mensuels, imposition et capitalisation. |
-| Figma et intégration | Conforme | Maquettes accessibles depuis le lien Figma. |
-| Déploiement | Conforme dans la configuration | Docker, PHP-FPM, PostgreSQL, Nginx, domaine et HTTPS. |
-| Gestion de projet | Conforme | Historique Git et board Jira SCRUM. |
-| Sécurité | Conforme sur les contrôles principaux | CSRF, validation, rôles, isolation, hash et HTTPS. |
-| Fréquence « tous les N mois » | Partiel | Les fréquences disponibles sont 1, 6 ou 12 mois et ponctuelle. Une valeur N libre reste à ajouter. |
-
-## Architecture technique
-
-- PHP 8.3
-- Laravel
-- PostgreSQL 16
-- Blade
-- SCSS et Vite
-- JavaScript et Chart.js
-- Docker Compose
-- Nginx et PHP-FPM
-- Mailpit en développement
-- Certbot / Let's Encrypt en production
-
-Organisation principale :
-
-```text
-Budgie/
-├── docker/                     # Configuration Nginx
-├── docker-compose.local.yml    # Environnement local
-├── docker-compose.prod.yml     # Environnement de production
-├── Dockerfile                  # PHP 8.3, Composer et Node.js
-└── src/
-    ├── app/                    # Modèles, contrôleurs, requêtes, mails
-    ├── config/                 # Configuration Laravel
-    ├── database/               # Migrations et factories
-    ├── resources/              # Vues Blade, SCSS et JavaScript
-    ├── routes/                 # Routes web, auth et console
-    └── tests/                  # Tests Feature et Unit
-```
+- PHP 8.3 et Laravel ;
+- PostgreSQL 16 ;
+- Blade, SCSS, JavaScript et Chart.js ;
+- Vite ;
+- Docker Compose, PHP-FPM et Nginx ;
+- Mailpit pour les e-mails en local ;
+- Certbot et Let's Encrypt en production.
 
 ## Installation locale
 
@@ -187,9 +49,9 @@ Budgie/
 
 - Docker Desktop avec Docker Compose ;
 - Git ;
-- ports `8000`, `5173`, `5432`, `8025` et `1025` disponibles.
+- les ports `8000`, `5173`, `5432`, `8025` et `1025` disponibles.
 
-### 1. Cloner et configurer
+### 1. Préparer le projet
 
 ```bash
 git clone https://github.com/bilal-taoufik/Budgie.git
@@ -197,10 +59,11 @@ cd Budgie
 cp src/.env.example src/.env
 ```
 
-Dans `src/.env`, configurer au minimum PostgreSQL :
+Configurer au minimum ces variables dans `src/.env` :
 
 ```dotenv
 APP_NAME=Budgie
+APP_ENV=local
 APP_URL=http://localhost:8000
 
 DB_CONNECTION=pgsql
@@ -210,184 +73,156 @@ DB_DATABASE=budgie
 DB_USERNAME=budgie
 DB_PASSWORD=mot_de_passe_local
 
+POSTGRES_DB=budgie
+POSTGRES_USER=budgie
+POSTGRES_PASSWORD=mot_de_passe_local
+
 MAIL_MAILER=smtp
 MAIL_HOST=mailpit
 MAIL_PORT=1025
 MAIL_FROM_ADDRESS=noreply@budgie.fr
 ```
 
-Les variables PostgreSQL sont également utilisées par le conteneur `postgres`. Elles doivent donc être renseignées.
-
-### 2. Démarrer les conteneurs
+### 2. Démarrer et initialiser l'application
 
 ```bash
 docker compose -f docker-compose.local.yml up -d --build
-```
-
-### 3. Installer et initialiser l'application
-
-```bash
 docker compose -f docker-compose.local.yml exec app composer install
 docker compose -f docker-compose.local.yml exec app npm install
 docker compose -f docker-compose.local.yml exec app php artisan key:generate
-docker compose -f docker-compose.local.yml exec app php artisan migrate
+docker compose -f docker-compose.local.yml exec app php artisan migrate --seed
 ```
 
-En cas de problème de permissions Linux :
-
-```bash
-docker compose -f docker-compose.local.yml exec app chmod -R a+rwX storage bootstrap/cache
-```
-
-### 4. Compiler les assets
-
-Développement avec rechargement automatique :
+### 3. Lancer Vite
 
 ```bash
 docker compose -f docker-compose.local.yml exec app npm run dev -- --host 0.0.0.0
 ```
 
-Compilation de production :
+Services disponibles :
+
+| Service | Adresse |
+|---|---|
+| Application | http://localhost:8000 |
+| Mailpit | http://localhost:8025 |
+| PostgreSQL | `localhost:5432` |
+| Vite | http://localhost:5173 |
+
+## Consulter la base avec HeidiSQL
+
+En local, HeidiSQL est utilisé pour consulter et administrer la base PostgreSQL.
+
+Créer une nouvelle session PostgreSQL avec les informations suivantes :
+
+| Paramètre | Valeur |
+|---|---|
+| Hôte | `127.0.0.1` |
+| Port | `5432` |
+| Utilisateur | valeur de `POSTGRES_USER` |
+| Mot de passe | valeur de `POSTGRES_PASSWORD` |
+| Base | valeur de `POSTGRES_DB` |
+
+Le conteneur PostgreSQL doit être démarré avant d'ouvrir la connexion :
 
 ```bash
-docker compose -f docker-compose.local.yml exec app npm run build
-```
-
-### 5. Accéder aux services
-
-- Application : [http://localhost:8000](http://localhost:8000)
-- Mailpit : [http://localhost:8025](http://localhost:8025)
-- Vite : [http://localhost:5173](http://localhost:5173)
-- PostgreSQL : `localhost:5432`
-
-## Commandes utiles
-
-```bash
-# État des conteneurs
-docker compose -f docker-compose.local.yml ps
-
-# Appliquer les migrations
-docker compose -f docker-compose.local.yml exec app php artisan migrate
-
-# Recréer la base de développement
-docker compose -f docker-compose.local.yml exec app php artisan migrate:fresh --seed
-
-# Vider les caches Laravel
-docker compose -f docker-compose.local.yml exec app php artisan optimize:clear
-
-# Afficher les routes
-docker compose -f docker-compose.local.yml exec app php artisan route:list
-
-# Ouvrir un shell dans PHP
-docker compose -f docker-compose.local.yml exec app bash
+docker compose -f docker-compose.local.yml up -d postgres
 ```
 
 ## Tests
 
-Les tests métier couvrent notamment :
-
-- le CRUD et les autorisations des comptes ;
-- le CRUD des dépenses et revenus ;
-- l'isolation entre utilisateurs ;
-- les filtres nom/description ;
-- les fréquences et dates de fin ;
-- la sécurité et le calcul des prévisions ;
-- le parcours de réinitialisation du mot de passe.
-
-Commande ciblée sur les fonctionnalités Budgie maintenues :
+La suite couvre notamment l'authentification, les rôles, les profils, l'administration, les comptes, les transactions, les soldes, les prévisions et l'isolation des données.
 
 ```bash
-docker compose -f docker-compose.local.yml exec -T app php artisan test \
-  tests/Feature/Customer \
-  tests/Feature/Auth/PasswordResetTest.php \
-  tests/Unit/TransactionFrequencyTest.php
+docker compose -f docker-compose.local.yml exec -T app php artisan test
 ```
 
-Les anciens tests Laravel générés à la création du projet peuvent encore référencer des routes Breeze non utilisées (`/profile`, `/confirm-password`) ou l'ancien champ `email_verified_at`. Ils doivent être adaptés au système d'authentification personnalisé avant d'utiliser `php artisan test` sans filtre.
+État actuel : **52 tests réussis et 219 assertions**.
 
-## Déploiement
+## Déploiement en production
 
-La production utilise `docker-compose.prod.yml` avec :
-
-- PHP-FPM dans le conteneur `app` ;
-- PostgreSQL dans le conteneur `postgres` ;
-- Nginx sur les ports 80 et 443 ;
-- redirection HTTP vers HTTPS ;
-- certificats Let's Encrypt montés depuis `/etc/letsencrypt`.
-
-Démarrage :
-
-```bash
-docker compose -f docker-compose.prod.yml up -d --build
-```
-
-Renouvellement du certificat et rechargement de Nginx :
-
-```bash
-sudo certbot renew --deploy-hook "docker exec budgie_nginx_prod nginx -s reload"
-```
-
-Vérification du renouvellement automatique :
-
-```bash
-systemctl status certbot.timer
-```
-
-## Données non incluses dans Git
-
-Les éléments suivants ne doivent pas être ajoutés au dépôt :
-
-- fichiers `.env` ;
-- dépendances `vendor` et `node_modules` ;
-- logs Laravel ;
-- sessions et caches ;
-- certificats et clés privées ;
-- build Vite généré.
-
-Utiliser uniquement `.env.example` pour documenter les variables nécessaires, sans valeur sensible.
-
-## Équipe et méthode
-
-Le projet est organisé avec Git/GitHub pour les versions et contributions, Jira pour le suivi SCRUM et Figma pour la conception graphique. L'historique complet des contributions est conservé dans le dossier `.git` demandé par le sujet.
-
-## Sauvegardes automatiques
-
-En production, le service `postgres-backup` sauvegarde PostgreSQL chaque dimanche à 03:00. Une seule sauvegarde compressée est conservée dans le dossier `backups/` du serveur : chaque nouvelle sauvegarde valide remplace la précédente.
-
-La planification est configurable dans `src/.env` :
+Vérifier d'abord la configuration de production dans `src/.env` :
 
 ```dotenv
-DB_BACKUP_CRON="0 3 * * 0"
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://budgiefinance.fr
 ```
 
-Pour lancer une sauvegarde manuellement :
-
-```bash
-docker compose -f docker-compose.prod.yml run --rm --entrypoint /bin/sh postgres-backup /usr/local/bin/backup-database.sh
-```
-
-Pour restaurer une sauvegarde :
-
-```bash
-docker compose -f docker-compose.prod.yml exec -T postgres pg_restore --clean --if-exists -U "$DB_USERNAME" -d "$DB_DATABASE" < backups/Budgie_latest.dump
-```
-## Déploiement automatisé
-
-Le script `scripts/deploy-prod.sh` exécute dans l'ordre :
-
-1. construction et mise à jour des images Docker ;
-2. démarrage et attente de PostgreSQL ;
-3. `composer install` optimisé sans dépendances de développement ;
-4. `npm ci` puis compilation Vite avec `npm run build` ;
-5. nettoyage des anciens caches Laravel ;
-6. migrations avec `php artisan migrate --force` ;
-7. création des caches de configuration, routes et vues ;
-8. démarrage de PHP-FPM, Nginx, du scheduler et de la sauvegarde PostgreSQL.
-
-Avant le premier déploiement, vérifier que `APP_ENV=production` est défini dans `src/.env`. Depuis la racine du projet sur le serveur :
+Le script de déploiement automatise la construction Docker, Composer, npm, Vite, les migrations, les caches Laravel et le démarrage des services :
 
 ```bash
 sh scripts/deploy-prod.sh
 ```
 
-Le service `scheduler` exécute continuellement `php artisan schedule:work`. La commande `accounts:interet` est planifiée automatiquement le 31 décembre à 00:00, heure de Paris.
+Les commentaires présents dans le script expliquent chaque étape.
+
+## Tâches automatiques
+
+### Intérêts annuels
+
+Le service Docker `scheduler` exécute le scheduler Laravel. La commande suivante est lancée automatiquement le 31 décembre à 00:00, heure de Paris :
+
+```bash
+php artisan accounts:interet
+```
+
+Pour vérifier la planification :
+
+```bash
+docker compose -f docker-compose.prod.yml exec -T app php artisan schedule:list
+```
+
+### Sauvegarde PostgreSQL
+
+Le service `postgres-backup` crée une sauvegarde chaque dimanche à 03:00. Une seule sauvegarde valide est conservée : la nouvelle remplace l'ancienne dans `backups/`.
+
+Configuration facultative dans `src/.env` :
+
+```dotenv
+DB_BACKUP_CRON="0 3 * * 0"
+```
+
+Sauvegarde manuelle :
+
+```bash
+docker compose -f docker-compose.prod.yml run --rm --entrypoint /bin/sh postgres-backup /usr/local/bin/backup-database.sh
+```
+
+Restauration :
+
+```bash
+docker compose -f docker-compose.prod.yml exec -T postgres pg_restore --clean --if-exists -U "$DB_USERNAME" -d "$DB_DATABASE" < backups/budgie_latest.dump
+```
+
+## Sécurité
+
+- protection CSRF des formulaires ;
+- mots de passe hachés et règles de complexité ;
+- validation avec des `FormRequest` ;
+- contrôle des rôles et de la propriété des données ;
+- isolation stricte des comptes et transactions ;
+- expiration des tokens de vérification et de réinitialisation ;
+- HTTPS en production ;
+- secrets stockés dans `.env`, exclu de Git.
+
+## Structure du projet
+
+```text
+Budgie/
+├── docker/                  # Nginx et sauvegardes PostgreSQL
+├── docs/                    # Ressources de documentation
+├── scripts/                 # Automatisation du déploiement
+├── docker-compose.local.yml
+├── docker-compose.prod.yml
+├── Dockerfile
+└── src/
+    ├── app/                 # Logique Laravel
+    ├── database/            # Migrations, factories et seeders
+    ├── resources/           # Vues, SCSS et JavaScript
+    ├── routes/              # Routes web et commandes
+    └── tests/               # Tests unitaires et fonctionnels
+```
+
+## Équipe
+
+Projet réalisé par **Bilal Taoufik** et **Zakaria Bouguera** avec GitHub, Jira, Figma.
