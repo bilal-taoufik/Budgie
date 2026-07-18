@@ -81,7 +81,7 @@
                                 <form method="POST" action="{{ route('resend.verification') }}">
                                     @csrf
                                     <input type="hidden" name="email" value="{{ session('email') }}">
-                                    <button type="submit" class="form-submit">
+                                    <button type="submit" class="btn-secondary is-full">
                                         Renvoyer l'e-mail de verification
                                     </button>
                                 </form>

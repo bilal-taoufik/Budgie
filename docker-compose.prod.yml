@@ -31,5 +31,22 @@ services:
     volumes:
       - postgres_prod_data:/var/lib/postgresql/data
 
+  postgres-backup:
+    image: postgres:16-alpine
+    container_name: budgie_postgres_backup_prod
+    restart: unless-stopped
+    env_file:
+      - ./src/.env
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_BACKUP_PATH: /backups
+    volumes:
+      - ./backups:/backups
+      - ./docker/postgres/backup-database.sh:/usr/local/bin/backup-database.sh:ro
+      - ./docker/postgres/backup-entrypoint.sh:/usr/local/bin/backup-entrypoint.sh:ro
+    entrypoint: ["/bin/sh", "/usr/local/bin/backup-entrypoint.sh"]
+    depends_on:
+      - postgres
 volumes:
   postgres_prod_data:

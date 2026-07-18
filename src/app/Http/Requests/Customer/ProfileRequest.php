@@ -23,7 +23,7 @@ class ProfileRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->routeIs('customer.profile.info')) {
+        if ($this->routeIs('customer.profile.info', 'admin.profile.info')) {
             return [
                 'firstname' => ['required', 'string', 'max:255'],
                 'lastname' => ['required', 'string', 'max:255'],
@@ -31,7 +31,7 @@ class ProfileRequest extends FormRequest
             ];
         }
 
-        if ($this->routeIs('customer.profile.password')) {
+        if ($this->routeIs('customer.profile.password', 'admin.profile.password')) {
             return [
                 'current_password' => ['required', 'current_password'],
                 'password' => ['required', 'string', 'confirmed', 'min:12', 'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/', 'regex:/[@$!%*#?&]/'],
