@@ -182,7 +182,7 @@
                                                     </td>
                                                     <td>
                                                         @if($user->id!==auth()->id())
-                                                        <form method="POST" action="{{ route('admin.users.delete',$user) }}" onsubmit="return confirm('Supprimer cet utilisateur ?')">
+                                                        <form method="POST" action="{{ route('admin.users.delete',$user) }}" data-confirm="Supprimer cet utilisateur ? Cette action est définitive.">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button class="icon-action icon-action-danger" title="Supprimer" aria-label="Supprimer">
