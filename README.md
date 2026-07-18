@@ -349,3 +349,25 @@ Utiliser uniquement `.env.example` pour documenter les variables nécessaires, s
 ## Équipe et méthode
 
 Le projet est organisé avec Git/GitHub pour les versions et contributions, Jira pour le suivi SCRUM et Figma pour la conception graphique. L'historique complet des contributions est conservé dans le dossier `.git` demandé par le sujet.
+
+## Sauvegardes automatiques
+
+En production, le service `postgres-backup` sauvegarde PostgreSQL chaque dimanche à 03:00. Une seule sauvegarde compressée est conservée dans le dossier `backups/` du serveur : chaque nouvelle sauvegarde valide remplace la précédente.
+
+La planification est configurable dans `src/.env` :
+
+```dotenv
+DB_BACKUP_CRON="0 3 * * 0"
+```
+
+Pour lancer une sauvegarde manuellement :
+
+```bash
+docker compose -f docker-compose.prod.yml run --rm --entrypoint /bin/sh postgres-backup /usr/local/bin/backup-database.sh
+```
+
+Pour restaurer une sauvegarde :
+
+```bash
+docker compose -f docker-compose.prod.yml exec -T postgres pg_restore --clean --if-exists -U "$DB_USERNAME" -d "$DB_DATABASE" < backups/Budgie_latest.dump
+```

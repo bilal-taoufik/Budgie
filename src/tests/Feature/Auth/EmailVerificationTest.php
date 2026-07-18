@@ -2,57 +2,81 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Mail\VerifyMail;
 use App\Models\User;
-use Illuminate\Auth\Events\Verified;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class EmailVerificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_email_verification_screen_can_be_rendered(): void
+    public function test_valid_token_verifies_email_and_invalidates_token(): void
     {
-        $user = User::factory()->unverified()->create();
+        $user = User::factory()->create([
+            'email_verified' => false,
+            'email_verification_token' => 'valid-token',
+            'email_verification_expires_at' => now()->addHour(),
+        ]);
 
-        $response = $this->actingAs($user)->get('/verify-email');
+        $this->get(route('verify.email', ['token' => 'valid-token']))
+            ->assertRedirect(route('login'))
+            ->assertSessionHas('success');
 
-        $response->assertStatus(200);
+        $user->refresh();
+        $this->assertTrue((bool) $user->email_verified);
+        $this->assertNull($user->email_verification_token);
+        $this->assertNull($user->email_verification_expires_at);
     }
 
-    public function test_email_can_be_verified(): void
+    public function test_invalid_or_expired_token_does_not_verify_email(): void
     {
-        $user = User::factory()->unverified()->create();
+        $user = User::factory()->create([
+            'email_verified' => false,
+            'email_verification_token' => 'expired-token',
+            'email_verification_expires_at' => now()->subMinute(),
+        ]);
 
-        Event::fake();
+        $this->get(route('verify.email', ['token' => 'unknown']))
+            ->assertRedirect(route('login'))->assertSessionHas('error');
+        $this->get(route('verify.email', ['token' => 'expired-token']))
+            ->assertRedirect(route('login'))->assertSessionHas('error');
 
-        $verificationUrl = URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(60),
-            ['id' => $user->id, 'hash' => sha1($user->email)]
-        );
-
-        $response = $this->actingAs($user)->get($verificationUrl);
-
-        Event::assertDispatched(Verified::class);
-        $this->assertTrue($user->fresh()->hasVerifiedEmail());
-        $response->assertRedirect(route('dashboard', absolute: false).'?verified=1');
+        $this->assertFalse((bool) $user->fresh()->email_verified);
     }
 
-    public function test_email_is_not_verified_with_invalid_hash(): void
+    public function test_unverified_user_can_request_new_verification_email(): void
     {
-        $user = User::factory()->unverified()->create();
+        Mail::fake();
+        $user = User::factory()->create([
+            'email' => 'user@example.com',
+            'email_verified' => false,
+            'email_verification_token' => 'old-token',
+            'email_verification_expires_at' => now()->subHour(),
+        ]);
 
-        $verificationUrl = URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(60),
-            ['id' => $user->id, 'hash' => sha1('wrong-email')]
-        );
+        $this->post(route('resend.verification'), ['email' => ' USER@EXAMPLE.COM '])
+            ->assertRedirect(route('login'))->assertSessionHas('success');
 
-        $this->actingAs($user)->get($verificationUrl);
+        $user->refresh();
+        $this->assertNotSame('old-token', $user->email_verification_token);
+        $this->assertTrue(Carbon::parse($user->email_verification_expires_at)->isFuture());
+        Mail::assertSent(VerifyMail::class, fn ($mail) => $mail->hasTo($user->email));
+    }
 
-        $this->assertFalse($user->fresh()->hasVerifiedEmail());
+    public function test_resend_rejects_unknown_email_and_skips_verified_user(): void
+    {
+        Mail::fake();
+
+        $this->post(route('resend.verification'), ['email' => 'unknown@example.com'])
+            ->assertSessionHasErrors('email');
+
+        $user = User::factory()->create(['email_verified' => true]);
+        $this->post(route('resend.verification'), ['email' => $user->email])
+            ->assertRedirect(route('login'))->assertSessionHas('info');
+
+        Mail::assertNothingSent();
     }
 }
