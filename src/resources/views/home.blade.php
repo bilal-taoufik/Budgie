@@ -6,6 +6,19 @@
     @vite(['resources/css/main.scss', 'resources/js/main.js'])
     <link rel="icon" type="image/ico" href="/favicon.ico" />
     <title>Budgie | Votre partenaire financier</title>
+    <meta name="description" content="Prenez le contrôle de votre budget avec Budgie : centralisez vos comptes, suivez vos revenus et dépenses, et anticipez sereinement vos finances.">
+    <meta name="keywords" content="budget, gestion finance, suivi dépenses, prévisions financières">
+    <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Budgie",
+            "url": "{{ url('/') }}",
+            "description": "Prenez le contrôle de votre budget avec Budgie : centralisez vos comptes, suivez vos revenus et dépenses, et anticipez sereinement vos finances.",
+            "applicationCategory": "FinanceApplication",
+            "operatingSystem": "Web"
+        }
+    </script>
 
     <!-- Finsweet Cookie Consent -->
     <script async fs-cc-mode="opt-in" src="https://cdn.jsdelivr.net/npm/@finsweet/cookie-consent@1/fs-cc.js"></script>
@@ -147,7 +160,7 @@
                 <div class="padding-global padding-section-large">
                     <div class="fonction-layout">
 
-                        <div class="fonction-content">
+                        <div class="fonction-content fade-up">
                             <div class="badge-section">
                                 <span>Valeurs</span>
                             </div>
@@ -164,7 +177,7 @@
                         </div>
 
                         <div class="fonction-grid">
-                            <div class="fonction-card">
+                            <div class="fonction-card scale-in reveal-delay-1 image-hover_trigger">
                                 <div class="fonction-icon">
                                     <img src="/assets/icons/wallet.svg" alt="">
                                 </div>
@@ -175,7 +188,7 @@
                                 </div>
                             </div>
 
-                            <div class="fonction-card">
+                            <div class="fonction-card scale-in reveal-delay-2 image-hover_trigger">
                                 <div class="fonction-icon">
                                     <img src="/assets/icons/chart-down.svg" alt="">
                                 </div>
@@ -186,7 +199,7 @@
                                 </div>
                             </div>
 
-                            <div class="fonction-card">
+                            <div class="fonction-card scale-in reveal-delay-3 image-hover_trigger">
                                 <div class="fonction-icon">
                                     <img src="/assets/icons/chart-up.svg" alt="">
                                 </div>
@@ -197,7 +210,7 @@
                                 </div>
                             </div>
 
-                            <div class="fonction-card">
+                            <div class="fonction-card scale-in reveal-delay-4 image-hover_trigger">
                                 <div class="fonction-icon">
                                     <img src="/assets/icons/stats.svg" alt="">
                                 </div>
@@ -217,7 +230,7 @@
 
                     <div class="cta-home-wrapper">
 
-                        <div class="cta-home-content">
+                        <div class="cta-home-content fade-up reveal-delay-1">
 
                             <div class="cta-home-logo">
                                 <svg width="74" height="88" viewBox="0 0 32 38" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -406,10 +419,10 @@
         <div class="footer_component">
             <div class="padding-global padding-section-large">
 
-                <div class="footer-layout">
+                <div class="footer-layout fade-in">
 
                     <div class="footer-brand">
-                        <a href="{{ route('home') }}" class="footer-logo">
+                        <a href="{{ route('home') }}" class="footer-logo" alt="Budgie Finance - Retour à l'accueil">
                             <svg width="32" height="38" viewBox="0 0 32 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 38L4.40149 0H20.9368C24.0297 0 29.6208 1.63691 29.6208 8.76923C29.6208 11.6925 28.5502 16.4861 20.9368 16.4861H18.5576L19.0335 10.9908L6.54275 17.8892L17.6059 24.32L18.0818 19.1754H25.5762C27.8364 19.1754 32 22.0985 32 28.0615C32 31.3354 29.6208 38 21.8885 38H0Z" fill="#A7B8AD"/>
                             </svg>

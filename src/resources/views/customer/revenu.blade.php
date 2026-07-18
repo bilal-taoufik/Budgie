@@ -6,6 +6,9 @@
     @vite(['resources/css/main.scss', 'resources/js/main.js'])
     <link rel="icon" type="image/ico" href="{{ asset('favicon.ico') }}" />
     <title>Budgie | Revenus</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Ajoutez, consultez et organisez vos revenus avec Budgie afin de mieux comprendre vos entrées d'argent et piloter votre budget.">
+
 </head>
 <body>
     <main class="main-wrapper">
@@ -44,7 +47,7 @@
                                 <path d="M18.3333 14.1667L11.25 7.08332L7.08329 11.25L1.66663 5.83332" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M13.3334 14.1667H18.3334V9.16666" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>Depenses</span>
+                            <span>Dépenses</span>
                         </a>
                         <a href="{{ route('customer.revenues.index') }}" class="nav-link is-active">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,7 +63,7 @@
                                 <path d="M10.8334 14.1667V4.16666" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M6.66663 14.1667V11.6667" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>Previsions</span>
+                            <span>Prévisions</span>
                         </a>
                     </nav>
 
@@ -85,20 +88,20 @@
                 </div>
 
                 <div class="dashboard-main">
-                    <div class="dashboard-header">
+                    <div class="dashboard-header fade-in">
                         <div>
                             <h1 class="heading-style-h3-bold">Revenus</h1>
-                            <p class="text-color-body text-size-small">Creer, modifier et supprimer vos revenus.</p>
+                            <p class="text-color-body text-size-small">Créer, modifier et supprimer vos revenus.</p>
                         </div>
                         <a class="client-back-link" href="{{ route('customer.dashboard') }}">Retour au dashboard</a>
                     </div>
 
-                    <div class="dashboard-content client-sections-content">
+                    <div class="dashboard-content client-sections-content fade-up reveal-delay-1">
 
 
                         <div class="client-section">
                             <div class="dashboard-card entity-form-card">
-                                <h3 class="heading-style-h5-bold">Creer</h3>
+                                <h3 class="heading-style-h5-bold">Créer une revenu</h3>
 
                                 <form class="dashboard-form" method="POST" action="{{ route('customer.revenues.store') }}">
                                     @csrf

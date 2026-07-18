@@ -6,12 +6,15 @@
     @vite(['resources/css/main.scss', 'resources/js/main.js'])
     <link rel="icon" type="image/ico" href="{{ asset('favicon.ico') }}" />
     <title>Budgie | Comptes</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Centralisez et gérez tous vos comptes financiers avec Budgie pour suivre facilement vos soldes et garder une vue claire sur votre budget.">
+
 </head>
 <body>
     <main class="main-wrapper">
         <div class="page-wrapper">
             <div class="dashboard-page">
-                <aside class="dashboard-sidebar">
+                <div class="dashboard-sidebar">
                     <a href="{{ route('home') }}" class="dashboard-logo" aria-label="Accueil">
                         <svg width="32" height="38" viewBox="0 0 32 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 38L4.40149 0H20.9368C24.0297 0 29.6208 1.63691 29.6208 8.76923C29.6208 11.6925 28.5502 16.4861 20.9368 16.4861H18.5576L19.0335 10.9908L6.54275 17.8892L17.6059 24.32L18.0818 19.1754H25.5762C27.8364 19.1754 32 22.0985 32 28.0615C32 31.3354 29.6208 38 21.8885 38H0Z" fill="#85A795"/>
@@ -44,7 +47,7 @@
                                 <path d="M18.3333 14.1667L11.25 7.08332L7.08329 11.25L1.66663 5.83332" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M13.3334 14.1667H18.3334V9.16666" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>Depenses</span>
+                            <span>Dépenses</span>
                         </a>
                         <a href="{{ route('customer.revenues.index') }}" class="nav-link">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,7 +63,7 @@
                                 <path d="M10.8334 14.1667V4.16666" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M6.66663 14.1667V11.6667" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>Previsions</span>
+                            <span>Prévisions</span>
                         </a>
                     </nav>
 
@@ -82,29 +85,29 @@
                             </button>
                         </form>
                     </div>
-                </aside>
+                </div>
 
                 <main class="dashboard-main">
-                    <header class="dashboard-header">
+                    <div class="dashboard-header fade-in">
                         <div>
                             <h1 class="heading-style-h3-bold">Comptes</h1>
-                            <p class="text-color-body text-size-small">Creer, supprimer et afficher vos comptes.</p>
+                            <p class="text-color-body text-size-small">Créer, supprimer et afficher vos comptes.</p>
                         </div>
                         <a class="client-back-link" href="{{ route('customer.dashboard') }}">Retour au dashboard</a>
-                    </header>
+                    </div>
 
-                    <section class="dashboard-content client-sections-content">
+                    <section class="dashboard-content client-sections-content fade-up reveal-delay-1">
 
 
                         <section class="client-section">
                             <article class="dashboard-card entity-form-card">
-                                <h3 class="heading-style-h5-bold">Creer un compte</h3>
+                                <h3 class="heading-style-h5-bold">Créer un compte</h3>
                                 <form class="dashboard-form" method="POST" action="{{ route('customer.accounts.store') }}">
                                     @csrf
-                                    <label>Nom court<input name="nom" type="text" value="{{ old('nom') }}" required></label>
-                                    <label>Description<input name="description" type="text" value="{{ old('description') }}"></label>
+                                    <label>Nom*<input name="nom" type="text" value="{{ old('nom') }}" required></label>
+                                    <label>Description*<input name="description" type="text" value="{{ old('description') }}"></label>
                                     <label>Solde<input name="solde" type="number" step="0.01" min="0" value="{{ old('solde', 0) }}" required></label>
-                                    <label>Taux de remuneration<input name="taux_remuneration" type="number" step="0.01" min="0" max="100" value="{{ old('taux_remuneration', 0) }}" required></label>
+                                    <label>Taux de rémuneration<input name="taux_remuneration" type="number" step="0.01" min="0" max="100" value="{{ old('taux_remuneration', 0) }}" required></label>
                                     <label>Taux d'imposition<input name="taux_imposition" type="number" step="0.01" min="0" max="100" value="{{ old('taux_imposition', 0) }}" required></label>
                                     <button type="submit" class="dashboard-action-button">Enregistrer</button>
                                 </form>
@@ -113,7 +116,17 @@
                             <div class="dashboard-table-card dashboard-card">
                                 <div class="dashboard-table-wrapper">
                                     <table class="dashboard-table">
-                                        <thead><tr><th>Nom</th><th>Description</th><th>Remuneration</th><th>Imposition</th><th>Solde</th><th>Date de creation</th><th>Actions</th></tr></thead>
+                                        <thead>
+                                            <tr>
+                                                <th>Nom</th>
+                                                <th>Description</th>
+                                                <th>Rémuneration</th>
+                                                <th>Imposition</th>
+                                                <th>Solde</th>
+                                                <th>Date de création</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
                                         <tbody>
                                             @forelse($accounts as $account)
                                                 <tr>

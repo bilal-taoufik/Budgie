@@ -1,16 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         @vite(['resources/css/main.scss','resources/js/main.js'])
-        <title>
-            Budgie | Profil admin
-        </title>
+        <title>Budgie | Profil admin</title>
+    <meta name="robots" content="noindex, nofollow">
+        <meta name="description" content="Consultez et mettez à jour les informations de votre profil administrateur Budgie en toute simplicité.">
     </head>
     <body>
         <main class="main-wrapper">
             <div class="page-wrapper">
+
                 <div class="dashboard-page">
                     <div class="dashboard-sidebar">
                         <a href="{{ route('home') }}" class="dashboard-logo" aria-label="Accueil">
@@ -66,20 +67,20 @@
                     </div>
 
                     <div class="dashboard-main">
-                        <header class="dashboard-header">
+                        <div class="dashboard-header fade-in">
                             <div>
                                 <h1 class="heading-style-h3-bold">
                                     Mon profil admin
                                 </h1>
                                 <p class="text-color-body text-size-small">
-                                    Gerez vos informations et la securite de votre compte.
+                                    Gérez vos informations et la sécurite de votre compte.
                                 </p>
                             </div>
                             <a class="client-back-link" href="{{ route('admin.dashboard') }}">
                                 Retour au dashboard
                             </a>
-                        </header>
-                        <div class="dashboard-content client-sections-content">
+                        </div>
+                        <div class="dashboard-content client-sections-content fade-up reveal-delay-1">
                             <section class="client-section">
                                 <div>
                                     <span class="section-kicker">

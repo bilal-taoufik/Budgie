@@ -47,26 +47,26 @@ class ProfileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'firstname.required' => 'Le prenom est requis.',
-            'firstname.string' => 'Le prenom doit etre une chaine de caracteres.',
-            'firstname.max' => 'Le prenom ne doit pas depasser 255 caracteres.',
+            'firstname.required' => 'Le prenom est obligatoire.',
+            'firstname.string' => 'Le prenom doit être une chaine de caractères.',
+            'firstname.max' => 'Le prenom ne doit pas depasser 255 caractères.',
 
-            'lastname.required' => 'Le nom est requis.',
-            'lastname.string' => 'Le nom doit etre une chaine de caracteres.',
-            'lastname.max' => 'Le nom ne doit pas depasser 255 caracteres.',
+            'lastname.required' => 'Le nom est obligatoire.',
+            'lastname.string' => 'Le nom doit être une chaine de caractères.',
+            'lastname.max' => 'Le nom ne doit pas depasser 255 caractères.',
 
-            'email.required' => 'L\'adresse e-mail est requise.',
-            'email.email' => 'L\'adresse e-mail doit etre valide.',
-            'email.unique' => 'Cette adresse e-mail est deja utilisee.',
+            'email.required' => 'L\'adresse e-mail est obligatoire.',
+            'email.email' => 'L\'adresse e-mail doit être valide.',
+            'email.unique' => 'Cette adresse e-mail est déjà utilisée.',
 
-            'current_password.required' => 'Le mot de passe actuel est requis.',
+            'current_password.required' => 'Le mot de passe actuel est obligatoire.',
             'current_password.current_password' => 'Le mot de passe actuel est incorrect.',
 
-            'password.required' => 'Le mot de passe est requis.',
+            'password.required' => 'Le mot de passe est obligatoire.',
             'password.current_password' => 'Le mot de passe est incorrect.',
             'password.confirmed' => 'Les mots de passe ne correspondent pas.',
-            'password.min' => 'Le mot de passe doit contenir au moins 12 caracteres.',
-            'password.regex' => 'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caractere special.',
+            'password.min' => 'Le mot de passe doit contenir au moins 12 caractères.',
+            'password.regex' => 'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caractère special.',
         ];
     }
 

@@ -6,12 +6,14 @@
     @vite(['resources/css/main.scss', 'resources/js/main.js'])
     <link rel="icon" type="image/ico" href="{{ asset('favicon.ico') }}" />
     <title>Budgie | Profil</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Consultez et modifiez les informations de votre profil Budgie afin de garder votre compte personnel à jour.">
 </head>
 <body>
     <main class="main-wrapper">
         <div class="page-wrapper">
             <div class="dashboard-page">
-                <aside class="dashboard-sidebar">
+                <div class="dashboard-sidebar">
                     <a href="{{ route('home') }}" class="dashboard-logo" aria-label="Accueil">
                         <svg width="32" height="38" viewBox="0 0 32 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 38L4.40149 0H20.9368C24.0297 0 29.6208 1.63691 29.6208 8.76923C29.6208 11.6925 28.5502 16.4861 20.9368 16.4861H18.5576L19.0335 10.9908L6.54275 17.8892L17.6059 24.32L18.0818 19.1754H25.5762C27.8364 19.1754 32 22.0985 32 28.0615C32 31.3354 29.6208 38 21.8885 38H0Z" fill="#85A795"/>
@@ -44,7 +46,7 @@
                                 <path d="M18.3333 14.1667L11.25 7.08332L7.08329 11.25L1.66663 5.83332" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M13.3334 14.1667H18.3334V9.16666" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>Depenses</span>
+                            <span>Dépenses</span>
                         </a>
                         <a href="{{ route('customer.revenues.index') }}" class="nav-link">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,7 +62,7 @@
                                 <path d="M10.8334 14.1667V4.16666" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M6.66663 14.1667V11.6667" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>Previsions</span>
+                            <span>Prévisions</span>
                         </a>
                     </nav>
 
@@ -82,11 +84,11 @@
                             </button>
                         </form>
                     </div>
-                </aside>
+                </div>
 
                 <main class="dashboard-main">
-                    <header class="dashboard-header"><div><h1 class="heading-style-h3-bold">Profil</h1><p class="text-color-body text-size-small">Gerer les informations de votre espace personnel.</p></div><a class="client-back-link" href="{{ route('customer.dashboard') }}">Retour au dashboard</a></header>
-                    <section class="dashboard-content client-sections-content">
+                    <header class="dashboard-header fade-in"><div><h1 class="heading-style-h3-bold">Profil</h1><p class="text-color-body text-size-small">Gerer les informations de votre espace personnel.</p></div><a class="client-back-link" href="{{ route('customer.dashboard') }}">Retour au dashboard</a></header>
+                    <section class="dashboard-content client-sections-content fade-up reveal-delay-1">
 
 
                         <section class="client-section">
@@ -105,9 +107,9 @@
                                 <h3 class="heading-style-h5-bold">Mot de passe</h3>
                                 <form class="dashboard-form" method="POST" action="{{ route('customer.profile.password') }}">
                                     @csrf @method('PUT')
-                                    <label>Mot de passe actuel<input name="current_password" type="password" required></label>
-                                    <label>Nouveau mot de passe<input name="password" type="password" required></label>
-                                    <label>Confirmation<input name="password_confirmation" type="password" required></label>
+                                    <label>Mot de passe actuel*<input name="current_password" type="password" required></label>
+                                    <label>Nouveau mot de passe*<input name="password" type="password" required></label>
+                                    <label>Confirmation*<input name="password_confirmation" type="password" required></label>
                                     <button type="submit" class="dashboard-action-button">Modifier</button>
                                 </form>
                             </article>
@@ -116,7 +118,7 @@
                                 <h3 class="heading-style-h5-bold">Supprimer mon compte</h3>
                                 <form class="dashboard-form" method="POST" action="{{ route('customer.profile.delete') }}">
                                     @csrf @method('DELETE')
-                                    <label>Mot de passe<input name="password" type="password" required></label>
+                                    <label>Mot de passe*<input name="password" type="password" required></label>
                                     <button type="submit" class="dashboard-action-button">Supprimer mon compte</button>
                                 </form>
                             </article>
