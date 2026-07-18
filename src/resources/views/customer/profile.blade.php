@@ -116,7 +116,7 @@
 
                             <article class="dashboard-card entity-form-card">
                                 <h3 class="heading-style-h5-bold">Supprimer mon compte</h3>
-                                <form class="dashboard-form" method="POST" action="{{ route('customer.profile.delete') }}">
+                                <form class="dashboard-form" method="POST" action="{{ route('customer.profile.delete') }}" data-confirm="Supprimer définitivement votre compte et toutes vos données ?">
                                     @csrf @method('DELETE')
                                     <label>Mot de passe*<input name="password" type="password" required></label>
                                     <button type="submit" class="dashboard-action-button">Supprimer mon compte</button>

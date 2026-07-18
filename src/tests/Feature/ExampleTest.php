@@ -2,18 +2,20 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_home_page_returns_a_successful_response(): void
     {
-        $response = $this->get('/');
+        $this->get(route('home'))->assertOk();
+    }
 
-        $response->assertStatus(200);
+    public function test_unknown_page_uses_custom_404_view(): void
+    {
+        $this->get('/page-qui-n-existe-pas')
+            ->assertNotFound()
+            ->assertSee("Oupss... Cette page n'existe plus !", false)
+            ->assertSee(route('home'));
     }
 }
