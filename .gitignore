@@ -20,3 +20,6 @@ src/storage/framework/sessions/*
 src/storage/framework/views/*
 src/storage/logs/*
 src/bootstrap/cache/*.php
+
+# Database backups
+backups/

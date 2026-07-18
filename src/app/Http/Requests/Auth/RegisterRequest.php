@@ -37,14 +37,14 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'firstname.required' => 'Le prénom est requis.',
-            'lastname.required' => 'Le nom est requis.',
-            'email.required' => 'L\'adresse e-mail est requise.',
+            'firstname.required' => 'Le prénom est obligatoire.',
+            'lastname.required' => 'Le nom est obligatoire.',
+            'email.required' => 'L\'adresse e-mail est obligatoire.',
             'email.unique' => 'Cette adresse e-mail est déjà utilisée.',
-            'password.required' => 'Le mot de passe est requis.',
+            'password.required' => 'Le mot de passe est obligatoire.',
             'password.regex' => 'Le mot de passe doit contenir 12 caractères avec au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.',
             'password_confirmation.same' => 'Les mots de passe ne correspondent pas.',
-            'password_confirmation.required' => 'La confirmation du mot de passe est requise.',
+            'password_confirmation.required' => 'La confirmation du mot de passe est obligatoire.',
         ];
     }
 

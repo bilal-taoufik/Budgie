@@ -11,41 +11,35 @@ class PasswordUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_password_can_be_updated(): void
+    public function test_admin_can_change_password_with_current_password(): void
     {
-        $user = User::factory()->create();
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'password' => bcrypt('CurrentPassword1!'),
+        ]);
 
-        $response = $this
-            ->actingAs($user)
-            ->from('/profile')
-            ->put('/password', [
-                'current_password' => 'password',
-                'password' => 'new-password',
-                'password_confirmation' => 'new-password',
-            ]);
+        $this->actingAs($admin)->put(route('admin.profile.password'), [
+            'current_password' => 'CurrentPassword1!',
+            'password' => 'NewPassword123!',
+            'password_confirmation' => 'NewPassword123!',
+        ])->assertSessionHasNoErrors()->assertRedirect(route('admin.profile.index'));
 
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect('/profile');
-
-        $this->assertTrue(Hash::check('new-password', $user->refresh()->password));
+        $this->assertTrue(Hash::check('NewPassword123!', $admin->fresh()->password));
     }
 
-    public function test_correct_password_must_be_provided_to_update_password(): void
+    public function test_weak_new_password_is_rejected(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'password' => bcrypt('CurrentPassword1!'),
+        ]);
 
-        $response = $this
-            ->actingAs($user)
-            ->from('/profile')
-            ->put('/password', [
-                'current_password' => 'wrong-password',
-                'password' => 'new-password',
-                'password_confirmation' => 'new-password',
-            ]);
+        $this->actingAs($user)->put(route('customer.profile.password'), [
+            'current_password' => 'CurrentPassword1!',
+            'password' => 'weak',
+            'password_confirmation' => 'weak',
+        ])->assertSessionHasErrors('password');
 
-        $response
-            ->assertSessionHasErrorsIn('updatePassword', 'current_password')
-            ->assertRedirect('/profile');
+        $this->assertTrue(Hash::check('CurrentPassword1!', $user->fresh()->password));
     }
 }

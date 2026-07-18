@@ -6,12 +6,16 @@
     @vite(['resources/css/main.scss', 'resources/js/main.js'])
     <link rel="icon" type="image/ico" href="{{ asset('favicon.ico') }}" />
     <title>Budgie | Previsions</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Anticipez l'évolution de votre budget grâce aux prévisions Budgie et visualisez l'impact futur de vos revenus et de vos dépenses.">
+
 </head>
 <body>
     <main class="main-wrapper">
         <div class="page-wrapper">
+
             <div class="dashboard-page">
-                <aside class="dashboard-sidebar">
+                <div class="dashboard-sidebar">
                     <a href="{{ route('home') }}" class="dashboard-logo" aria-label="Accueil">
                         <svg width="32" height="38" viewBox="0 0 32 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 38L4.40149 0H20.9368C24.0297 0 29.6208 1.63691 29.6208 8.76923C29.6208 11.6925 28.5502 16.4861 20.9368 16.4861H18.5576L19.0335 10.9908L6.54275 17.8892L17.6059 24.32L18.0818 19.1754H25.5762C27.8364 19.1754 32 22.0985 32 28.0615C32 31.3354 29.6208 38 21.8885 38H0Z" fill="#85A795"/>
@@ -44,7 +48,7 @@
                                 <path d="M18.3333 14.1667L11.25 7.08332L7.08329 11.25L1.66663 5.83332" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M13.3334 14.1667H18.3334V9.16666" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>Depenses</span>
+                            <span>Dépenses</span>
                         </a>
                         <a href="{{ route('customer.revenues.index') }}" class="nav-link">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -82,18 +86,18 @@
                             </button>
                         </form>
                     </div>
-                </aside>
+                </div>
 
-                <main class="dashboard-main">
-                    <header class="dashboard-header">
+                <div class="dashboard-main">
+                    <header class="dashboard-header fade-in">
                         <div>
-                            <h1 class="heading-style-h3-bold">Previsions</h1>
-                            <p class="text-color-body text-size-small">Voir le solde estime a une date future.</p>
+                            <h1 class="heading-style-h3-bold">Prévisions</h1>
+                            <p class="text-color-body text-size-small">Voir le solde estimé a une date future.</p>
                         </div>
                         <a class="client-back-link" href="{{ route('customer.dashboard') }}">Retour au dashboard</a>
                     </header>
 
-                    <section class="dashboard-content client-sections-content">
+                    <section class="dashboard-content client-sections-content fade-up reveal-delay-1">
 
                         @if(!isset($previsions) || empty($previsions))
                         <!-- FORMULAIRE POUR SELECTIONNER LA DATE -->
@@ -103,7 +107,7 @@
                                     <h3 class="heading-style-h5-bold">Date de projection</h3>
 
                                     <form class="dashboard-form" method="GET" action="{{ route('customer.previsions.calculer') }}">
-                                        <label>Date selectionnee
+                                        <label>Date sélectionner
                                             <input name="date_prevision" type="date" value="{{ now()->format('Y-m-d') }}">
                                         </label>
                                         <button type="submit" class="dashboard-action-button">Calculer</button>
@@ -120,7 +124,7 @@
                                     <h3 class="heading-style-h5-bold">Date de projection</h3>
 
                                     <form class="dashboard-form" method="GET" action="{{ route('customer.previsions.calculer') }}">
-                                        <label>Date selectionnee
+                                        <label>Date sélectionner
                                             <input name="date_prevision" type="date" value="{{ $selectedDate->format('Y-m-d') }}">
                                         </label>
                                         <button type="submit" class="dashboard-action-button">Calculer</button>
@@ -129,7 +133,7 @@
 
                                 <article class="dashboard-card forecast-summary">
                                     <h3 class="heading-style-h5-bold">Prevision au {{ $selectedDate->format('d/m/Y') }}</h3>
-                                    <p class="text-color-body">Solde estime avec revenus, depenses, interets et taxes.</p>
+                                    <p class="text-color-body">Solde estimer avec revenus, dépenses, interèts et taxes.</p>
 
                                     <div class="forecast-total">
                                         {{ number_format($totalPrevision, 2, ',', ' ') }} €
@@ -157,8 +161,9 @@
                         @endif
 
                     </section>
-                </main>
+                </div>
             </div>
+
         </div>
     </main>
     @include('components.popup-messages')

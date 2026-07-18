@@ -1,16 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         @vite(['resources/css/main.scss','resources/js/main.js'])
-        <title>
-            Budgie | Administration
-        </title>
+        <title>Budgie | Administration</title>
+    <meta name="robots" content="noindex, nofollow">
+        <meta name="description" content="Pilotez l'administration de Budgie depuis un tableau de bord centralisé et accédez rapidement aux outils de gestion de la plateforme.">
     </head>
     <body>
         <main class="main-wrapper">
             <div class="page-wrapper">
+
                 <div class="dashboard-page">
                     <div class="dashboard-sidebar">
                         <a href="{{ route('home') }}" class="dashboard-logo" aria-label="Accueil">
@@ -66,7 +67,7 @@
                     </div>
 
                     <div class="dashboard-main">
-                        <header class="dashboard-header">
+                        <div class="dashboard-header fade-in">
                             <div>
                                 <h1 class="heading-style-h3-bold">
                                     Tableau de bord admin
@@ -78,21 +79,20 @@
                             <span class="text-size-tiny text-color-body">
                                 {{ now()->format('d/m/Y') }}
                             </span>
-                        </header>
-                        <div class="dashboard-content">
+                        </div>
+                        <div class="dashboard-content fade-up reveal-delay-1">
                             <div class="dashboard-stats">
-                                @foreach([['Utilisateurs',$totalUsers],['Clients',$totalCustomers],['Administrateurs',$totalAdmins],['Comptes crees',$totalAccounts]] as [$label,$value])
+                                @foreach([['Utilisateurs',$totalUsers],['Clients',$totalCustomers],['Administrateurs',$totalAdmins],['Comptes crées',$totalAccounts]] as [$label,$value])
                                 <article class="dashboard-card stat-card">
                                     <div>
-                                        <span class="text-size-regular">
-                                            {{ $label }}
-                                        </span>
+                                        <div class="margin-bottom margin-medium">
+                                            <span class="text-size-regular">
+                                                {{ $label }}
+                                            </span>
+                                        </div>
                                         <h2 class="heading-style-h3-regular">
                                             {{ $value }}
                                         </h2>
-                                        <p class="text-color-body text-size-small">
-                                            Total enregistre
-                                        </p>
                                     </div>
                                 </article>
                                 @endforeach

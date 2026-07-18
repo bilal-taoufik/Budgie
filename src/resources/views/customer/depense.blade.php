@@ -5,12 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite(['resources/css/main.scss', 'resources/js/main.js'])
     <link rel="icon" type="image/ico" href="{{ asset('favicon.ico') }}" />
-    <title>Budgie | Depenses</title>
+    <title>Budgie | Dépenses</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Enregistrez, consultez et suivez vos dépenses avec Budgie pour maîtriser votre budget et prendre de meilleures décisions financières.">
+
 </head>
 <body>
     <main class="main-wrapper">
         <div class="page-wrapper">
+
             <div class="dashboard-page">
+                
                 <div class="dashboard-sidebar">
                     <a href="{{ route('home') }}" class="dashboard-logo" aria-label="Accueil">
                         <svg width="32" height="38" viewBox="0 0 32 38" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +49,7 @@
                                 <path d="M18.3333 14.1667L11.25 7.08332L7.08329 11.25L1.66663 5.83332" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M13.3334 14.1667H18.3334V9.16666" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>Depenses</span>
+                            <span>Dépenses</span>
                         </a>
                         <a href="{{ route('customer.revenues.index') }}" class="nav-link">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,7 +65,7 @@
                                 <path d="M10.8334 14.1667V4.16666" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M6.66663 14.1667V11.6667" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>Previsions</span>
+                            <span>Prévisions</span>
                         </a>
                     </nav>
 
@@ -85,20 +90,20 @@
                 </div>
 
                 <div class="dashboard-main">
-                    <div class="dashboard-header">
+                    <div class="dashboard-header fade-in">
                         <div>
-                            <h1 class="heading-style-h3-bold">Depenses</h1>
-                            <p class="text-color-body text-size-small">Creer, modifier et supprimer vos depenses.</p>
+                            <h1 class="heading-style-h3-bold">Dépenses</h1>
+                            <p class="text-color-body text-size-small">Créer, modifier et supprimer vos dépenses.</p>
                         </div>
                         <a class="client-back-link" href="{{ route('customer.dashboard') }}">Retour au dashboard</a>
                     </div>
 
-                    <section class="dashboard-content client-sections-content">
+                    <section class="dashboard-content client-sections-content fade-up reveal-delay-1">
 
 
                         <section class="client-section">
                             <article class="dashboard-card entity-form-card">
-                                <h3 class="heading-style-h5-bold">Creer</h3>
+                                <h3 class="heading-style-h5-bold">Créer une dépense</h3>
 
                                 <form class="dashboard-form" method="POST" action="{{ route('customer.depenses.store') }}">
                                     @csrf
@@ -128,7 +133,7 @@
                             </article>
 
                             <form class="dashboard-filter-row" method="GET" action="{{ route('customer.depenses.index') }}">
-                                <label for="recherche-depense">Filtrer les depenses</label>
+                                <label for="recherche-depense">Filtrer les dépenses</label>
                                 <input id="recherche-depense" name="recherche" type="search" value="{{ $recherche ?? '' }}" placeholder="Nom ou description">
                                 <button type="submit" class="dashboard-action-button">Rechercher</button>
                                 @if(!empty($recherche))
@@ -190,12 +195,13 @@
                                         </div>
                                     </article>
                                 @empty
-                                    <article class="dashboard-card entity-card"><p class="text-color-body">Aucune depense pour le moment.</p></article>
+                                    <article class="dashboard-card entity-card"><p class="text-color-body">Aucune dépense pour le moment.</p></article>
                                 @endforelse
                             </div>
                         </section>
                     </section>
                 </div>
+
             </div>
         </div>
     </main>

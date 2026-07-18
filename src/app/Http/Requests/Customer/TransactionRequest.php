@@ -31,20 +31,20 @@ class TransactionRequest extends FormRequest
     {
         return [
             'account_id.required' => 'Veuillez selectionner un compte.',
-            'account_id.exists' => 'Le compte selectionne est invalide.',
+            'account_id.exists' => 'Le compte selectionné est invalide.',
             'type.required' => 'Veuillez selectionner un type.',
-            'type.in' => 'Le type selectionne est invalide.',
+            'type.in' => 'Le type selectionné est invalide.',
             'nom.required' => 'Le nom est obligatoire.',
-            'nom.max' => 'Le nom ne peut pas depasser 40 caracteres.',
-            'description.max' => 'La description ne peut pas depasser 255 caracteres.',
+            'nom.max' => 'Le nom ne peut pas dépasser 40 caractères.',
+            'description.max' => 'La description ne peut pas dépasser 255 caractères.',
             'montant.required' => 'Le montant est obligatoire.',
-            'montant.numeric' => 'Le montant doit etre un nombre.',
-            'montant.min' => 'Le montant doit etre minimum 0.',
-            'fractionnement.required' => 'Veuillez selectionner une frequence.',
-            'fractionnement.in' => 'La frequence selectionnee est invalide.',
+            'montant.numeric' => 'Le montant doit être un nombre.',
+            'montant.min' => 'Le montant doit être minimum 0.',
+            'fractionnement.required' => 'Veuillez selectionner une fréquence.',
+            'fractionnement.in' => 'La frequence selectionnée est invalide.',
             'date_effet.required' => 'Veuillez selectionner une date.',
             'date_effet.date' => 'La date est invalide.',
-            'date_fin.after_or_equal' => 'La date ne peux pas etre avant la date d\'effet.',
+            'date_fin.after_or_equal' => 'La date ne peux pas être avant la date d\'effet.',
         ];
     }
 

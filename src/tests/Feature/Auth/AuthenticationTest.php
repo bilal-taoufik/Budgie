@@ -12,43 +12,81 @@ class AuthenticationTest extends TestCase
 
     public function test_login_screen_can_be_rendered(): void
     {
-        $response = $this->get('/login');
-
-        $response->assertStatus(200);
+        $this->get(route('login'))->assertOk();
     }
 
-    public function test_users_can_authenticate_using_the_login_screen(): void
+    public function test_verified_customer_can_authenticate(): void
     {
-        $user = User::factory()->create();
-
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email_verified' => true,
+            'password' => bcrypt('Password123!'),
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response = $this->post(route('login'), [
+            'email' => strtoupper($user->email),
+            'password' => 'Password123!',
+        ]);
+
+        $this->assertAuthenticatedAs($user);
+        $response->assertRedirect(route('customer.dashboard'));
     }
 
-    public function test_users_can_not_authenticate_with_invalid_password(): void
+    public function test_verified_admin_is_redirected_to_admin_dashboard(): void
     {
-        $user = User::factory()->create();
-
-        $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'wrong-password',
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'email_verified' => true,
+            'password' => bcrypt('Password123!'),
         ]);
+
+        $this->post(route('login'), [
+            'email' => $admin->email,
+            'password' => 'Password123!',
+        ])->assertRedirect(route('admin.dashboard'));
+
+        $this->assertAuthenticatedAs($admin);
+    }
+
+    public function test_unverified_user_cannot_authenticate_and_can_request_a_new_email(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'customer',
+            'email_verified' => false,
+            'password' => bcrypt('Password123!'),
+        ]);
+
+        $response = $this->post(route('login'), [
+            'email' => $user->email,
+            'password' => 'Password123!',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors('email');
+        $response->assertSessionHas('btn_resend', true);
+        $response->assertSessionHas('email', $user->email);
+    }
+
+    public function test_invalid_password_is_rejected(): void
+    {
+        $user = User::factory()->create([
+            'email_verified' => true,
+            'password' => bcrypt('Password123!'),
+        ]);
+
+        $this->post(route('login'), [
+            'email' => $user->email,
+            'password' => 'WrongPassword1!',
+        ])->assertSessionHasErrors('password');
 
         $this->assertGuest();
     }
 
-    public function test_users_can_logout(): void
+    public function test_user_can_logout(): void
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->post('/logout');
-
+        $this->actingAs($user)->post(route('logout'))->assertRedirect(route('home'));
         $this->assertGuest();
-        $response->assertRedirect('/');
     }
 }

@@ -72,6 +72,7 @@
 
         background: var(--brand-green);
         color: var(--black);
+        text-transform: uppercase;
 
         cursor: pointer;
 
@@ -79,13 +80,8 @@
         font-weight: 700;
         line-height: 1;
 
-        transition:
-            background-color .3s ease,
-            transform .3s ease;
-
         &:hover {
             background: var(--brand-green-hover);
-            transform: translateY(f.rem(-1));
         }
     }
 

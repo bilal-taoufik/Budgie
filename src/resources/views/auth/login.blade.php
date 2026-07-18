@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta lharset="UTF-8">
+    <meta name="viewport" lontent="width=device-width, initial-scale=1.0">
     @vite(['resources/css/main.scss', 'resources/js/main.js'])
     <link rel="icon" type="image/ico" href="/favicon.ico" />
     <title>Budgie | Connexion</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Connectez-vous à votre espace Budgie pour consulter vos comptes, suivre votre budget et gérer vos finances personnelles.">
 
     <!-- Finsweet Cookie Consent -->
     <script async fs-cc-mode="opt-in" src="https://cdn.jsdelivr.net/npm/@finsweet/cookie-consent@1/fs-cc.js"></script>
@@ -19,7 +21,7 @@
 
             <div class="section_forms-inscription">
                 <div class="padding-global padding-section-large">
-                    <div class="component-form">
+                    <div class="component-form scale-in reveal-delay-1">
 
                         <div class="margin-bottom margin-medium">
                             <svg width="50" height="59" viewBox="0 0 50 59" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -28,7 +30,7 @@
                         </div>
 
                         <div class="max-width-xxlarge">
-                            <div class="margin-bottom margin-tiny">
+                            <div class="margin-bottom margin-small">
                                 <h1 class="heading-style-h2-bold text-color-white">
                                     Connectez-vous !
                                 </h1>
@@ -66,7 +68,6 @@
                                     >
                                 </div>
 
-                                <a class="text-size-small text-color-brand" href="{{ route('password.request') }}">Mot de passe oublie ?</a>
 
                                 <button type="submit" class="btn-secondary is-full">
                                     Se connecter
@@ -80,12 +81,15 @@
                                 <form method="POST" action="{{ route('resend.verification') }}">
                                     @csrf
                                     <input type="hidden" name="email" value="{{ session('email') }}">
-                                    <button type="submit" class="form-submit">
+                                    <button type="submit" class="btn-secondary is-full">
                                         Renvoyer l'e-mail de verification
                                     </button>
                                 </form>
                             @endif
+
                         <div class="form-bottom">
+                            <a class="text-size-small text-color-brand" href="{{ route('password.request') }}">Mot de passe oublie ?</a>
+
                             <p class="text-size-regular text-color-body">
                                 Pas encore de compte ?
                                 <a class="text-size-regular text-color-brand" href="{{ route('register') }}">
@@ -97,16 +101,6 @@
                         <div class="form-divider"></div>
 
                         <a href="{{ route('home') }}" class="form-back-link">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <path 
-                                    d="M15 18L9 12L15 6" 
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                />
-                            </svg>
-
                             <span>Retour à l'accueil</span>
                         </a>
 

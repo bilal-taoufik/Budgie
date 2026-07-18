@@ -21,9 +21,9 @@ class PrevisionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'date_prevision.required' => 'La date de prevision est requise.',
-            'date_prevision.date_format' => 'La date de prevision est invalide.',
-            'date_prevision.after' => 'La date de prevision doit etre posterieure a aujourd hui.',
+            'date_prevision.required' => 'La date de prévision est obligatoire.',
+            'date_prevision.date_format' => 'La date de prévision est invalide.',
+            'date_prevision.after' => 'La date de prévision doit être supérieur à aujourd hui.',
         ];
     }
 }
