@@ -38,9 +38,9 @@ class LoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'L\'adresse e-mail est requise.',
+            'email.required' => 'L\'adresse e-mail est obligatoire.',
             'email.email' => 'L\'adresse e-mail doit être valide.',
-            'password.required' => 'Le mot de passe est requis.',
+            'password.required' => 'Le mot de passe est obligatoire.',
             'password.min' => 'Le mot de passe doit contenir 12 caractères avec au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.',
             'password.regex' => 'Le mot de passe doit contenir 12 caractères avec au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.',
         ];

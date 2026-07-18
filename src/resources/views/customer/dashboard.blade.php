@@ -6,11 +6,16 @@
     @vite(['resources/css/main.scss', 'resources/js/main.js', 'resources/js/dashboard.js'])
     <link rel="icon" type="image/ico" href="{{ asset('favicon.ico') }}" />
     <title>Budgie | Tableau de bord</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Visualisez en un coup d'œil votre situation financière, vos comptes, vos revenus, vos dépenses et l'évolution de votre budget avec Budgie.">
+
 </head>
 <body>
     <main class="main-wrapper">
         <div class="page-wrapper">
+            
             <div class="dashboard-page">
+                <!--Nav-bar -->
                 <div class="dashboard-sidebar">
                     <a href="{{ route('home') }}" class="dashboard-logo" aria-label="Accueil">
                         <svg width="32" height="38" viewBox="0 0 32 38" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -25,7 +30,6 @@
                         <span></span>
                         <span></span>
                     </label>
-
                     <nav class="dashboard-nav">
                         <a href="{{ route('customer.dashboard') }}" class="nav-link is-active">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +48,7 @@
                                 <path d="M18.3333 14.1667L11.25 7.08332L7.08329 11.25L1.66663 5.83332" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M13.3334 14.1667H18.3334V9.16666" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>Depenses</span>
+                            <span>Dépenses</span>
                         </a>
                         <a href="{{ route('customer.revenues.index') }}" class="nav-link">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,10 +64,9 @@
                                 <path d="M10.8334 14.1667V4.16666" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M6.66663 14.1667V11.6667" stroke="#85A795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>Previsions</span>
+                            <span>Prévisions</span>
                         </a>
                     </nav>
-
                     <div class="dashboard-sidebar-bottom">
                         <a href="{{ route('customer.profile.index') }}" class="nav-link">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -78,14 +81,15 @@
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M10.8333 2.5H9.16667V10.8333H10.8333V2.5ZM14.8583 4.30833L13.675 5.49167C14.3499 6.03307 14.8944 6.71941 15.268 7.49984C15.6416 8.28026 15.8348 9.13475 15.8333 10C15.8333 13.225 13.225 15.8333 10 15.8333C8.79602 15.8341 7.62135 15.4619 6.63738 14.7681C5.65341 14.0743 4.90841 13.0929 4.50474 11.9586C4.10107 10.8243 4.05854 9.59281 4.38298 8.43337C4.70742 7.27392 5.38292 6.24338 6.31667 5.48333L5.14167 4.30833C4.31343 5.00743 3.6479 5.87901 3.1916 6.86212C2.73531 7.84524 2.49928 8.91616 2.5 10C2.5 11.9891 3.29018 13.8968 4.6967 15.3033C6.10322 16.7098 8.01088 17.5 10 17.5C11.9891 17.5 13.8968 16.7098 15.3033 15.3033C16.7098 13.8968 17.5 11.9891 17.5 10C17.5 7.71667 16.475 5.68333 14.8583 4.30833Z" fill="#85A795"/>
                                 </svg>
-                                <span>Deconnexion</span>
+                                <span>Déconnexion</span>
                             </button>
                         </form>
                     </div>
                 </div>
 
                 <div class="dashboard-main">
-                    <div class="dashboard-header">
+                    <!-- Header Content -->
+                    <div class="dashboard-header fade-in">
                         <div>
                             <h1 class="heading-style-h3-bold">Tableau de bord</h1>
                             <p class="text-color-body text-size-small">
@@ -98,34 +102,47 @@
                         </span>
                     </div>
 
-                    <div class="dashboard-content" id="dashboard-overview">
+                    <!-- Content de le page -->
+                    <div class="dashboard-content fade-up reveal-delay-1" id="dashboard-overview">
                         <div class="dashboard-stats">
                             <article class="dashboard-card stat-card">
                                 <div>
-                                    <span class="text-size-regular">Solde total</span>
-                                    <h2 class="heading-style-h3-regular">
-                                        {{ number_format($soldeTotal, 2, ',', ' ') }} €
-                                    </h2>
+                                    <div class="margin-bottom margin-medium">
+                                        <span class="text-size-regular">Solde total</span>
+                                    </div>
+                                    <div class="margin-bottom margin-small">
+                                        <h2 class="heading-style-h3-regular">
+                                            {{ number_format($soldeTotal, 2, ',', ' ') }} €
+                                        </h2>
+                                    </div>
                                     <p class="text-color-body text-size-small">Tous les comptes confondus</p>
                                 </div>
                             </article>
 
                             <article class="dashboard-card stat-card">
                                 <div>
-                                    <span class="text-size-regular">Revenus ce mois</span>
-                                    <h2 class="heading-style-h3-regular positive">
-                                        +{{ number_format($revenuTotal, 2, ',', ' ') }} €
-                                    </h2>
+                                    <div class="margin-bottom margin-medium">
+                                        <span class="text-size-regular">Revenus ce mois</span>
+                                    </div>
+                                    <div class="margin-bottom margin-small">
+                                        <h2 class="heading-style-h3-regular positive">
+                                            +{{ number_format($revenuTotal, 2, ',', ' ') }} €
+                                        </h2>
+                                    </div>
                                     <p class="text-color-body text-size-small">Total des revenus du mois</p>
                                 </div>
                             </article>
 
                             <article class="dashboard-card stat-card">
                                 <div>
-                                    <span class="text-size-regular">Dépenses ce mois</span>
-                                    <h2 class="heading-style-h3-regular negative">
-                                        -{{ number_format($depenseTotal, 2, ',', ' ') }} €
-                                    </h2>
+                                    <div class="margin-bottom margin-medium">
+                                        <span class="text-size-regular">Dépenses ce mois</span>
+                                    </div>
+                                    <div class="margin-bottom margin-small">
+                                        <h2 class="heading-style-h3-regular negative">
+                                            -{{ number_format($depenseTotal, 2, ',', ' ') }} €
+                                        </h2>
+                                    </div>
                                     <p class="text-color-body text-size-small">Total des dépenses du mois</p>
                                 </div>
                             </article>
@@ -207,6 +224,7 @@
                         </article>
                     </div>
                 </div>
+                
             </div>
         </div>
     </main>

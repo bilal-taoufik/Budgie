@@ -25,21 +25,21 @@ class AccountRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nom.required' => 'Le nom du compte est requis.',
-            'nom.string' => 'Le nom du compte doit etre une chaine de caracteres.',
-            'nom.max' => 'Le nom du compte ne doit pas depasser 255 caracteres.',
-            'solde.required' => 'Le solde du compte est requis.',
-            'solde.numeric' => 'Le solde du compte doit etre un nombre.',
-            'solde.min' => 'Le solde du compte ne peut pas etre negatif.',
-            'description.string' => 'La description du compte doit etre une chaine de caracteres.',
-            'taux_remuneration.required' => 'Le taux d interet est requis.',
-            'taux_remuneration.numeric' => 'Le taux d interet doit etre un nombre.',
-            'taux_remuneration.min' => 'Le taux d interet ne peut pas etre inferieur a 0%.',
-            'taux_remuneration.max' => 'Le taux d interet ne peut pas depasser 100%.',
-            'taux_imposition.required' => 'Le taux d imposition est requis.',
-            'taux_imposition.numeric' => 'Le taux d imposition doit etre un nombre.',
-            'taux_imposition.min' => 'Le taux d imposition ne peut pas etre inferieur a 0%.',
-            'taux_imposition.max' => 'Le taux d imposition ne peut pas depasser 100%.',
+            'nom.required' => 'Le nom du compte est obligatoire.',
+            'nom.string' => 'Le nom du compte doit être une chaine de caractères.',
+            'nom.max' => 'Le nom du compte ne doit pas dépasser 255 caractères.',
+            'solde.required' => 'Le solde du compte est obligatoire.',
+            'solde.numeric' => 'Le solde du compte doit être un nombre.',
+            'solde.min' => 'Le solde du compte ne peut pas être négatif.',
+            'description.string' => 'La description du compte doit être une chaine de caractères.',
+            'taux_remuneration.required' => 'Le taux d\'intérêt est obligatoire.',
+            'taux_remuneration.numeric' => 'Le taux d\'intérêt doit être un nombre.',
+            'taux_remuneration.min' => 'Le taux d\'intérêt ne peut pas être infèrieur a 0%.',
+            'taux_remuneration.max' => 'Le taux d\'intérêt ne peut pas dépasser 100%.',
+            'taux_imposition.required' => 'Le taux d\'imposition est obligatoire.',
+            'taux_imposition.numeric' => 'Le taux d\'imposition doit être un nombre.',
+            'taux_imposition.min' => 'Le taux d\'imposition ne peut pas être infèrieur a 0%.',
+            'taux_imposition.max' => 'Le taux d\'imposition ne peut pas dépasser 100%.',
         ];
     }
 

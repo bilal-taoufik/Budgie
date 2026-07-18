@@ -35,22 +35,22 @@ class UserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'firstname.required' => 'Le prenom est requis.',
-            'firstname.string' => 'Le prenom doit etre une chaine de caracteres.',
-            'firstname.max' => 'Le prenom ne doit pas depasser 255 caracteres.',
+            'firstname.required' => 'Le prénom est requis.',
+            'firstname.string' => 'Le prénom doit etre une chaine de caractères.',
+            'firstname.max' => 'Le prénom ne doit pas depasser 255 caractères.',
 
             'lastname.required' => 'Le nom est requis.',
-            'lastname.string' => 'Le nom doit etre une chaine de caracteres.',
-            'lastname.max' => 'Le nom ne doit pas depasser 255 caracteres.',
+            'lastname.string' => 'Le nom doit etre une chaine de caractères.',
+            'lastname.max' => 'Le nom ne doit pas depasser 255 caractères.',
 
-            'email.required' => 'L\'adresse e-mail est requise.',
+            'email.required' => 'L\'adresse e-mail est obligatoire.',
             'email.email' => 'L\'adresse e-mail doit etre valide.',
-            'email.unique' => 'Cette adresse e-mail est deja utilisee.',
+            'email.unique' => 'Cette adresse e-mail est deja utilisée.',
 
             'password.required' => 'Le mot de passe est requis.',
             'password.confirmed' => 'Les mots de passe ne correspondent pas.',
-            'password.min' => 'Le mot de passe doit contenir au moins 12 caracteres.',
-            'password.regex' => 'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caractere special.',
+            'password.min' => 'Le mot de passe doit contenir au moins 12 caractères.',
+            'password.regex' => 'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caractère special.',
         ];
     }
 

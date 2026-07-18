@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta lharset="UTF-8">
+    <meta name="viewport" lontent="width=device-width, initial-scale=1.0">
     @vite(['resources/css/main.scss', 'resources/js/main.js'])
     <link rel="icon" type="image/ico" href="/favicon.ico" />
     <title>Budgie | Inscription</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Créez votre compte Budgie et commencez à suivre vos revenus, vos dépenses et l'évolution de votre budget personnel.">
 
     <!-- Finsweet Cookie Consent -->
     <script async fs-cc-mode="opt-in" src="https://cdn.jsdelivr.net/npm/@finsweet/cookie-consent@1/fs-cc.js"></script>
@@ -19,7 +21,7 @@
 
             <div class="section_forms-inscription">
                 <div class="padding-global padding-section-large">
-                    <div class="component-form">
+                    <div class="component-form scale-in reveal-delay-1">
                         <div class="margin-bottom margin-medium">
                             <svg width="50" height="59" viewBox="0 0 50 59" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M0 59L6.87732 0H32.7138C37.5465 0 46.2825 2.54152 46.2825 13.6154C46.2825 18.1542 44.6097 25.5969 32.7138 25.5969H28.9963L29.7398 17.0646L10.223 27.7754L27.5093 37.76L28.2528 29.7723H39.9628C43.4944 29.7723 50 34.3108 50 43.5692C50 48.6523 46.2825 59 34.2007 59H0Z" fill="#85A795"/>
@@ -117,15 +119,6 @@
 
                         <!-- BACK -->
                         <a href="{{ route('home') }}" class="form-back-link">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <path
-                                    d="M15 18L9 12L15 6"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                />
-                            </svg>
                             <span>Retour à l'accueil</span>
                         </a>
 
