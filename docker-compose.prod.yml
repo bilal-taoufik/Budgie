@@ -10,6 +10,18 @@ services:
     depends_on:
       - postgres
 
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: budgie_scheduler_prod
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php artisan schedule:work
+    volumes:
+      - ./src:/var/www
+    depends_on:
+      - postgres
   nginx:
     image: nginx:alpine
     container_name: budgie_nginx_prod

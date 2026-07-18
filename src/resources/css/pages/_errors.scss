@@ -1,0 +1,104 @@
+@use "../partials/functions" as f;
+
+@layer pages {
+    .error-page {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-height: 100svh;
+        padding: f.rem(32);
+        overflow: hidden;
+        isolation: isolate;
+        background:
+            linear-gradient(180deg, rgba(0, 0, 0, .18), rgba(0, 0, 0, .68)),
+            url("../../assets/bg-header_home.png") center / cover no-repeat,
+            var(--black);
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, .52) 72%);
+        }
+    }
+
+    .error-page__logo {
+        position: absolute;
+        top: f.rem(32);
+        left: f.rem(40);
+        color: var(--brand-green);
+        transition: transform .25s ease, color .25s ease;
+
+        &:hover {
+            color: var(--white);
+            transform: translateY(f.rem(-3));
+        }
+    }
+
+    .error-page__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: min(100%, f.rem(900));
+        text-align: center;
+    }
+
+    .error-page__code {
+        margin: 0 0 f.rem(18);
+        color: var(--brand-green);
+        font-size: f.rem(13);
+        font-weight: 700;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+    }
+
+    .error-page h1 {
+        max-width: f.rem(850);
+        margin: 0;
+        color: var(--white);
+        font-size: clamp(3rem, 8vw, 7.5rem);
+        font-weight: 600;
+        line-height: .95;
+        letter-spacing: -.055em;
+    }
+
+    .error-page__description {
+        max-width: f.rem(580);
+        margin: f.rem(28) 0 f.rem(38);
+        color: var(--body);
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        line-height: 1.6;
+    }
+
+    .error-page__brand {
+        position: absolute;
+        right: f.rem(40);
+        bottom: f.rem(28);
+        margin: 0;
+        color: rgba(255, 255, 255, .34);
+        font-size: f.rem(12);
+        font-weight: 700;
+        letter-spacing: .28em;
+    }
+}
+
+@media (max-width: 576px) {
+    .error-page {
+        padding: f.rem(24);
+    }
+
+    .error-page__logo {
+        top: f.rem(24);
+        left: f.rem(24);
+    }
+
+    .error-page h1 {
+        font-size: clamp(3rem, 16vw, 5rem);
+    }
+
+    .error-page__brand {
+        right: f.rem(24);
+        bottom: f.rem(20);
+    }
+}

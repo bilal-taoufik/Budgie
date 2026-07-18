@@ -159,7 +159,7 @@
                                     <p class="text-color-body text-size-small">
                                         Impossible de supprimer le dernier administrateur.
                                     </p>
-                                    <form class="dashboard-form" method="POST" action="{{ route('admin.profile.delete') }}" onsubmit="return confirm('Supprimer votre compte admin ?')">
+                                    <form class="dashboard-form" method="POST" action="{{ route('admin.profile.delete') }}" data-confirm="Supprimer votre compte administrateur ? Cette action est définitive.">
                                         @csrf
                                         @method('DELETE')
                                         <label>

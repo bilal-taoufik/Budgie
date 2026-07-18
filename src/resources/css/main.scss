@@ -1,4 +1,4 @@
-﻿@use "vendor/modern-normalize.css";
+@use "vendor/modern-normalize.css";
 
 @use "animations/animation";
 
@@ -20,6 +20,7 @@
 @use "components/footer";
 @use "components/form";
 @use "components/message";
+@use "components/confirm-modal";
 @use "components/cookies";
 
 @use "pages/home";
@@ -27,6 +28,7 @@
 @use "pages/sign-in";
 @use "pages/dashboard";
 @use "pages/client-sections";
+@use "pages/errors";
 
 
 
