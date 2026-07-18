@@ -371,3 +371,23 @@ Pour restaurer une sauvegarde :
 ```bash
 docker compose -f docker-compose.prod.yml exec -T postgres pg_restore --clean --if-exists -U "$DB_USERNAME" -d "$DB_DATABASE" < backups/Budgie_latest.dump
 ```
+## Déploiement automatisé
+
+Le script `scripts/deploy-prod.sh` exécute dans l'ordre :
+
+1. construction et mise à jour des images Docker ;
+2. démarrage et attente de PostgreSQL ;
+3. `composer install` optimisé sans dépendances de développement ;
+4. `npm ci` puis compilation Vite avec `npm run build` ;
+5. nettoyage des anciens caches Laravel ;
+6. migrations avec `php artisan migrate --force` ;
+7. création des caches de configuration, routes et vues ;
+8. démarrage de PHP-FPM, Nginx, du scheduler et de la sauvegarde PostgreSQL.
+
+Avant le premier déploiement, vérifier que `APP_ENV=production` est défini dans `src/.env`. Depuis la racine du projet sur le serveur :
+
+```bash
+sh scripts/deploy-prod.sh
+```
+
+Le service `scheduler` exécute continuellement `php artisan schedule:work`. La commande `accounts:interet` est planifiée automatiquement le 31 décembre à 00:00, heure de Paris.
