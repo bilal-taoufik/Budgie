@@ -67,7 +67,7 @@ class LoginRequest extends FormRequest
         // Vérification si l'utilisateur existe
         if (! $user) {
             throw ValidationException::withMessages([
-                'email' => 'Aucun compte n\'est associé à cette adresse e-mail.',
+                'email' => 'Les identifiants fournis sont incorrects.',
             ]);
         }
 
@@ -83,7 +83,7 @@ class LoginRequest extends FormRequest
         // Vérification si le mot de passe est correct
         if (! Hash::check($this->input('password'), $user->password)) {
             throw ValidationException::withMessages([
-                'password' => 'Le mot de passe est incorrect.',
+                'password' => 'Les identifiants fournis sont incorrects.',
             ]);
         }
         Auth::login($user);

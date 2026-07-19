@@ -22,10 +22,10 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'email_verified',
         'email_verification_token',
         'email_verification_expires_at',
     ];
+    
 
     // Définir la relation entre User et Account
     public function accounts(): HasMany

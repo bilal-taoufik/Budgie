@@ -59,7 +59,7 @@ class UserRequest extends FormRequest
     {
         $this->merge([
             'firstname' => ucwords(strtolower(trim($this->firstname))),
-            'lastname' => strtoupper(strtolower(trim($this->lastname))),
+            'lastname' => mb_strtoupper(trim($this->lastname)),
             'email' => strtolower(trim($this->email)),
         ]);
     }
