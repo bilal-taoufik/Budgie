@@ -24,7 +24,7 @@ class ProfileController extends Controller
         auth()->user()->update($request->validated());
 
         return redirect()->route('admin.profile.index')
-            ->with('success', 'Profil mis a jour avec succes.');
+            ->with('success', 'Profil mis a jour avec succès.');
     }
 
     public function updatePassword(ProfileRequest $request): RedirectResponse
@@ -34,7 +34,7 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->route('admin.profile.index')
-            ->with('success', 'Mot de passe modifie avec succes.');
+            ->with('success', 'Mot de passe modifié avec succès.');
     }
 
     public function delete(ProfileRequest $request): RedirectResponse
@@ -53,6 +53,6 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('home')
-            ->with('success', 'Compte admin supprime avec succes.');
+            ->with('success', 'Compte admin supprimé avec succès.');
     }
 }

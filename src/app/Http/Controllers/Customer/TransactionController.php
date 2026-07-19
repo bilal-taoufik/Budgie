@@ -19,17 +19,11 @@ class TransactionController extends Controller
             'recherche' => ['nullable', 'string', 'max:100'],
         ]);
         $accounts = auth()->user()->accounts()->get();
-        $recherche = trim($validated['recherche'] ?? '');
+        $recherche = trim($request->input('recherche', ''));
         $transactions = Transaction::with('account')
             ->whereIn('account_id', $accounts->pluck('id'))
             ->where('type', 'revenu')
-            ->when($recherche !== '', function ($query) use ($recherche) {
-                $terme = '%'.mb_strtolower($recherche).'%';
-                $query->where(function ($query) use ($terme) {
-                    $query->whereRaw('LOWER(nom) LIKE ?', [$terme])
-                        ->orWhereRaw('LOWER(description) LIKE ?', [$terme]);
-                });
-            })
+            ->recherche($recherche)
             ->latest()
             ->get();
 
@@ -42,17 +36,11 @@ class TransactionController extends Controller
             'recherche' => ['nullable', 'string', 'max:100'],
         ]);
         $accounts = auth()->user()->accounts()->get();
-        $recherche = trim($validated['recherche'] ?? '');
+        $recherche = trim($request->input('recherche', ''));
         $transactions = Transaction::with('account')
             ->whereIn('account_id', $accounts->pluck('id'))
             ->where('type', 'depense')
-            ->when($recherche !== '', function ($query) use ($recherche) {
-                $terme = '%'.mb_strtolower($recherche).'%';
-                $query->where(function ($query) use ($terme) {
-                    $query->whereRaw('LOWER(nom) LIKE ?', [$terme])
-                        ->orWhereRaw('LOWER(description) LIKE ?', [$terme]);
-                });
-            })
+            ->recherche($recherche)
             ->latest()
             ->get();
 
@@ -70,7 +58,7 @@ class TransactionController extends Controller
         $this->appliquerDiffSolde($account, $this->totalAppliqueJusquaAujourdhui($transaction));
         $transaction->update(['derniere_application' => Carbon::today()]);
 
-        return redirect()->route($this->typeRoute($transaction->type))->with('success', 'Transaction creee.');
+        return redirect()->route($this->typeRoute($transaction->type))->with('success', 'Transaction crée.');
     }
 
     public function update(TransactionRequest $request, Transaction $transaction): RedirectResponse
@@ -91,7 +79,7 @@ class TransactionController extends Controller
             $this->appliquerDiffSolde($nouveauCompte, $nouveauTotal);
         }
 
-        return redirect()->route($this->typeRoute($transaction->type))->with('success', 'Transaction modifiee.');
+        return redirect()->route($this->typeRoute($transaction->type))->with('success', 'Transaction modifié.');
     }
 
     public function delete(Transaction $transaction): RedirectResponse
@@ -102,10 +90,10 @@ class TransactionController extends Controller
         $this->appliquerDiffSolde($account, -$this->totalAppliqueJusquaAujourdhui($transaction));
         $transaction->delete();
 
-        return redirect()->route($this->typeRoute($type))->with('success', 'Transaction supprimee.');
+        return redirect()->route($this->typeRoute($type))->with('success', 'Transaction supprimée.');
     }
 
-    // methode qui dit que le montant total est appliquer de la date a effet et aujoud'hui
+    // methode qui renvoie la date d'effet et la date d'aujoud'hui
     private function totalAppliqueJusquaAujourdhui(Transaction $transaction): float
     {
         return $transaction->montantTotal($transaction->date_effet, Carbon::today());
@@ -122,6 +110,7 @@ class TransactionController extends Controller
         $account->save();
     }
 
+    // premet de renvoyer a depense ou revenu selon le type
     private function typeRoute(string $type): string
     {
         if ($type === 'revenu') {

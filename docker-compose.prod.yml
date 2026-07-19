@@ -22,6 +22,7 @@ services:
       - ./src:/var/www
     depends_on:
       - postgres
+      
   nginx:
     image: nginx:alpine
     container_name: budgie_nginx_prod
@@ -49,10 +50,6 @@ services:
     restart: unless-stopped
     env_file:
       - ./src/.env
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_BACKUP_PATH: /backups
     volumes:
       - ./backups:/backups
       - ./docker/postgres/backup-database.sh:/usr/local/bin/backup-database.sh:ro
@@ -60,5 +57,6 @@ services:
     entrypoint: ["/bin/sh", "/usr/local/bin/backup-entrypoint.sh"]
     depends_on:
       - postgres
+
 volumes:
   postgres_prod_data:

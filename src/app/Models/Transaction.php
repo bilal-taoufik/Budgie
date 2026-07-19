@@ -119,4 +119,14 @@ class Transaction extends Model
     {
         return $this->nrbEcheance($debut, $fin)->count() * $this->montantSelonType();
     }
+
+    public function scopeRecherche($query, string $recherche)
+    {
+        return $query->when($recherche !== '', function ($query) use ($recherche) {
+            $query->where(function ($query) use ($recherche) {
+                $query->whereLike('nom', "%{$recherche}%", caseSensitive: false)
+                    ->orWhereLike('description', "%{$recherche}%", caseSensitive: false);
+            });
+        });
+    }
 }

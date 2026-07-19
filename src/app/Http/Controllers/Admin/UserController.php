@@ -44,7 +44,7 @@ class UserController extends Controller
         Mail::to($user->email)->send(new VerifyMail($user, $verificationUrl));
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'Admin ajoute avec succes. Un e-mail de verification lui a ete envoye.');
+            ->with('success', 'Admin ajoute avec succès. Un e-mail de verification lui a été envoyer.');
     }
 
     public function delete(User $user): RedirectResponse
@@ -62,6 +62,6 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'Utilisateur supprime avec succes.');
+            ->with('success', 'Utilisateur supprimé avec succès.');
     }
 }
